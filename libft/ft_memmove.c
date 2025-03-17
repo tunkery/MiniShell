@@ -1,28 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/11/09 13:47:57 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/11 15:38:34 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	size_t	i;
+	char	*t_dst;
+	char	*t_src;
 
-	if (ac != 1)
+	if (!dst && !src)
+		return (NULL);
+	t_dst = (char *) dst;
+	t_src = (char *) src;
+	if (t_dst < t_src)
 	{
-		printf("Don't give any arguments!\n");
-		return (0);
+		i = 0;
+		while (i < len)
+		{
+			t_dst[i] = t_src[i];
+			i++;
+		}
 	}
-	i = 0;
-	return (0);
+	if (t_dst > t_src)
+	{
+		while (len-- > 0)
+			t_dst[len] = t_src[len];
+	}
+	return (dst);
 }

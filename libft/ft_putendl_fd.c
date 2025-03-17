@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/11/08 10:50:56 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/08 18:49:53 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+void	ft_putendl_fd(char *s, int fd)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	int	i;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
 	i = 0;
-	return (0);
+	while (s[i])
+	{
+		write (fd, &s[i], 1);
+		i++;
+	}
+	write (fd, "\n", 1);
 }

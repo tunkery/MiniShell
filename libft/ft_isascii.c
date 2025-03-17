@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/10/08 16:11:43 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/08 17:21:20 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+int	ft_isascii(int c)
 {
-	int i;
-	(void)av;
-	(void)envp;
-
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
-	i = 0;
+	if (c >= 0 && c <= 127)
+		return (1);
 	return (0);
 }
+/*
+#include <stdio.h>
+
+int main()
+{
+    int c;
+
+    c = ' ';
+    printf("%d", ft_isascii(c));
+    return(0);
+}
+*/

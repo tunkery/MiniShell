@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/11/04 15:31:09 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/08 17:22:25 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+void	*ft_calloc(size_t count, size_t size)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	size_t	total;
+	char	*tmp;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
-	i = 0;
-	return (0);
+	total = count * size;
+	tmp = malloc (total);
+	if (!tmp)
+		return (NULL);
+	ft_memset(tmp, 0, total);
+	return (tmp);
 }

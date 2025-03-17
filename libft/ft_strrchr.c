@@ -1,28 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/10/23 17:18:20 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/10 16:47:16 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+char	*ft_strrchr(const char *s, int c)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	int	i;
+	int	j;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
 	i = 0;
+	j = -1;
+	while (s[i])
+	{
+		if (s[i] == (char) c)
+			j = i;
+		i++;
+	}
+	if (j != -1)
+		return ((char *) &s[j]);
+	else if (s[i] == (char) c)
+		return ((char *) &s[i]);
 	return (0);
 }
+/*
+#include <stdio.h>
+
+int main()
+{
+    const char *s = "yoo how you doin";
+    int c = 'o';
+    printf("%s", ft_strrchr(s, c));
+    return (0);
+}
+*/

@@ -1,28 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/10/24 11:25:35 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/08 17:16:35 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	size_t			i;
+	unsigned char	*tmp;
+	unsigned char	j;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
 	i = 0;
-	return (0);
+	j = c;
+	tmp = b;
+	while (i < len)
+	{
+		tmp[i] = j;
+		i++;
+	}
+	return (b);
 }
+/*
+#include <stdio.h>
+
+int main()
+{
+    char b[] = "hows it goin";
+    int c = 'b';
+    size_t len = 2;
+    printf("%s", ft_memset(b, c, len));
+    return (0);
+}
+*/

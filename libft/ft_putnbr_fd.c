@@ -1,28 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/11/08 10:54:16 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/09 12:50:00 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+void	ft_putnbr_fd(int n, int fd)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	long	copy;
+	char	number[10];
+	int		i;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
+	copy = n;
 	i = 0;
-	return (0);
+	if (copy == 0)
+	{
+		write(fd, "0", 1);
+		return ;
+	}
+	if (copy < 0)
+	{
+		copy *= -1;
+		write (fd, "-", 1);
+	}
+	while (copy > 0)
+	{
+		number[i++] = copy % 10 + 48;
+		copy /= 10;
+	}
+	while (i > 0)
+	{
+		write (fd, &number[--i], 1);
+	}
 }
+/*
+int	main(void)
+{
+	ft_putnbr_fd(-2147483648, 1);
+}
+*/

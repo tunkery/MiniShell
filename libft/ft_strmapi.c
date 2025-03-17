@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/11/08 18:05:26 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/08 18:30:32 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	int i;
-	(void)av;
-	(void)envp;
+	unsigned int		i;
+	unsigned int		j;
+	char				*new_s;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
 	i = 0;
-	return (0);
+	j = ft_strlen(s);
+	new_s = (char *)malloc (j + 1);
+	if (!new_s)
+		return (NULL);
+	while (i < j)
+	{
+		new_s[i] = f(i, s[i]);
+		i ++;
+	}
+	new_s[i] = '\0';
+	return (new_s);
 }

@@ -1,28 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/11/01 17:18:02 by bolcay            #+#    #+#             */
+/*   Updated: 2025/02/16 17:08:56 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+char	*ft_strdup(const char *s)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	size_t	i;
+	size_t	j;
+	char	*new_s;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
 	i = 0;
-	return (0);
+	j = ft_strlen(s);
+	new_s = (char *) malloc(j + 1);
+	if (new_s == 0)
+		return (0);
+	while (s[i])
+	{
+		new_s[i] = s[i];
+		i++;
+	}
+	new_s[i] = '\0';
+	return (new_s);
 }
+
+/*
+#include <stdio.h>
+
+int main()
+{
+    const char *s = "broski why";
+    printf("%s", ft_strdup(s));
+    free(ft_strdup(s));
+    return (0);
+}
+*/

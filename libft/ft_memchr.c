@@ -1,28 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:47 by bolcay           ###   ########.fr       */
+/*   Created: 2024/10/24 13:26:20 by bolcay            #+#    #+#             */
+/*   Updated: 2024/11/10 18:17:59 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **envp)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	int i;
-	(void)av;
-	(void)envp;
+	size_t			i;
+	unsigned char	*j;
+	unsigned char	k;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
 	i = 0;
+	j = (unsigned char *) s;
+	k = (unsigned char) c;
+	while (i < n)
+	{
+		if (j[i] == k)
+			return ((unsigned char *) &j[i]);
+		i++;
+	}
 	return (0);
 }
+/*
+#include <stdio.h>
+
+int main()
+{
+    const char s[] = "howdy";
+    int c = 'o';
+    size_t n = 5;
+    printf("%s", ft_memchr(s, c, n));
+    return (0);
+}
+*/
