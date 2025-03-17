@@ -13,12 +13,13 @@
 SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c envp/envp_utils.c \
 		envp/envp.c deallocation.c builtin.c token.c
 
+OBJS = $(SRCS:.c=.o)
+
+NAME = minishell
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g $(INCLUDE)
 RM = rm -f
 RM_DIR = rm -rf
-NAME = minishell
-OBJS = $(SRCS:.c=.o)
 
 LIBFT_DIR = libft
 LIBFT_LIB = ${LIBFT_DIR}/libft.a
@@ -32,7 +33,7 @@ $(LIBFT_LIB):
 	make -C $(LIBFT_DIR) && make clean -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT_LIB) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LDINCLUDE) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LDINCLUDE) -lreadline -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

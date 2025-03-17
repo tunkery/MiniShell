@@ -12,9 +12,23 @@
 
 #include "minishell.h"
 
+void    read_line(void)
+{
+    char    *line;
+
+    line = readline(CYAN"minishell> "RESET);
+    if (line && *line)
+    {
+        add_history(line);
+        printf("%s\n", line);
+        free(line);
+    }
+    rl_clear_history();
+}
+
 int main(int ac, char **av, char **envp)
 {
-	int i;
+
 	(void)av;
 	(void)envp;
 
@@ -23,6 +37,7 @@ int main(int ac, char **av, char **envp)
 		printf("Don't give any arguments!\n");
 		return (0);
 	}
-	i = 0;
+    read_line();
+
 	return (0);
 }

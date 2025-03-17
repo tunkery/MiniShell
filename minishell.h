@@ -72,4 +72,9 @@ char	**remove_env(char **envp, char *key);
 
 void	clean_2d(char **str);
 
+// Readline functions
+
+void    read_line(void);
+
+
 #endif
