@@ -64,6 +64,8 @@ int main(int ac, char **av, char **envp)
         line = user_input();
         if(!line)
             break; // We can add free(line) here. or each links free it.
+        signal_mode_command();
+        // process_input(line);
     }
 
 	return (0);

@@ -78,5 +78,9 @@ void    read_line(void);
 // Signal functions
 void    signal_mode_read(void);
 void    sigint_handler_read(int signo);
+void    signal_mode_command(void);
+void    sigint_handler_command(int signo);
+void    turn_off_echo(void);
+
 
 #endif
