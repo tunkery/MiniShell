@@ -12,23 +12,44 @@
 
 #include "minishell.h"
 
-void    read_line(void)
+/*
+    Standart file descriptors:
+        #define STDIN_FILENO    0        Standard input. 
+        #define STDOUT_FILENO   1        Standard output.  
+        #define STDERR_FILENO   2        Standard error output.
+    
+    - hpehliva$ hello
+    bash: hello: command not found // Add this command!
+*/
+char    *user_input(void)
 {
     char    *line;
-
+    
     line = readline(CYAN"minishell> "RESET);
-    if (line && *line)
+    if(isatty(STDIN_FILENO)) // If it is terminal
     {
-        add_history(line);
-        printf("%s\n", line);
-        free(line);
+        if (line && *line)
+        {
+            add_history(line);
+            printf("%s\n", line);
+            free(line);
+        }
+    }
+    else // or not!
+    {
+        if (line)
+        {
+            printf("%s\n", line);
+            free(line);
+        }
     }
     rl_clear_history();
+    return (line);
 }
 
 int main(int ac, char **av, char **envp)
 {
-
+    char   *line;
 	(void)av;
 	(void)envp;
 
@@ -37,7 +58,13 @@ int main(int ac, char **av, char **envp)
 		printf("Don't give any arguments!\n");
 		return (0);
 	}
-    read_line();
+    while(1)
+    {
+        signal_mode_read();
+        line = user_input();
+        if(!line)
+            break; // We can add free(line) here. or each links free it.
+    }
 
 	return (0);
 }

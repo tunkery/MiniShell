@@ -73,8 +73,10 @@ char	**remove_env(char **envp, char *key);
 void	clean_2d(char **str);
 
 // Readline functions
-
 void    read_line(void);
 
+// Signal functions
+void    signal_mode_read(void);
+void    sigint_handler_read(int signo);
 
 #endif
