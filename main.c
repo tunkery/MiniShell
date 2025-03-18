@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+//showing braches 
 /*
     Standart file descriptors:
         #define STDIN_FILENO    0        Standard input. 
