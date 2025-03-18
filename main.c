@@ -37,13 +37,11 @@ char    *user_input(void)
     }
     else // or not!
     {
-        if (line)
-        {
+        if(line){
             printf("%s\n", line);
             free(line);
         }
     }
-    rl_clear_history();
     return (line);
 }
 
