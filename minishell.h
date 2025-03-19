@@ -12,6 +12,7 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
 # include "../libft/libft.h"
 # include "get_next_line/get_next_line.h"
 # include <stdio.h>                // printf, perror
@@ -34,9 +35,15 @@
 
 #define RESET        "\001\033[0m"   // Reset to default
 #define CYAN         "\001\033[1;36m"
-#define PASTEL_BLUE  "\001\033[1;34m"
-#define PASTEL_RED   "\001\033[1;31m"
+#define BLUE  		 "\001\033[1;34m"
+#define RED   		 "\001\033[1;31m"
 
+# define DEBUG 1
+	#if DEBUG
+		# define DEBUG_PRINT(fmt, ...) printf(" [DEBUG] " fmt, ##__VA_ARGS__)
+	#else
+		# define DEBUG_PRINT(fmt, ...) do {} while(0) // Dont do anything when the debug closed
+#endif
 typedef struct s_builtin
 {
 	const char	*name;
@@ -49,6 +56,31 @@ typedef struct s_env
 	char	**path;
 	char	*path1;
 }	t_env;
+
+typedef struct s_process
+{
+	char	*line;
+	char	**envp;
+}	t_process;
+
+
+typedef enum e_token_type
+{
+	TOKEN_WORD, // (Cmd, Args)
+	TOKEN_PIPE, // |
+	TOKEN_REDIRECT_IN, // <
+	TOKEN_REDIRECT_OUT, // >
+	TOKEN_END
+}	t_token_type;
+
+
+typedef	struct s_token
+{
+	t_token_type  type; // token type
+	char  *value; // token value
+	struct s_token *next; // next token
+}	t_token;
+
 
 // Builtin functions
 
@@ -86,6 +118,16 @@ void    sigint_handler_read(int signo);
 void    signal_mode_command(void);
 void    sigint_handler_command(int signo);
 void    turn_off_echo(void);
+void    rest_signal_command(void);
+
+// Process
+void added_process(char *line, char **envp);
+
+// Tokenizer
+t_token    *tokenizer(char *line);
+void    seperated_token(char *line, t_token **head);
+char    *extract_word(char *line, int *i);
+void    free_token_matrix(t_token *head);
 
 
 #endif

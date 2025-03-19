@@ -12,7 +12,33 @@
 
 #include "minishell.h"
 
-//showing branch
+void added_process(char *line, char **envp)
+{
+    DEBUG_PRINT(RED"Proccesing line : %s \n", line);
+    t_token *tokens;
+    t_token *tmp;
+    (void)envp;
+    // t_process *process;
+
+    tokens = tokenizer(line);
+    if(!tokens)
+    {
+        DEBUG_PRINT(RED"No token to process\n"RESET);
+        return ;
+    }
+    tmp = tokens;
+    while(tmp)
+    {
+        DEBUG_PRINT(RED"Token: type= %d, value = '%s' \n", tmp->type, tmp->value);
+        tmp = tmp->next;
+    }
+
+    free_token_matrix(tokens);
+    DEBUG_PRINT(RED"Line processing completed\n"RESET);
+}
+
+
+
 /*
     Standart file descriptors:
         #define STDIN_FILENO    0        Standard input. 
@@ -22,10 +48,16 @@
     - hpehliva$ hello
     bash: hello: command not found // Add this command!
 */
+
 char    *user_input(void)
 {
     char    *line;
+    char *cpy;
     
+
+    if(isatty(STDIN_FILENO)){
+        return(readline(CYAN"minishell> "RESET));
+
     line = readline(CYAN"minishell> "RESET);
     if(isatty(STDIN_FILENO)) // If it is terminal
     {
@@ -35,13 +67,23 @@ char    *user_input(void)
             // printf("%s\n", line);
             free(line);
         }
+
     }
-    else // or not!
+    line = get_next_line(STDIN_FILENO);
+    if(!line)
+        return (NULL); // Control D and EOF situation
+    if(line)
     {
+
+        cpy = line;
+        line = ft_strtrim(line, "\n");
+        free(cpy);
+
         if(line){
             // printf("%s\n", line);
             free(line);
         }
+
     }
     return (line);
 }
@@ -113,8 +155,8 @@ int main(int ac, char **av, char **envp)
         // free(line);
         // clean_2d(args);
         signal_mode_command();
-        // process_input(line);
+        added_process(line, envp);
+        free(line);
     }
-
 	return (0);
 }
