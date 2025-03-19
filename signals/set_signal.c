@@ -12,13 +12,15 @@
 
 #include "../minishell.h"
 
+
 void    turn_off_echo(void)
 {
     struct termios  term;
 
     if(tcgetattr(STDIN_FILENO, &term) == -1)
         return ;
-    term.c_lflag &= ~(ECHOCTL); // Activated /* local flags */ to close echo
+    term.c_lflag &= ~(ECHOCTL); // Activated /* local flags */ to close the echo
+    // term.c_lflag |= ~(ISIG); // Activated /* local flags */ to close the echo
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);// Setting the teminal attributes
 	// /* drain output, flush input */ TCSAFLUSH closed the file(STDIN_FILENO).
 }
@@ -26,7 +28,7 @@ void    turn_off_echo(void)
 void    sigint_handler_command(int signo)
 {
     (void)signo;
-    write(STDOUT_FILENO, "^C\n", 3);
+    write(STDOUT_FILENO, "\n", 1);
 
 }
 

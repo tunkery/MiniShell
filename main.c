@@ -25,23 +25,19 @@
 char    *user_input(void)
 {
     char    *line;
+    char *cpy;
     
-    line = readline(CYAN"minishell> "RESET);
-    if(isatty(STDIN_FILENO)) // If it is terminal
-    {
-        if (line && *line)
-        {
-            add_history(line);
-            printf("%s\n", line);
-            free(line);
-        }
+    if(isatty(STDIN_FILENO)){
+        return(readline(CYAN"minishell> "RESET));
     }
-    else // or not!
+    line = get_next_line(STDIN_FILENO);
+    if(!line)
+        return (NULL); // Control D and EOF situation
+    if(line)
     {
-        if(line){
-            printf("%s\n", line);
-            free(line);
-        }
+        cpy = line;
+        line = ft_strtrim(line, "\n");
+        free(cpy);
     }
     return (line);
 }
@@ -62,10 +58,10 @@ int main(int ac, char **av, char **envp)
         signal_mode_read();
         line = user_input();
         if(!line)
-            break; // We can add free(line) here. or each links free it.
+            break;
         signal_mode_command();
-        // process_input(line);
+        added_process(line, envp);
+        free(line);
     }
-
 	return (0);
 }

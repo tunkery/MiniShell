@@ -34,8 +34,8 @@
 
 #define RESET        "\001\033[0m"   // Reset to default
 #define CYAN         "\001\033[1;36m"
-#define PASTEL_BLUE  "\001\033[1;34m"
-#define PASTEL_RED   "\001\033[1;31m"
+#define BLUE  		 "\001\033[1;34m"
+#define RED   		 "\001\033[1;31m"
 
 typedef struct s_builtin
 {
@@ -47,6 +47,12 @@ typedef struct s_env
 {
 	char	**envp;
 }	t_env;
+
+typedef struct s_process
+{
+	char	*line;
+	char	**envp;
+}	t_process;
 
 // Builtin functions
 
@@ -81,6 +87,10 @@ void    sigint_handler_read(int signo);
 void    signal_mode_command(void);
 void    sigint_handler_command(int signo);
 void    turn_off_echo(void);
+void    rest_signal_command(void);
+
+// Process
+void added_process(char *line, char **envp);
 
 
 #endif
