@@ -6,12 +6,13 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/19 15:01:22 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/19 15:04:36 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//showing branch
 /*
     Standart file descriptors:
         #define STDIN_FILENO    0        Standard input. 
