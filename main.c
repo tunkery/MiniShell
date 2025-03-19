@@ -12,7 +12,33 @@
 
 #include "minishell.h"
 
-//showing branch
+void added_process(char *line, char **envp)
+{
+    DEBUG_PRINT(RED"Proccesing line : %s \n", line);
+    t_token *tokens;
+    t_token *tmp;
+    (void)envp;
+    // t_process *process;
+
+    tokens = tokenizer(line);
+    if(!tokens)
+    {
+        DEBUG_PRINT(RED"No token to process\n"RESET);
+        return ;
+    }
+    tmp = tokens;
+    while(tmp)
+    {
+        DEBUG_PRINT(RED"Token: type= %d, value = '%s' \n", tmp->type, tmp->value);
+        tmp = tmp->next;
+    }
+
+    free_token_matrix(tokens);
+    DEBUG_PRINT(RED"Line processing completed\n"RESET);
+}
+
+
+
 /*
     Standart file descriptors:
         #define STDIN_FILENO    0        Standard input. 
@@ -22,6 +48,7 @@
     - hpehliva$ hello
     bash: hello: command not found // Add this command!
 */
+
 char    *user_input(void)
 {
     char    *line;
