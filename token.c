@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:34:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:22:21 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/18 19:31:38 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,20 @@ static	int	ft_count(const char *str, int j)
 	return (count);
 }
 
-char **get_tokens(char **str)
+char **get_tokens(char *str)
 {
 	int i;
 	char **tokens;
 	int size;
 
-	size = ft_count(*str, ' ');
-	tokens = malloc(sizeof(char **) * size);
+	size = ft_count(str, ' ');
+	tokens = malloc(sizeof(char **) * size + 2);
 	i = 0;
-	while (str[i])
+	while (tokens[i])
 	{
-		tokens[i] = ft_strdup(str[i]);
+		tokens[i] = ft_strdup(str);
 		i++;
 	}
+	tokens[i] = NULL;
 	return (tokens);
 }
