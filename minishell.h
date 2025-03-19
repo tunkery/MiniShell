@@ -12,6 +12,7 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
 # include "../libft/libft.h"
 # include "get_next_line/get_next_line.h"
 # include <stdio.h>                // printf, perror
@@ -37,14 +38,12 @@
 #define BLUE  		 "\001\033[1;34m"
 #define RED   		 "\001\033[1;31m"
 
-#define DEBUG 1
-
-#if DEBUG
-	# define DEBUG_PRINT(fmt, ...) printf(" [DEBUG] " fmt, ##__VA_ARGS__)
-#else
-	# define DEBUG_PRINT(fmt, ...) do {} while(0) // Dont do anything when the debug closed
+# define DEBUG 1
+	#if DEBUG
+		# define DEBUG_PRINT(fmt, ...) printf(" [DEBUG] " fmt, ##__VA_ARGS__)
+	#else
+		# define DEBUG_PRINT(fmt, ...) do {} while(0) // Dont do anything when the debug closed
 #endif
-
 typedef struct s_builtin
 {
 	const char	*name;
