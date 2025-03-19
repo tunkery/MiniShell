@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/19 15:00:14 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/19 15:06:24 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	initiate_env(t_env *env)
 	env->path[1] = NULL;
 	
 }
+
+// helper function that's needed for the find_exec
 
 static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len)
 {
