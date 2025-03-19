@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:06 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/19 14:57:33 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ typedef struct s_builtin
 typedef struct s_env
 {
 	char	**envp;
+	char	**path;
+	char	*path1;
 }	t_env;
 
 typedef struct s_process
@@ -92,12 +94,15 @@ void	cell_unset(char **envp, char *key);
 
 // Env functions
 
+char	*find_exec(char *command, char *path_variable, int i, int j);
+void	cell_launch(char **args, t_env *env);
+void	initiate_env(t_env *env);
 int		key_size(char *str);
 int		value_size(char *str);
 int		env_size(char **envp);
 void	copy_env(char **str, char **envp);
 char	**update_env(char **envp, char *key);
-char	**get_tokens(char **str);
+char	**get_tokens(char *str);
 char	**remove_env(char **envp, char *key);
 
 // Deallocation functions
