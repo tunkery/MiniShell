@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/19 14:57:33 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 16:59:24 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,11 @@ typedef	struct s_token
 
 // Builtin functions
 
+int		builtin_check(char **tokens);
+void	run_builtin(char **args, t_env *env);
 void	cell_exit(char **args);
-int		cell_echo(char **args);
-void	cell_env(char **env);
+void	cell_echo(char **args, int check);
+void	cell_env(t_env *env);
 void	cell_pwd(void);
 void	cell_cd(const char *path);
 void	cell_export(char **envp, char *key);
@@ -100,11 +102,11 @@ void	cell_unset(char **envp, char *key);
 
 char	*find_exec(char *command, char *path_variable, int i, int j);
 void	cell_launch(t_token *tokens, t_env *env);
-void	initiate_env(t_env *env);
+void	initiate_env(t_env *env, char **envp);
 int		key_size(char *str);
 int		value_size(char *str);
 int		env_size(char **envp);
-void	copy_env(char **str, char **envp);
+void	copy_env(char **str, char ***envp);
 char	**update_env(char **envp, char *key);
 char	**get_tokens(char *str);
 char	**remove_env(char **envp, char *key);
@@ -126,6 +128,7 @@ void    rest_signal_command(void);
 
 // Process
 void added_process(char *line, char **envp);
+void exec_command(char **args, t_env *env, int out_fd);
 
 // Tokenizer
 t_token    *tokenizer(char *line);
@@ -135,6 +138,7 @@ void    free_token_matrix(t_token *head);
 char *process_quoted(char *line, int *i, char quote_type);
 char *expand_env(char *line, int *i);
 char *handler_heredoc(char *delimiter);
+char **tokens_to_args(t_token *tokens);
 
 // Tokenizer utils
 int ft_strcmp(const char *s1, const char *s2);

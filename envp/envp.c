@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/19 15:06:24 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 17:02:17 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ char	**update_env(char **envp, char *key)
 	new_env = malloc(sizeof(char **) * size);
 	if (!new_env)
 		return (NULL);
-	copy_env(envp, new_env);
-	new_env[size] = ft_strdup(key);
+	copy_env(envp, &new_env);
+	new_env[size - 1] = ft_strdup(key);
 	clean_2d(envp);
 	return (new_env);
 }
@@ -54,15 +54,18 @@ char	**remove_env(char **envp, char *key)
 	return (new_env);
 }
 
-void	initiate_env(t_env *env)
+void	initiate_env(t_env *env, char **envp)
 {
-	// env->path = malloc(sizeof(char **) * 2);
-	// if (!env->path)
-	// 	return ;
+	int i;
+
+	i = 0;
+	copy_env(envp, &(env->envp));
+	if (!env->envp)
+		return ;
+	env->path = malloc(sizeof(char **) * 2);
+	if (!env->path)
+		return ;
 	env->path1 = getenv("PATH");
-	// env->path[0] = ft_gnl_substr(env->path1, 5, ft_strlen(env->path1) - 5);
-	// env->path[1] = NULL;
-	
 }
 
 // helper function that's needed for the find_exec
@@ -100,33 +103,36 @@ char	*find_exec(char *command, char *path, int i, int j)
 {
 	char *temp;
 
+	if (!command || !path)
+		return (NULL);
 	while(path[i])
 	{
-		while (path[i] && path[i] != ':')
+		while (path[i] && path[i] && path[i] != ':')
 			i++;
-		temp = ft_gnls_substr(path, j, i - j);
+		temp = ft_gnls_substr(path, j, i - 4);
 		if(!temp)
 			return (NULL);
 		temp = ft_strjoin(temp, command);
 		if (access(temp, X_OK) == 0)
 			return (temp);
 		free(temp);
+		temp = NULL;
 		if(!path[i])
 			break;
 		j = i + 1;
 		i++;
 	}
-	return (NULL);
+	return (temp);
 }
 
-static void exec_command(char **args, t_env *env, int out_fd)
+void exec_command(char **args, t_env *env, int out_fd)
 {
 	pid_t	pid;
 	char *exec_path;
 
 	if (!args || !args[0])
 		return ;
-	exec_path = find_exec(args[0], env->path1, 0, 1);
+	exec_path = find_exec(args[0], env->path1, 0, 5);
 	if (!exec_path)
 	{
 		printf("minishell: %s: command not found.\n", args[0]);
@@ -155,7 +161,7 @@ static void exec_command(char **args, t_env *env, int out_fd)
 	free(exec_path);
 
 }
-static char **tokens_to_args(t_token *tokens)
+char **tokens_to_args(t_token *tokens)
 {
     int count = 0;
     t_token *tmp = tokens;

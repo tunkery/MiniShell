@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:38:05 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:33 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 15:50:21 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,31 @@ void	cell_exit(char **args)
 	exit(0);
 }
 
-int	cell_echo(char **args)
+void	cell_echo(char **args, int check)
 {
 	int	i;
 
 	i = 1;
 	while (args[i])
 	{
+		if (ft_strncmp(args[i], "-n", ft_strlen(args[i])) == 0
+		&& i < 3)
+			i++;
 		printf("%s ", args[i]);
 		i++;
 	}
-	printf("\n");
-	return (1);
+	if (check == 0)
+		printf("\n");
 }
 
-void	cell_env(char **env)
+void	cell_env(t_env *env)
 {
 	int i;
 
 	i = 0;
-	while (env[i])
+	while (env->envp[i])
 	{
-		printf("%s\n", env[i]);
+		printf("%s\n", env->envp[i]);
 		i++;
 	}
 }
