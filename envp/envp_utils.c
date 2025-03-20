@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:11:50 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:21:01 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/19 17:46:37 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,20 @@ int	env_size(char **envp)
 	return (i);
 }
 
-void copy_env(char **str, char **envp)
+void copy_env(char **str, char ***envp)
 {
 	int i;
 	int size;
 
 	i = 0;
-	size = env_size(envp);
-	envp = malloc(sizeof(char **) * size);
+	size = env_size(str);
+	*envp = malloc(sizeof(char *) * (size + 1));
 	if (!envp)
 		return ;
 	while (i < size)
 	{
-		envp[i] = ft_strdup(str[i]);
+		(*envp)[i] = ft_strdup(str[i]);
 		i++;
 	}
+	(*envp)[i] = NULL;
 }
