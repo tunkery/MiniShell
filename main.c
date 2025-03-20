@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/19 15:04:36 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 15:35:19 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int main(int ac, char **av, char **envp)
     env = malloc(sizeof(t_env));
     if (!env)
         return (0);
-    initiate_env(env);
+    initiate_env(env, envp);
     while(1)
     {
         signal_mode_read();
@@ -177,7 +177,9 @@ int main(int ac, char **av, char **envp)
             continue;
         }
         args = tokens_to_args(tokens);
-        if (args && args[0])
+        if (builtin_check(args) != 0)
+            run_builtin(args, env);
+        else if (args && args[0])
             cell_launch(args, env); // a function that runs the programs in the computer
         free_token_matrix(tokens);
         clean_2d(args);

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/20 13:39:18 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 16:19:20 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	**update_env(char **envp, char *key)
 	if (!new_env)
 		return (NULL);
 	copy_env(envp, &new_env);
-	new_env[size] = ft_strdup(key);
+	new_env[size - 1] = ft_strdup(key);
 	clean_2d(envp);
 	return (new_env);
 }
@@ -54,15 +54,18 @@ char	**remove_env(char **envp, char *key)
 	return (new_env);
 }
 
-void	initiate_env(t_env *env)
+void	initiate_env(t_env *env, char **envp)
 {
-	// env->path = malloc(sizeof(char **) * 2);
-	// if (!env->path)
-	// 	return ;
+	int i;
+
+	i = 0;
+	copy_env(envp, &(env->envp));
+	if (!env->envp)
+		return ;
+	env->path = malloc(sizeof(char **) * 2);
+	if (!env->path)
+		return ;
 	env->path1 = getenv("PATH");
-	// env->path[0] = ft_gnl_substr(env->path1, 5, ft_strlen(env->path1) - 5);
-	// env->path[1] = NULL;
-	
 }
 
 // helper function that's needed for the find_exec
@@ -141,6 +144,7 @@ void	cell_launch(char **args, t_env *env)
 	pid = fork();
 	if (pid == 0)
 	{
+		
 		if (execve(exec_path, args, env->path) == -1)
 		{
 			perror("execvp Failed");

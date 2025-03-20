@@ -6,13 +6,13 @@
 #    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/03/17 12:22:01 by bolcay           ###   ########.fr        #
+#    Updated: 2025/03/20 14:32:28 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c envp/envp_utils.c \
 		envp/envp.c deallocation.c builtin.c token.c signals/set_signal.c \
-		tokens/tokenizer.c
+		tokens/tokenizer.c builtin_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
