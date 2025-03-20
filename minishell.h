@@ -37,6 +37,7 @@
 #define CYAN         "\001\033[1;36m"
 #define BLUE  		 "\001\033[1;34m"
 #define RED   		 "\001\033[1;31m"
+#define GRN   		 "\001\033[1;32m"
 
 # define DEBUG 1
 	#if DEBUG
@@ -128,6 +129,8 @@ t_token    *tokenizer(char *line);
 void    seperated_token(char *line, t_token **head);
 char    *extract_word(char *line, int *i);
 void    free_token_matrix(t_token *head);
+char *process_quoted(char *line, int *i, char quote_type);
+char *expand_env(char *line, int *i);
 
 
 #endif

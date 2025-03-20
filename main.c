@@ -12,30 +12,30 @@
 
 #include "minishell.h"
 
-void added_process(char *line, char **envp)
-{
-    DEBUG_PRINT(RED"Proccesing line : %s \n", line);
-    t_token *tokens;
-    t_token *tmp;
-    (void)envp;
-    // t_process *process;
+// void added_process(char *line, char **envp)
+// {
+//     DEBUG_PRINT(RED"Proccesing line : %s \n", line);
+//     t_token *tokens;
+//     t_token *tmp;
+//     (void)envp;
+//     // t_process *process;
 
-    tokens = tokenizer(line);
-    if(!tokens)
-    {
-        DEBUG_PRINT(RED"No token to process\n"RESET);
-        return ;
-    }
-    tmp = tokens;
-    while(tmp)
-    {
-        DEBUG_PRINT(RED"Token: type= %d, value = '%s' \n", tmp->type, tmp->value);
-        tmp = tmp->next;
-    }
+//     tokens = tokenizer(line);
+//     if(!tokens)
+//     {
+//         DEBUG_PRINT(RED"No token to process\n"RESET);
+//         return ;
+//     }
+//     tmp = tokens;
+//     while(tmp)
+//     {
+//         DEBUG_PRINT(RED"Token: type= %d, value = '%s' \n", tmp->type, tmp->value);
+//         tmp = tmp->next;
+//     }
 
-    free_token_matrix(tokens);
-    DEBUG_PRINT(RED"Line processing completed\n"RESET);
-}
+//     free_token_matrix(tokens);
+//     DEBUG_PRINT(RED"Line processing completed\n"RESET);
+// }
 
 
 
@@ -52,75 +52,94 @@ void added_process(char *line, char **envp)
 char    *user_input(void)
 {
     char    *line;
-    char *cpy;
+    char *trimmer;
     
 
-    if(isatty(STDIN_FILENO)){
+    if(isatty(STDIN_FILENO))
         return(readline(CYAN"minishell> "RESET));
 
     line = readline(CYAN"minishell> "RESET);
     if(isatty(STDIN_FILENO)) // If it is terminal
     {
-        if (line && *line)
-        {
+        if(!line)
+            return (NULL); // Control D and EOF situation
+        if(!*line)
             add_history(line);
-            // printf("%s\n", line);
-            free(line);
-        }
-
+        return line;
     }
     line = get_next_line(STDIN_FILENO);
     if(!line)
-        return (NULL); // Control D and EOF situation
-    if(line)
-    {
+        return (NULL);
+    trimmer = ft_strtrim(line, "\n");
+    free(line);
 
-        cpy = line;
-        line = ft_strtrim(line, "\n");
-        free(cpy);
-
-        if(line){
-            // printf("%s\n", line);
-            free(line);
-        }
-
-    }
-    return (line);
+    return (trimmer);
 }
 
 // just a temporary function for word separation in the arguments
 
-static char **split_input(char *line)
+// static char **split_input(char *line)
+// {
+//     int i = 0;
+//     char **args;
+//     char *token;
+//     int count = 0;
+//     char *temp = strdup(line); // Copy to count tokens
+
+//     if (!temp)
+//         return NULL;
+
+//     // Count words
+//     token = strtok(temp, " ");
+//     while (token)
+//     {
+//         count++;
+//         token = strtok(NULL, " ");
+//     }
+//     free(temp);
+
+//     // Allocate array (+1 for NULL)
+//     args = malloc((count + 1) * sizeof(char *));
+//     if (!args)
+//         return NULL;
+
+//     // Fill array
+//     token = strtok(line, " ");
+//     while (token)
+//     {
+//         args[i++] = strdup(token);
+//         token = strtok(NULL, " ");
+//     }
+//     args[i] = NULL;
+//     return args;
+// }
+
+static char **tokens_to_args(t_token *tokens)
 {
-    int i = 0;
-    char **args;
-    char *token;
     int count = 0;
-    char *temp = strdup(line); // Copy to count tokens
+    t_token *tmp = tokens;
+    char **args;
+    int i = 0;
 
-    if (!temp)
-        return NULL;
-
-    // Count words
-    token = strtok(temp, " ");
-    while (token)
+    while(tmp)
     {
-        count++;
-        token = strtok(NULL, " ");
+        if (tmp->type == TOKEN_WORD)
+            count++;
+        tmp = tmp->next;
     }
-    free(temp);
 
-    // Allocate array (+1 for NULL)
     args = malloc((count + 1) * sizeof(char *));
-    if (!args)
+    if(!args)
         return NULL;
-
-    // Fill array
-    token = strtok(line, " ");
-    while (token)
+    tmp = tokens;
+    while(tmp)
     {
-        args[i++] = strdup(token);
-        token = strtok(NULL, " ");
+        if(tmp->type == TOKEN_WORD)
+        {
+            args[i] = strdup(tmp->value);
+            i++;
+        }
+        tmp = tmp->next;
     }
     args[i] = NULL;
     return args;
@@ -130,7 +149,9 @@ int main(int ac, char **av, char **envp)
 {
     char   *line;
     t_env   *env = NULL;
+    t_token *tokens;
     char **args;
+    // char **args;
 	(void)av;
 	(void)envp;
 
@@ -149,14 +170,21 @@ int main(int ac, char **av, char **envp)
         line = user_input();
         if(!line)
             break; // We can add free(line) here. or each links free it.
-        args = split_input(line);
+        tokens = tokenizer(line);
+        if(!tokens)
+        {
+            free(line);
+            continue;
+        }
+        args = tokens_to_args(tokens);
         if (args && args[0])
             cell_launch(args, env); // a function that runs the programs in the computer
-        // free(line);
-        // clean_2d(args);
-        signal_mode_command();
-        added_process(line, envp);
+        free_token_matrix(tokens);
+        clean_2d(args);
         free(line);
+        signal_mode_command();
+        // added_process(line, envp);
     }
+    free(env);
 	return (0);
 }

@@ -56,12 +56,12 @@ char	**remove_env(char **envp, char *key)
 
 void	initiate_env(t_env *env)
 {
-	env->path = malloc(sizeof(char **) * 2);
-	if (!env->path)
-		return ;
+	// env->path = malloc(sizeof(char **) * 2);
+	// if (!env->path)
+	// 	return ;
 	env->path1 = getenv("PATH");
-	env->path[0] = ft_gnl_substr(env->path1, 5, ft_strlen(env->path1) - 5);
-	env->path[1] = NULL;
+	// env->path[0] = ft_gnl_substr(env->path1, 5, ft_strlen(env->path1) - 5);
+	// env->path[1] = NULL;
 	
 }
 
@@ -104,15 +104,19 @@ char	*find_exec(char *command, char *path, int i, int j)
 	{
 		while (path[i] != ':')
 			i++;
-		temp = ft_gnls_substr(path, j, i - 4);
+		temp = ft_gnls_substr(path, j, i - j);
+		if(!temp)
+			return (NULL);
 		temp = ft_strjoin(temp, command);
 		if (access(temp, X_OK) == 0)
 			return (temp);
 		free(temp);
+		if(!path[i])
+			break;
 		j = i + 1;
 		i++;
 	}
-	return (temp);
+	return (NULL);
 }
 
 // a function that runs the programs in the computer
