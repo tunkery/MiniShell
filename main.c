@@ -114,44 +114,13 @@ char    *user_input(void)
 //     return args;
 // }
 
-static char **tokens_to_args(t_token *tokens)
-{
-    int count = 0;
-    t_token *tmp = tokens;
-    char **args;
-    int i = 0;
 
-    while(tmp)
-    {
-        if (tmp->type == TOKEN_WORD)
-            count++;
-        tmp = tmp->next;
-    }
-
-    args = malloc((count + 1) * sizeof(char *));
-    if(!args)
-        return NULL;
-    tmp = tokens;
-    while(tmp)
-    {
-        if(tmp->type == TOKEN_WORD)
-        {
-            args[i] = strdup(tmp->value);
-            i++;
-        }
-        tmp = tmp->next;
-    }
-    args[i] = NULL;
-    return args;
-}
 
 int main(int ac, char **av, char **envp)
 {
     char   *line;
     t_env   *env = NULL;
     t_token *tokens;
-    char **args;
-    // char **args;
 	(void)av;
 	(void)envp;
 
@@ -176,11 +145,8 @@ int main(int ac, char **av, char **envp)
             free(line);
             continue;
         }
-        args = tokens_to_args(tokens);
-        if (args && args[0])
-            cell_launch(args, env); // a function that runs the programs in the computer
+        cell_launch(tokens, env); // a function that runs the programs in the computer
         free_token_matrix(tokens);
-        clean_2d(args);
         free(line);
         signal_mode_command();
         // added_process(line, envp);

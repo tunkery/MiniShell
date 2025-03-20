@@ -71,6 +71,9 @@ typedef enum e_token_type
 	TOKEN_PIPE, // |
 	TOKEN_REDIRECT_IN, // <
 	TOKEN_REDIRECT_OUT, // >
+	TOKEN_REDIRECT_APPEND,
+	TOKEN_HEREDOC,
+	TOKEN_SEMIC,
 	TOKEN_END
 }	t_token_type;
 
@@ -96,7 +99,7 @@ void	cell_unset(char **envp, char *key);
 // Env functions
 
 char	*find_exec(char *command, char *path_variable, int i, int j);
-void	cell_launch(char **args, t_env *env);
+void	cell_launch(t_token *tokens, t_env *env);
 void	initiate_env(t_env *env);
 int		key_size(char *str);
 int		value_size(char *str);
@@ -131,6 +134,10 @@ char    *extract_word(char *line, int *i);
 void    free_token_matrix(t_token *head);
 char *process_quoted(char *line, int *i, char quote_type);
 char *expand_env(char *line, int *i);
+char *handler_heredoc(char *delimiter);
+
+// Tokenizer utils
+int ft_strcmp(const char *s1, const char *s2);
 
 
 #endif

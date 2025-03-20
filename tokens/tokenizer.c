@@ -12,6 +12,27 @@
 
 #include "../minishell.h"
 
+char *handler_heredoc(char *delimiter)
+{
+    char *line;
+    char *result = ft_strdup("");
+
+    while(1)
+    {
+        line = readline("> ");
+        if(!line && ft_strcmp(line, delimiter) == 0)
+        {
+            DEBUG_PRINT(RED"Heredoc delimiter reached\n"RESET);
+            free(line);
+            break;
+        }
+        result = ft_strjoin(result, line);
+        result = ft_strjoin(result, "\n");
+        free(line);
+    }
+    return (result);
+}
+
 char *expand_env(char *line, int *i)
 {
     (*i)++; // skip the '$'
@@ -121,14 +142,38 @@ void seperated_token(char *line, t_token **head)
         }
         else if(line[i] == '<')
         {
-            token->type = TOKEN_REDIRECT_IN;
-            token->value = ft_strdup("<");
-            i++;
+            if(line[i + 1] == '<')
+            {
+                token->type = TOKEN_HEREDOC;
+                token->value = ft_strdup("<<");
+                i += 2;
+            }
+            else
+            {
+                token->type = TOKEN_REDIRECT_IN;
+                token->value = ft_strdup("<");
+                i++;
+            }
         }
         else if(line[i] == '>')
         {
-            token->type = TOKEN_REDIRECT_OUT;
-            token->value = ft_strdup(">");
+            if(line[i + 1] == '>')
+            {
+                token->type = TOKEN_REDIRECT_APPEND;
+                token->value = ft_strdup(">>");
+                i += 2;
+            }
+            else
+            {
+                token->type = TOKEN_REDIRECT_OUT;
+                token->value = ft_strdup(">");
+                i++;
+            }
+        }
+        else if(line[i] == ';')
+        {
+            token->type = TOKEN_SEMIC;
+            token->value = ft_strdup(";");
             i++;
         }
         else if(line[i] == '"')
