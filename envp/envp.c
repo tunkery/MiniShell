@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/20 13:12:34 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 13:31:47 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,23 +100,30 @@ char	*find_exec(char *command, char *path, int i, int j)
 {
 	char *temp;
 
+	if (!command || !path)
+		return (NULL);
+	DEBUG_PRINT("test1\n");
 	while(path[i])
 	{
-		while (path[i] != ':')
+		DEBUG_PRINT("test2\n");
+		while (path[i] && path[i] != ':')
 			i++;
-		temp = ft_gnls_substr(path, j, i - j);
+		temp = ft_gnls_substr(path, j, i - 4);
 		if(!temp)
 			return (NULL);
+		DEBUG_PRINT("test3\n");
 		temp = ft_strjoin(temp, command);
 		if (access(temp, X_OK) == 0)
 			return (temp);
+		DEBUG_PRINT("test4\n");
 		free(temp);
+		temp = NULL;
 		if(!path[i])
 			break;
 		j = i + 1;
 		i++;
 	}
-	return (NULL);
+	return (temp);
 }
 
 // a function that runs the programs in the computer
@@ -127,14 +134,16 @@ void	cell_launch(char **args, t_env *env)
 	int		status;
 	char *exec_path;
 
+	DEBUG_PRINT("test\n");
 	if (!args || !args[0])
 		return ;
-	exec_path = find_exec(args[0], env->path1, 0, 1);
+	exec_path = find_exec(args[0], env->path1, 0, 5);
 	if (!exec_path)
 	{
 		printf("minishell: %s: command not found.\n", args[0]);
 		return ;
 	}
+	DEBUG_PRINT("test\n");
 	pid = fork();
 	if (pid == 0)
 	{
