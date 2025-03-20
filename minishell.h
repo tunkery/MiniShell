@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/20 13:11:01 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 13:15:24 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef	struct s_token
 
 void	cell_exit(char **args);
 int		cell_echo(char **args);
-void	cell_env(char **env);
+void	cell_env(t_env *env);
 void	cell_pwd(void);
 void	cell_cd(const char *path);
 void	cell_export(char **envp, char *key);

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/19 15:06:24 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/20 13:12:34 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	**update_env(char **envp, char *key)
 	new_env = malloc(sizeof(char **) * size);
 	if (!new_env)
 		return (NULL);
-	copy_env(envp, new_env);
+	copy_env(envp, &new_env);
 	new_env[size] = ft_strdup(key);
 	clean_2d(envp);
 	return (new_env);
