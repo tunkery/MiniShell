@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/20 16:59:24 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 07:25:20 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_builtin
 typedef struct s_env
 {
 	char	**envp;
+	char	**export;
 	char	**path;
 	char	*path1;
 }	t_env;
