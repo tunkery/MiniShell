@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 12:13:32 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 13:39:39 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,46 +74,6 @@ char    *user_input(void)
     }
     return (trimmer);
 }
-
-// just a temporary function for word separation in the arguments
-
-// static char **split_input(char *line)
-// {
-//     int i = 0;
-//     char **args;
-//     char *token;
-//     int count = 0;
-//     char *temp = strdup(line); // Copy to count tokens
-
-//     if (!temp)
-//         return NULL;
-
-//     // Count words
-//     token = strtok(temp, " ");
-//     while (token)
-//     {
-//         count++;
-//         token = strtok(NULL, " ");
-//     }
-//     free(temp);
-
-//     // Allocate array (+1 for NULL)
-//     args = malloc((count + 1) * sizeof(char *));
-//     if (!args)
-//         return NULL;
-
-//     // Fill array
-//     token = strtok(line, " ");
-//     while (token)
-//     {
-//         args[i++] = strdup(token);
-//         token = strtok(NULL, " ");
-//     }
-//     args[i] = NULL;
-//     return args;
-// }
-
-
 
 int main(int ac, char **av, char **envp)
 {
