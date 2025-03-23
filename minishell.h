@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 09:21:25 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 12:17:52 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@
 # include <sys/termios.h>          // tcsetattr, tcgetattr
 # include <sys/unistd.h> 
 
-#define RESET        "\001\033[0m"   // Reset to default
-#define CYAN         "\001\033[1;36m"
-#define BLUE  		 "\001\033[1;34m"
-#define RED   		 "\001\033[1;31m"
-#define GRN   		 "\001\033[1;32m"
+#define RESET        "\001\033[0m\002"   // Reset to default
+#define CYAN         "\001\033[1;36m\002"
+#define BLUE  		 "\001\033[1;34m\002"
+#define RED   		 "\001\033[1;31m\002"
+#define GRN   		 "\001\033[1;32m\002"
 
 # define DEBUG 1
 	#if DEBUG

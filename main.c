@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/20 17:02:16 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 12:13:32 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,23 +56,22 @@ char    *user_input(void)
     
 
     if(isatty(STDIN_FILENO))
-        return(readline(CYAN"minishell> "RESET));
-
-    line = readline(CYAN"minishell> "RESET);
-    if(isatty(STDIN_FILENO)) // If it is terminal
     {
+        line = readline(CYAN"minishell> "RESET);
         if(!line)
             return (NULL); // Control D and EOF situation
-        if(!*line)
+        if(*line)
             add_history(line);
         return line;
     }
-    line = get_next_line(STDIN_FILENO);
-    if(!line)
-        return (NULL);
-    trimmer = ft_strtrim(line, "\n");
-    free(line);
-
+    else
+    {
+        line = get_next_line(STDIN_FILENO);
+        if(!line)
+            return (NULL);
+        trimmer = ft_strtrim(line, "\n");
+        free(line);
+    }
     return (trimmer);
 }
 
@@ -123,7 +122,6 @@ int main(int ac, char **av, char **envp)
     t_token *tokens;
     char **args;
 	(void)av;
-	(void)envp;
 
 	if (ac != 1)
 	{
