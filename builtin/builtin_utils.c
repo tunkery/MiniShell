@@ -6,18 +6,25 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 08:24:54 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 09:21:18 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int	cd_util(char **args)
+int	key_check(char *args)
 {
-	if (!args[1])
+	int	i;
+
+	i = 0;
+	if (ft_isalpha(args[0]) != 1 && args[0] != '_')
 		return (-1);
-	if (chdir(args[1]) != 0)
-		return (-1);
+	while (args[i])
+	{
+		if (ft_isalnum(args[i]) != 1 && args[i] != '_')
+			return (-1);
+		i++;
+	}
 	return (0);
 }
 
@@ -42,66 +49,18 @@ int	builtin_check(char **tokens)
 
 void	run_builtin(char **args, t_env *env)
 {
-	int check;
-	int	i;
-
-	check = 0;
-	i = 0;
 	if (builtin_check(args) == 1)
-	{	
-		if (args[1])
-		{
-			printf("env: illegal option %s\n", args[1]);
-			printf("usage: env\n");
-			return ;
-		}
-		cell_env(env);
-	}
+		run_env(args, env);
 	else if (builtin_check(args) == 2)
-	{
-		if (args[1] && args[1][0] == '-')
-		{
-			printf("minishell: pwd: %s: invalid option\n", args[1]);
-			printf("pwd: usage: pwd\n");
-			return ;
-		}
-		cell_pwd();
-	}
+		run_pwd(args);
 	else if (builtin_check(args) == 3)
-	{
-		if (ft_strncmp(args[1], "-n", ft_strlen(args[1])) == 0)
-			check++;
-		cell_echo(args, check);
-	}
+		run_echo(args);
 	else if (builtin_check(args) == 4)
-	{
-		if (!args[1])
-		{
-			while (env->export[i])
-			{
-				printf("%s\n", env->export[i]);
-				i++;
-			}
-		}
-		else if (ft_strchr(args[1], '=') != 0)
-		{
-			env->envp = update_env(env->envp, args[1]);
-			env->export = update_env(env->export, args[1]);
-		}
-		else
-			env->export = update_env(env->export, args[1]);
-	}
+		run_export(args, env);
 	else if (builtin_check(args) == 5)
-	{
-		env->envp = remove_env(env->envp, args[1]);
-		env->export = remove_env(env->export, args[1]);
-	}
+		run_unset(args, env);
 	else if (builtin_check(args) == 6)
-	{
-		cd_util(args);
-	}
+		run_cd(args);
 	else if (builtin_check(args) == 7)
-	{
-		exit(1);
-	}
+		run_exit();
 }

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 08:21:59 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 09:21:25 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,16 +89,16 @@ typedef	struct s_token
 
 // Builtin functions
 
-int		cd_util(char **args);
+int		key_check(char *args);
 int		builtin_check(char **tokens);
 void	run_builtin(char **args, t_env *env);
-void	cell_exit(char **args);
-void	cell_echo(char **args, int check);
-void	cell_env(t_env *env);
-void	cell_pwd(void);
-void	cell_cd(const char *path);
-void	cell_export(char **envp, char *key);
-void	cell_unset(char **envp, char *key);
+void	run_export(char **args, t_env *env);
+void	run_exit(void);
+void	run_echo(char **args);
+void	run_pwd(char **args);
+void	run_unset(char **args, t_env *env);
+void	run_env(char **args, t_env *env);
+void	run_cd(char **args);
 
 // Env functions
 
