@@ -26,7 +26,9 @@ char	**update_env(char **envp, char *key)
 	copy_env(envp, &new_env);
 	new_env[size - 1] = ft_strdup(key);
 	new_env[size] = NULL;
-	// clean_2d(envp);
+	DEBUG_PRINT(GRN"New env created with key: %s\n"RESET, key);
+	clean_2d(envp); // freee old envp
+	DEBUG_PRINT(GRN"Updated env with key: %s\n"RESET, key);
 	return (new_env);
 }
 
@@ -59,7 +61,8 @@ char	**remove_env(char **envp, char *key)
 		}
 	}
 	new_env[j] = NULL;
-	// clean_2d(envp);
+	clean_2d(envp); //  free ald envp
+	DEBUG_PRINT(GRN"Removed env with key: %s\n"RESET, key);
 	return (new_env);
 }
 
@@ -209,20 +212,32 @@ void	cell_launch(t_token *tokens, t_env *env)
 	t_token *tmp = tokens;
 	char **args = NULL;
 	int out_fd = STDOUT_FILENO;
+	int save_stdout = dup(STDOUT_FILENO);
 	char *heredoc_input = NULL;
-	t_token *current = tmp;
+	t_token *current;
 
+	DEBUG_PRINT(BLUE"Starting Cell_lounch\n"RESET);
 	while(tmp)
 	{
 		args = tokens_to_args(tmp);
 		if(!args)
 		{
+			DEBUG_PRINT(RED"Failed to convert tokens to args\n"RESET);
 			while(tmp && tmp->type != TOKEN_SEMIC)
 				tmp = tmp->next;
 			if(tmp)
 				tmp = tmp->next;
 			continue;
 		}
+		DEBUG_PRINT(BLUE"Args created\n"RESET);
+		/* Check it all aguments in here*/
+		int i = 0;
+		while (args[i])
+		{
+			DEBUG_PRINT(BLUE"Args[%d]: %s\n"RESET, i, args[i]);
+			i++;
+		}
+		current = tmp;
 		while(current && current->type != TOKEN_SEMIC)
 		{
 			if (current->type == TOKEN_REDIRECT_APPEND) // >>
@@ -237,6 +252,7 @@ void	cell_launch(t_token *tokens, t_env *env)
 						clean_2d(args);
 						return ;
 					}
+					DEBUG_PRINT(BLUE"Redirecting aoutput to '%s'\n"RESET, current->value);
 				}
 			}
 			else if(current->type == TOKEN_HEREDOC) // <<
@@ -246,23 +262,53 @@ void	cell_launch(t_token *tokens, t_env *env)
 				{
 					heredoc_input = handler_heredoc(current->value);
 					int pipe_fd[2];
-					pipe(pipe_fd); // Surecler arasi boruyu olusturur > alt surec icin
+					if(pipe(pipe_fd) == -1)
+					{
+						perror("pipe failed!");
+						clean_2d(args);
+						return ;
+					} // Surecler arasi boruyu olusturur > alt surec icin
 					write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
 					close(pipe_fd[1]);
 					dup2(pipe_fd[0], STDIN_FILENO);
 					close(pipe_fd[0]);
 					free(heredoc_input);
+					DEBUG_PRINT(GRN"HEredoc process for delimiter '%s'\n"RESET, current->value);
 				}
 			}
 			current = current->next;
 		}
-		exec_command(args, env, out_fd);
+		if(builtin_check(args) != 0)
+		{
+			if(out_fd != STDOUT_FILENO)
+			{
+				if(dup2(out_fd, STDOUT_FILENO) == -1)
+					perror("dup2 failed!");
+				close(out_fd);
+				DEBUG_PRINT(GRN"Output redirected to file\n"RESET);
+			}
+			run_builtin(args, env);
+			if(out_fd != STDOUT_FILENO)
+			{
+				if(dup2(save_stdout, STDOUT_FILENO) == -1)
+					perror("dup2 failed!");
+				DEBUG_PRINT(GRN"STDOUT restored\n"RESET);
+			}
+		}
+		else
+		{
+			exec_command(args, env, out_fd);
+			DEBUG_PRINT(GRN"Command executed\n"RESET);
+		}
 		clean_2d(args);
 		if(out_fd != STDOUT_FILENO)
 			close(out_fd);
+		out_fd = STDOUT_FILENO;
 		while(tmp && tmp->type != TOKEN_SEMIC)
 			tmp = tmp->next;
 		if(tmp)
 			tmp = tmp->next;
 	}
+	close(save_stdout);
+	DEBUG_PRINT(BLUE"Ending Cell_lounch\n"RESET);
 }

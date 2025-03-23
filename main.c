@@ -120,7 +120,7 @@ int main(int ac, char **av, char **envp)
     char   *line;
     t_env   *env = NULL;
     t_token *tokens;
-    char **args;
+    // char **args;
 	(void)av;
 
 	if (ac != 1)
@@ -144,11 +144,7 @@ int main(int ac, char **av, char **envp)
             free(line);
             continue;
         }
-        args = tokens_to_args(tokens);
-        if (builtin_check(args) != 0)
-            run_builtin(args, env);
-        else
-            cell_launch(tokens, env); // a function that runs the programs in the computer
+        cell_launch(tokens, env); // a function that runs the programs in the computer
         free_token_matrix(tokens);
         free(line);
         signal_mode_command();

@@ -1,0 +1,21 @@
+/* EKSIKLER
+
+1-) Ctrl + D (EOF)
+    Expectation: Nothing should happen.
+    Test:
+    Start minishell.
+    Type:
+            echo Hello
+    Before pressing Enter, press Ctrl + D.
+    Verify that nothing happens (the command is still in the input buffer).
+
+2-) *Ctrl + * (SIGQUIT)
+    Expectation: The process should terminate and display "Quit" with a signal number.
+    Test:
+    Start minishell.
+    Run:
+        cat
+    Press Ctrl + \.
+    Verify that cat is terminated with a "Quit" message.
+    
+3-) 
