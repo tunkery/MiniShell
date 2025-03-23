@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:56:22 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 10:15:34 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 13:46:05 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ void	run_echo(char **args)
 		if (ft_strncmp(args[i], "-n", ft_strlen(args[i])) == 0
 		&& i < 3)
 			i++;
-		printf("%s ", args[i]);
+		if (args[i + 1])
+			printf("%s ", args[i]);
+		else
+			printf("%s", args[i]);
 		i++;
 	}
 	if (check == 0)
