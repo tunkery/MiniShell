@@ -6,11 +6,20 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 08:11:52 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 08:22:59 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	cd_util(char **args)
+{
+	if (!args[1])
+		return (-1);
+	if (chdir(args[1]) != 0)
+		return (-1);
+	return (0);
+}
 
 int	builtin_check(char **tokens)
 {
@@ -86,5 +95,9 @@ void	run_builtin(char **args, t_env *env)
 	{
 		env->envp = remove_env(env->envp, args[1]);
 		env->export = remove_env(env->export, args[1]);
+	}
+	else if (builtin_check(args) == 6)
+	{
+		cd_util(args);
 	}
 }

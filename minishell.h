@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 07:25:20 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/23 08:21:59 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef	struct s_token
 
 // Builtin functions
 
+int		cd_util(char **args);
 int		builtin_check(char **tokens);
 void	run_builtin(char **args, t_env *env);
 void	cell_exit(char **args);
