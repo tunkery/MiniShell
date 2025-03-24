@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:56:22 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 22:51:02 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/24 22:55:23 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ char *echo_separate(char *line, int check)
 		return (NULL);
 	if (check > 0)
 		i = 7;
+	while ((line[i] >= 9 && line[i] <= 13) || (line[i] == 32))
+		i++;
 	if (line[i] == '"' && line[ft_strlen(line) - 1] == '"')
 	{
 		DEBUG_PRINT(BLUE"We're in the if statement now for the quotes\n"RESET);
