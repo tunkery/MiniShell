@@ -58,7 +58,7 @@
 5-)minishell> echo " yazdiktan sonra control-D ye bastigimizda cikis yapiyor terminalden Control C calisiyor."
 
 
-6-) env de unset calismiyor!
+6-) env de unset calismiyor! yoo calisiyo, freeleme guzelim orayi yoksa calismaz yine.
        Test ciktisi:
         ➜  MiniShell git:(develop) ✗ ./minishell
             minishell> env

@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:56:22 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 21:05:27 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/24 22:51:02 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,18 @@ char *echo_separate(char *line, int check)
 	int i;
 	char *temp;
 
-	i = 6;
+	i = 5;
 	if (!line)
 		return (NULL);
 	if (check > 0)
-		i = 8;
-	temp = ft_substr(line, i, ft_strlen(line) - i);
+		i = 7;
+	if (line[i] == '"' && line[ft_strlen(line) - 1] == '"')
+	{
+		DEBUG_PRINT(BLUE"We're in the if statement now for the quotes\n"RESET);
+		i++;
+		temp = ft_substr(line, i, ft_strlen(line) - i - 1);
+	}
+	else
+		temp = ft_substr(line, i, ft_strlen(line) - i);
 	return (temp);
 }
