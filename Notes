@@ -1,4 +1,4 @@
-/* EKSIKLER
+/* EKSIKLER */
 
 1-) Ctrl + D (EOF)
     Expectation: Nothing should happen.
@@ -55,11 +55,11 @@
 4-)  echo $? sembolun eklenmesi gerekiyorr!! Bunun sonucunda cikti bize bir numara veriyor. 
     Konuyu arastirip kodu eklemeliyiz!
 
-5-)minishell> echo " yazdiktan sonra control-D ye bastigimizda cikis yapiyor terminalden Control C calisiyor.
+5-)minishell> echo " yazdiktan sonra control-D ye bastigimizda cikis yapiyor terminalden Control C calisiyor."
 
 
 6-) env de unset calismiyor!
-    /* Test ciktisi:
+       Test ciktisi:
         ➜  MiniShell git:(develop) ✗ ./minishell
             minishell> env
         [DEBUG] Starting token seperation for line: 'env'
@@ -233,4 +233,3 @@
         Olmasi gereken cikti:
         minishell> wc -w < file.txt
                   14
-                  
