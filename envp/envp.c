@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 19:04:53 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/24 21:11:25 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	**update_env(char **envp, char *key)
 	new_env[size - 1] = ft_strdup(key);
 	new_env[size] = NULL;
 	DEBUG_PRINT(GRN"New env created with key: %s\n"RESET, key);
-	clean_2d(envp); // freee old envp
+	// asko freeleme cunku hata veriyo
 	DEBUG_PRINT(GRN"Updated env with key: %s\n"RESET, key);
 	return (new_env);
 }
@@ -59,7 +59,7 @@ char	**remove_env(char **envp, char *key)
 		}
 	}
 	new_env[j] = NULL;
-	clean_2d(envp); //  free ald envp
+	// asko freeleme cunku hata veriyo
 	DEBUG_PRINT(GRN"Removed env with key: %s\n"RESET, key);
 	return (new_env);
 }
