@@ -18,4 +18,219 @@
     Press Ctrl + \.
     Verify that cat is terminated with a "Quit" message.
     
-3-) 
+3-) Pipe komutu:
+    3.1-) Test 1
+            echo -n "No new line" | cat -e
+            [DEBUG] Starting token seperation for line: 'echo -n "No new line" | cat -e'
+            [DEBUG] Extracted word: 'echo' (start = 0, end = 4) 
+            [DEBUG] Created token: type= 0, value = 'echo' 
+            [DEBUG] Extracted word: '-n' (start = 5, end = 7) 
+            [DEBUG] Created token: type= 0, value = '-n' 
+            [DEBUG] Processed quoted string: 'No new line' (start = 9, end = 21)
+            [DEBUG] Created token: type= 0, value = 'No new line' 
+            [DEBUG] Created token: type= 1, value = '|' 
+            [DEBUG] Extracted word: 'cat' (start = 24, end = 27) 
+            [DEBUG] Created token: type= 0, value = 'cat' 
+            [DEBUG] Extracted word: '-e' (start = 28, end = 30) 
+            [DEBUG] Created token: type= 0, value = '-e' 
+            [DEBUG] Token seperation completed
+            [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
+            [DEBUG] Starting Cell_lounch
+            [DEBUG] Args created
+            [DEBUG] Args[0]: echo
+            [DEBUG] Args[1]: -n
+            [DEBUG] Args[2]: No new line
+            [DEBUG] Running echo
+            [DEBUG] Check is 1: Flag detected
+            No new line  [DEBUG] Echo completed // Dolar sembolu fln yok burayi pipe ekleyip gelistirmek lazim!!
+            [DEBUG] Ending Cell_lounch
+            [DEBUG] Freeing token matrix
+            [DEBUG] Freeing token: type=0, value= 'echo'
+            [DEBUG] Freeing token: type=0, value= '-n'
+            [DEBUG] Freeing token: type=0, value= 'No new line'
+            [DEBUG] Freeing token: type=1, value= '|'
+            [DEBUG] Freeing token: type=0, value= 'cat'
+            [DEBUG] Freeing token: type=0, value= '-e'
+
+4-)  echo $? sembolun eklenmesi gerekiyorr!! Bunun sonucunda cikti bize bir numara veriyor. 
+    Konuyu arastirip kodu eklemeliyiz!
+
+5-)minishell> echo " yazdiktan sonra control-D ye bastigimizda cikis yapiyor terminalden Control C calisiyor.
+
+
+6-) env de unset calismiyor!
+    /* Test ciktisi:
+        ➜  MiniShell git:(develop) ✗ ./minishell
+            minishell> env
+        [DEBUG] Starting token seperation for line: 'env'
+        [DEBUG] Extracted word: 'env' (start = 0, end = 3) 
+        [DEBUG] Created token: type= 0, value = 'env' 
+        [DEBUG] Token seperation completed
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'env'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: env
+        SECURITYSESSIONID=18c19
+        USER=hpehliva
+        MallocNanoZone=0
+        COMMAND_MODE=unix2003
+        PATH=/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin
+        HOME=/Users/hpehliva
+        SHELL=/bin/zsh
+        LaunchInstanceID=A409725D-7234-4E93-AF15-F4F67D61784B
+        __CF_USER_TEXT_ENCODING=0x193F4:0x0:0x2
+        XPC_SERVICE_NAME=0
+        SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.Zhdk8PIiJV/Listeners
+        XPC_FLAGS=0x0
+        LOGNAME=hpehliva
+        TMPDIR=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/
+        ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+        SHLVL=1
+        PWD=/Users/hpehliva/MiniShell
+        OLDPWD=/Users/hpehliva/MiniShell
+        ZSH=/Users/hpehliva/.oh-my-zsh
+        PAGER=less
+        LESS=-R
+        LSCOLORS=Gxfxcxdxbxegedabagacad
+        LS_COLORS=di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43
+        TERM_PROGRAM=vscode
+        TERM_PROGRAM_VERSION=1.97.2
+        LANG=en_US.UTF-8
+        COLORTERM=truecolor
+        GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+        VSCODE_GIT_ASKPASS_NODE=/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin)
+        VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+        VSCODE_GIT_ASKPASS_MAIN=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass-main.js
+        VSCODE_GIT_IPC_HANDLE=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/vscode-git-194c01b131.sock
+        VSCODE_INJECTION=1
+        ZDOTDIR=/Users/hpehliva
+        USER_ZDOTDIR=/Users/hpehliva
+        TERM=xterm-256color
+        VSCODE_PROFILE_INITIALIZED=1
+        _=/Users/hpehliva/MiniShell/./minishell
+        MY_VAR=42
+        [DEBUG] Ending Cell_lounch
+        [DEBUG] Freeing token matrix
+        [DEBUG] Freeing token: type=0, value= 'env'
+        minishell> unset MY_VAR
+        [DEBUG] Starting token seperation for line: 'unset MY_VAR'
+        [DEBUG] Extracted word: 'unset' (start = 0, end = 5) 
+        [DEBUG] Created token: type= 0, value = 'unset' 
+        [DEBUG] Extracted word: 'MY_VAR' (start = 6, end = 12) 
+        [DEBUG] Created token: type= 0, value = 'MY_VAR' 
+        [DEBUG] Token seperation completed
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'unset'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: unset
+        [DEBUG] Args[1]: MY_VAR
+        minishell(34875,0x1066dedc0) malloc: *** error for object 0x7f92cdd05cd0: pointer being freed was not allocated
+        minishell(34875,0x1066dedc0) malloc: *** set a breakpoint in malloc_error_break to debug
+        [1]    34875 abort      ./minishell
+        ➜  MiniShell git:(develop) ✗ unset MY_VAR=42
+        unset: MY_VAR=42: invalid parameter name
+        ➜  MiniShell git:(develop) ✗ ./minishell    
+        minishell> env
+        [DEBUG] Starting token seperation for line: 'env'
+        [DEBUG] Extracted word: 'env' (start = 0, end = 3) 
+        [DEBUG] Created token: type= 0, value = 'env' 
+        [DEBUG] Token seperation completed
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'env'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: env
+        SECURITYSESSIONID=18c19
+        USER=hpehliva
+        MallocNanoZone=0
+        COMMAND_MODE=unix2003
+        PATH=/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin
+        HOME=/Users/hpehliva
+        SHELL=/bin/zsh
+        LaunchInstanceID=A409725D-7234-4E93-AF15-F4F67D61784B
+        __CF_USER_TEXT_ENCODING=0x193F4:0x0:0x2
+        XPC_SERVICE_NAME=0
+        SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.Zhdk8PIiJV/Listeners
+        XPC_FLAGS=0x0
+        LOGNAME=hpehliva
+        TMPDIR=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/
+        ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+        SHLVL=1
+        PWD=/Users/hpehliva/MiniShell
+        OLDPWD=/Users/hpehliva/MiniShell
+        ZSH=/Users/hpehliva/.oh-my-zsh
+        PAGER=less
+        LESS=-R
+        LSCOLORS=Gxfxcxdxbxegedabagacad
+        LS_COLORS=di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43
+        TERM_PROGRAM=vscode
+        TERM_PROGRAM_VERSION=1.97.2
+        LANG=en_US.UTF-8
+        COLORTERM=truecolor
+        GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+        VSCODE_GIT_ASKPASS_NODE=/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin)
+        VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+        VSCODE_GIT_ASKPASS_MAIN=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass-main.js
+        VSCODE_GIT_IPC_HANDLE=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/vscode-git-194c01b131.sock
+        VSCODE_INJECTION=1
+        ZDOTDIR=/Users/hpehliva
+        USER_ZDOTDIR=/Users/hpehliva
+        TERM=xterm-256color
+        VSCODE_PROFILE_INITIALIZED=1
+        _=/Users/hpehliva/MiniShell/./minishell
+        [DEBUG] Ending Cell_lounch
+        [DEBUG] Freeing token matrix
+        [DEBUG] Freeing token: type=0, value= 'env'
+
+7-)  "<" Sembolun testi
+
+        minishell> 
+        [DEBUG] Starting token seperation for line: ''
+        [DEBUG] Token seperation completed
+        [DEBUG] No tokens created
+        minishell> wc -w < file.txt
+        [DEBUG] Starting token seperation for line: 'wc -w < file.txt'
+        [DEBUG] Extracted word: 'wc' (start = 0, end = 2) 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Extracted word: '-w' (start = 3, end = 5) 
+        [DEBUG] Created token: type= 0, value = '-w' 
+        [DEBUG] Created token: type= 2, value = '<' 
+        [DEBUG] Extracted word: 'file.txt' (start = 8, end = 16) 
+        [DEBUG] Created token: type= 0, value = 'file.txt' 
+        [DEBUG] Token seperation completed
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'wc'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: wc
+        [DEBUG] Args[1]: -w
+
+        minishell>  [DEBUG] Command executed
+        [DEBUG] Ending Cell_lounch
+        [DEBUG] Freeing token matrix
+        [DEBUG] Freeing token: type=0, value= 'wc'
+        [DEBUG] Freeing token: type=0, value= '-w'
+        [DEBUG] Freeing token: type=2, value= '<'
+        [DEBUG] Freeing token: type=0, value= 'file.txt'
+        minishell> cat < file.txt
+        [DEBUG] Starting token seperation for line: 'cat < file.txt'
+        [DEBUG] Extracted word: 'cat' (start = 0, end = 3) 
+        [DEBUG] Created token: type= 0, value = 'cat' 
+        [DEBUG] Created token: type= 2, value = '<' 
+        [DEBUG] Extracted word: 'file.txt' (start = 6, end = 14) 
+        [DEBUG] Created token: type= 0, value = 'file.txt' 
+        [DEBUG] Token seperation completed
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'cat'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: cat
+
+        minishell>  [DEBUG] Command executed
+        [DEBUG] Ending Cell_lounch
+        [DEBUG] Freeing token matrix
+        [DEBUG] Freeing token: type=0, value= 'cat'
+        [DEBUG] Freeing token: type=2, value= '<'
+        [DEBUG] Freeing token: type=0, value= 'file.txt'
+
+        Olmasi gereken cikti:
+        minishell> wc -w < file.txt
+                  14
+                  

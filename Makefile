@@ -13,7 +13,9 @@
 SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c envp/envp_utils.c \
 		envp/envp.c deallocation.c token.c signals/set_signal.c \
 		tokens/tokenizer.c builtin/builtin_utils.c tokens/tokenizer_utils.c builtin/env.c \
-		builtin/pwd.c builtin/echo.c builtin/export.c builtin/unset.c builtin/cd.c builtin/exit.c
+		builtin/pwd.c builtin/echo.c builtin/export.c builtin/unset.c builtin/cd.c builtin/exit.c \
+		execute/exe_main.c execute/heredoc.c
+
 
 OBJS = $(SRCS:.c=.o)
 

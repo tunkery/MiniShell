@@ -12,26 +12,6 @@
 
 #include "../minishell.h"
 
-char *handler_heredoc(char *delimiter)
-{
-    char *line;
-    char *result = ft_strdup("");
-
-    while(1)
-    {
-        line = readline("> ");
-        if(!line && ft_strcmp(line, delimiter) == 0)
-        {
-            DEBUG_PRINT(RED"Heredoc delimiter reached\n"RESET);
-            free(line);
-            break;
-        }
-        result = ft_strjoin(result, line);
-        result = ft_strjoin(result, "\n");
-        free(line);
-    }
-    return (result);
-}
 
 char *expand_env(char *line, int *i)
 {

@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
+/*
+	This function will work only for flags!!
+*/
 void	run_echo(char **args)
 {
 	int	check;
@@ -22,41 +24,23 @@ void	run_echo(char **args)
 	check = 0;
 	i = 1;
 	first = 1;
-	if (!args[1])
+	if (!args[1]) // If there is no argumant just print it new line!
 	{
 		printf("\n");
 		return ;
 	}
-	// else if (ft_strncmp(args[1], "-n", ft_strlen(args[1])) == 0
-	// 		&& !args[2])
-	// 		return ;
-	if (ft_strncmp(args[1], "-n", ft_strlen(args[1])) == 0)
+	if (ft_strncmp(args[1], "-n", ft_strlen(args[1])) == 0 && ft_strlen(args[1]) == 2)
 	{
 		check = 1;
+		i++;
 		DEBUG_PRINT(GRN"Check is 1: Flag detected\n"RESET);
 	}
-		// check++;
 	while (args[i])
 	{
-		if(i == 1 && ft_strncmp(args[i], "-n", ft_strlen(args[i])) == 0)
-		{
-			i++;
-<<<<<<< HEAD
-			continue;
-		}
-		// if (ft_strncmp(args[i], "-n", ft_strlen(args[i])) == 0
-		// && i < 3)
-		// 	i++;
 		if(!first)
-			printf(" ");
-		printf("%s ", args[i]);
+			printf(" "); // Add space after first argument
+		printf("%s ", args[i]); //  Print argument only once.
 		first = 0;
-=======
-		if (args[i + 1])
-			printf("%s ", args[i]);
-		else
-			printf("%s", args[i]);
->>>>>>> e8ce99ea3911f3eeccfacc55e03bc693ce906ab7
 		i++;
 	}
 	if (check == 0)

@@ -72,9 +72,9 @@ typedef enum e_token_type
 	TOKEN_PIPE, // |
 	TOKEN_REDIRECT_IN, // <
 	TOKEN_REDIRECT_OUT, // >
-	TOKEN_REDIRECT_APPEND,
-	TOKEN_HEREDOC,
-	TOKEN_SEMIC,
+	TOKEN_REDIRECT_APPEND, // >>
+	TOKEN_HEREDOC, // <<
+	TOKEN_SEMIC, // ;
 	TOKEN_END
 }	t_token_type;
 
@@ -102,8 +102,6 @@ void	run_cd(char **args);
 
 // Env functions
 
-char	*find_exec(char *command, char *path_variable, int i, int j);
-void	cell_launch(t_token *tokens, t_env *env);
 void	initiate_env(t_env *env, char **envp);
 int		key_size(char *str);
 int		value_size(char *str);
@@ -112,6 +110,16 @@ void	copy_env(char **str, char ***envp);
 char	**update_env(char **envp, char *key);
 char	**get_tokens(char *str);
 char	**remove_env(char **envp, char *key);
+
+// Execute functions
+char	*find_exec(char *command, char *path_variable, int i, int j);
+void	cell_launch(t_token *tokens, t_env *env);
+void exec_command(char **args, t_env *env, int out_fd);
+char **tokens_to_args(t_token *tokens);
+
+// Heredoc functions
+char *expanded_heredoc_line(char *line);
+char *handler_heredoc(char *delimiter);
 
 // Deallocation functions
 
@@ -128,9 +136,6 @@ void    sigint_handler_command(int signo);
 void    turn_off_echo(void);
 void    rest_signal_command(void);
 
-// Process
-void added_process(char *line, char **envp);
-void exec_command(char **args, t_env *env, int out_fd);
 
 // Tokenizer
 t_token    *tokenizer(char *line);
@@ -139,7 +144,6 @@ char    *extract_word(char *line, int *i);
 void    free_token_matrix(t_token *head);
 char *process_quoted(char *line, int *i, char quote_type);
 char *expand_env(char *line, int *i);
-char *handler_heredoc(char *delimiter);
 char **tokens_to_args(t_token *tokens);
 
 // Tokenizer utils
