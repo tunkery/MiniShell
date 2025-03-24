@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 21:11:25 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/25 00:33:48 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,18 @@ char	**remove_env(char **envp, char *key)
 
 void	initiate_env(t_env *env, char **envp)
 {
+	int	i;
+
+	i = 0;
 	copy_env(envp, &(env->envp));
 	copy_env(envp, &(env->export));
+	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
+		i++;
+	env->curr_pwd = ft_strdup(env->envp[i]);
+	i = 0;
+	while (env->envp[i] && ft_strncmp(env->envp[i], "OLDPWD", 6) != 0)
+		i++;
+	env->old_pwd = ft_strdup(env->envp[i]);
 	if (!env->envp)
 		return ;
 	env->path = malloc(sizeof(char **) * 2);

@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 20:52:36 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/24 23:45:14 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int main(int ac, char **av, char **envp)
             free(line);
             continue;
         }
+        // initiate_env(env, envp);
         cell_launch(tokens, env, line); // a function that runs the programs in the computer
         free_token_matrix(tokens);
         free(line);

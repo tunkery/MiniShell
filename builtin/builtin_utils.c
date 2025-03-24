@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 20:54:44 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/24 23:14:27 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	run_builtin(char **args, t_env *env, char *line)
 	else if (builtin_check(args) == 5)
 		run_unset(args, env);
 	else if (builtin_check(args) == 6)
-		run_cd(args);
+		run_cd(args, env);
 	else if (builtin_check(args) == 7)
 		run_exit();
 }

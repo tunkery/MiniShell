@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 21:05:41 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/24 23:14:24 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_env
 {
 	char	**envp;
 	char	**export;
+	char	*curr_pwd;
+	char	*old_pwd;
 	char	**path;
 	char	*path1;
 }	t_env;
@@ -99,7 +101,7 @@ char 	*echo_separate(char *line, int check);
 void	run_pwd(char **args);
 void	run_unset(char **args, t_env *env);
 void	run_env(char **args, t_env *env);
-void	run_cd(char **args);
+void	run_cd(char **args, t_env *env);
 
 // Env functions
 
