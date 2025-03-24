@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 13:39:39 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/24 20:52:36 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int main(int ac, char **av, char **envp)
             free(line);
             continue;
         }
-        cell_launch(tokens, env); // a function that runs the programs in the computer
+        cell_launch(tokens, env, line); // a function that runs the programs in the computer
         free_token_matrix(tokens);
         free(line);
         signal_mode_command();

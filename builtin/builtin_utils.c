@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 09:21:18 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/24 20:54:44 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,14 @@ int	builtin_check(char **tokens)
 	return (0);
 }
 
-void	run_builtin(char **args, t_env *env)
+void	run_builtin(char **args, t_env *env, char *line)
 {
 	if (builtin_check(args) == 1)
 		run_env(args, env);
 	else if (builtin_check(args) == 2)
 		run_pwd(args);
 	else if (builtin_check(args) == 3)
-		run_echo(args);
+		run_echo(args, line);
 	else if (builtin_check(args) == 4)
 		run_export(args, env);
 	else if (builtin_check(args) == 5)

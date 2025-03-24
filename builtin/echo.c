@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:56:22 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 13:46:05 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/24 21:05:27 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,20 @@
 /*
 	This function will work only for flags!!
 */
-void	run_echo(char **args)
+
+// artik duzgun calisiyooooo!!!
+
+void	run_echo(char **args, char *line)
 {
 	int	check;
 	int	i;
-	int first;
+	// int first;
+	char *new;
 
 	DEBUG_PRINT(BLUE"Running echo\n"RESET);
 	check = 0;
 	i = 1;
-	first = 1;
+	// first = 1;
 	if (!args[1]) // If there is no argumant just print it new line!
 	{
 		printf("\n");
@@ -35,15 +39,33 @@ void	run_echo(char **args)
 		i++;
 		DEBUG_PRINT(GRN"Check is 1: Flag detected\n"RESET);
 	}
-	while (args[i])
-	{
-		if(!first)
-			printf(" "); // Add space after first argument
-		printf("%s ", args[i]); //  Print argument only once.
-		first = 0;
-		i++;
-	}
+	new = echo_separate(line, check);
+	printf("%s", new);
+	// while (args[i])
+	// {
+	// 	if(!first)
+	// 		printf(" "); // Add space after first argument
+	// 	printf("%s ", args[i]); //  Print argument only once.
+	// 	first = 0;
+	// 	i++;
+	// }
 	if (check == 0)
 		printf("\n");
 	DEBUG_PRINT(GRN"Echo completed\n"RESET);
+}
+
+// echo ve -n varsa onlari kaldirip onlarsiz olan stringi veriyor
+
+char *echo_separate(char *line, int check)
+{
+	int i;
+	char *temp;
+
+	i = 6;
+	if (!line)
+		return (NULL);
+	if (check > 0)
+		i = 8;
+	temp = ft_substr(line, i, ft_strlen(line) - i);
+	return (temp);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 12:17:52 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/24 21:05:41 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,11 @@ typedef	struct s_token
 
 int		key_check(char *args);
 int		builtin_check(char **tokens);
-void	run_builtin(char **args, t_env *env);
+void	run_builtin(char **args, t_env *env, char *line);
 void	run_export(char **args, t_env *env);
 void	run_exit(void);
-void	run_echo(char **args);
+void	run_echo(char **args, char *line);
+char 	*echo_separate(char *line, int check);
 void	run_pwd(char **args);
 void	run_unset(char **args, t_env *env);
 void	run_env(char **args, t_env *env);
@@ -113,7 +114,7 @@ char	**remove_env(char **envp, char *key);
 
 // Execute functions
 char	*find_exec(char *command, char *path_variable, int i, int j);
-void	cell_launch(t_token *tokens, t_env *env);
+void	cell_launch(t_token *tokens, t_env *env, char *line);
 void exec_command(char **args, t_env *env, int out_fd);
 char **tokens_to_args(t_token *tokens);
 

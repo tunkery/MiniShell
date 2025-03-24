@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/03/24 19:47:36 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/24 20:54:06 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void exec_command(char **args, t_env *env, int out_fd)
 
 	if (!args || !args[0])
 		return ;
-	if (ft_strchr(args[0], '/'))
+	if (ft_strchr(args[0], '/')) // if, yani eger, biri path ile yazmissa komutu burasi kontrol edip calistiriyo
 	{
 		exec_path = NULL;
 		if (access(args[0], X_OK) == 0)
@@ -46,7 +46,7 @@ void exec_command(char **args, t_env *env, int out_fd)
 		else
 			printf("minishell: %s: command not found.\n", args[0]);
 	}
-	else
+	else // eger pathsiz yazilmissa command burasi isi eline aliyo ve pathi bulup calistiriyo
 	{
 		exec_path = find_exec(args[0], env->path1, 0, 5);
 		if (!exec_path)
@@ -129,7 +129,7 @@ char **tokens_to_args(t_token *tokens)
 */
 
 
-void	cell_launch(t_token *tokens, t_env *env)
+void	cell_launch(t_token *tokens, t_env *env, char *line)
 {
 	t_token *tmp = tokens;
 	char **args = NULL;
@@ -228,7 +228,7 @@ void	cell_launch(t_token *tokens, t_env *env)
 				close(out_fd);
 				DEBUG_PRINT(GRN"Output redirected to file\n"RESET);
 			}
-			run_builtin(args, env);
+			run_builtin(args, env, line);
 			if(out_fd != STDOUT_FILENO)
 			{
 				if(dup2(save_stdout, STDOUT_FILENO) == -1)
