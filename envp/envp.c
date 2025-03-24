@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/23 12:06:29 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/24 19:04:53 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 char	**update_env(char **envp, char *key)
 {
-	int i;
 	int size;
 	char **new_env;
 	
-	i = 0;
 	size = env_size(envp) + 1;
 	new_env = malloc(sizeof(char *) * size);
 	if (!new_env)
@@ -68,9 +66,6 @@ char	**remove_env(char **envp, char *key)
 
 void	initiate_env(t_env *env, char **envp)
 {
-	int i;
-
-	i = 0;
 	copy_env(envp, &(env->envp));
 	copy_env(envp, &(env->export));
 	if (!env->envp)

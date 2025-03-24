@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/03/24 12:04:29 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/03/24 19:47:36 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,34 +19,64 @@ void exec_command(char **args, t_env *env, int out_fd)
 
 	if (!args || !args[0])
 		return ;
-	exec_path = find_exec(args[0], env->path1, 0, 5);
-	if (!exec_path)
+	if (ft_strchr(args[0], '/'))
 	{
-		printf("minishell: %s: command not found.\n", args[0]);
-		return ;
-	}
-	pid = fork();
-	if (pid == 0)
-	{
-		/*Added the openfile in here*/
-		if(out_fd  != STDOUT_FILENO)
+		exec_path = NULL;
+		if (access(args[0], X_OK) == 0)
 		{
-			dup2(out_fd, STDOUT_FILENO);
-			close(out_fd);
+			pid = fork();
+			if (pid == 0)
+			{
+				if (out_fd != STDOUT_FILENO)
+				{
+					dup2(out_fd, STDOUT_FILENO);
+					close (out_fd);
+				}
+				if (execve(args[0], args, env->path) == -1)
+				{
+					perror("execvp Failed");
+					exit(127);
+				}
+			}
+			else if (pid < 0)
+				perror("fork Failed");
+			else
+				wait(NULL);
 		}
-		if (execve(exec_path, args, env->path) == -1)
-		{
-			perror("execvp Failed");
-			free(exec_path);
-			exit(127);
-		}
+		else
+			printf("minishell: %s: command not found.\n", args[0]);
 	}
-	else if (pid < 0)
-		perror("fork Failed");
 	else
-		wait(NULL);
-	free(exec_path);
-
+	{
+		exec_path = find_exec(args[0], env->path1, 0, 5);
+		if (!exec_path)
+		{
+			printf("minishell: %s: command not found.\n", args[0]);
+			return ;
+		}
+		pid = fork();
+		if (pid == 0)
+		{
+			/*Added the openfile in here*/
+			if(out_fd  != STDOUT_FILENO)
+			{
+				dup2(out_fd, STDOUT_FILENO);
+				close(out_fd);
+			}
+			if (execve(exec_path, args, env->path) == -1)
+			{
+				perror("execvp Failed");
+				free(exec_path);
+				exit(127);
+			}
+		}
+		else if (pid < 0)
+			perror("fork Failed");
+		else
+			wait(NULL);
+	}
+	if (exec_path)
+		free(exec_path);
 }
 char **tokens_to_args(t_token *tokens)
 {
