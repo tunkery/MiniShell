@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
+#    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/03/25 00:34:44 by batuhan          ###   ########.fr        #
+#    Updated: 2025/03/25 13:51:36 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		envp/envp.c deallocation.c token.c signals/set_signal.c \
 		tokens/tokenizer.c builtin/builtin_utils.c tokens/tokenizer_utils.c builtin/env.c \
 		builtin/pwd.c builtin/echo.c builtin/export.c builtin/unset.c builtin/cd.c builtin/exit.c \
-		execute/exe_main.c execute/heredoc.c
+		execute/exe_main.c execute/heredoc.c execute/run_commands.c
 
 
 OBJS = $(SRCS:.c=.o)
