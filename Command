@@ -1,1 +1,84 @@
 /* COMMANDS */
+
+/** Minishell Test Plan **/
+
+1. Compilation Check
+        Command:** make -n | grep -E "(-Wall|-Wextra|-Werror)"
+        Expected Output:** Compilation flags should be present.
+        Command:** make && make
+        Expected Output:** Second make should return "Nothing to be done for 'all'."
+2. Simple Commands & Global Variables
+        Command:** /bin/ls
+        Expected Output:** Lists files in the current directory.
+        Test empty command:** Press Enter with no input.
+        Expected Output:** New prompt without error.
+3. Arguments
+        Command:** /bin/ls -l -a
+        Expected Output:** Detailed list including hidden files.
+4. "echo" Tests
+        Command:** "echo "Hello, world!""
+        Expected Output:** "Hello, world!"
+        Command:** "echo -n "No newline""        
+        Expected Output:** "No newline" (without newline at the end)
+5. "exit" Command
+        Command:** "exit 42"
+        Expected Output:** Shell exits with status "42".
+6. Return Value of a Process
+        Command:** "/bin/ls filethatdoesntexist; echo $?"
+        Expected Output:** Error message and "2" as return value.
+7. Signals
+        Ctrl+C:** Interrupts process, shows new prompt.
+        Ctrl+D:** Exits shell.
+        Ctrl+\:** Nothing happens at prompt.
+8. Double Quotes
+        Command:** "echo "cat lol.c | cat > lol.c""
+        Expected Output:** Prints the string as-is.
+9. Single Quotes
+        Command:** "echo '$USER'"
+        Expected Output:** "$USER" (not expanded)
+10. "env" Command
+        Command:** "env"
+        Expected Output:** Prints all environment variables.
+11. "export" Command
+        Command:** "export TESTVAR="Hello"; env | grep TESTVAR"
+        Expected Output:** "TESTVAR=Hello"
+12. "unset" Command
+C       ommand:** "unset TESTVAR; env | grep TESTVAR"
+        Expected Output:** No output if unset successfully.
+13. "cd" Command
+        Command:** "cd /; pwd"
+        Expected Output:** "/"
+        Command:** "cd non_existing_dir"
+        Expected Output:** Error: "No such file or directory"
+14. "pwd" Command
+        Command:** "pwd"
+        Expected Output:** Prints current directory.
+15. Relative Path Execution
+        Command:** "./myscript.sh"
+        Expected Output:** Executes if "myscript.sh" exists.
+16. Environment Path
+        Command:** "unset PATH; ls"
+        Expected Output:** "command not found"
+        Command:** "export PATH="/bin:/usr/bin""
+        Expected Output:** Commands like "ls" should work again.
+17. Redirection Tests : ">", ">>", "<"
+        Command:** "echo "Hello" > testfile.txt; cat < testfile.txt"
+        Expected Output:** "Hello"
+        Command:** "echo "Hello again" >> testfile.txt; cat testfile.txt"
+        Expected Output:** "Hello" and "Hello again" on separate lines.
+18. Pipe Tests
+        Command:** "cat file | grep bla | more"
+        Expected Output:** Filters and paginates content.
+        Command:** "ls filethatdoesntexist | grep bla | more"
+        Expected Output:** "ls" error message.
+19. History and Miscellaneous
+        Up/Down Arrow:** Navigate command history.
+        Invalid Command:** "dsbksdgbksdghsd"
+        Expected Output:** "command not found"
+20. Environment Variable Handling
+        Command:** "echo $USER"
+        Expected Output:** Prints username.
+        Command:** "export TEST=42; echo "$TEST""
+        Expected Output:** "42"
+---
+**End of Test Plan**

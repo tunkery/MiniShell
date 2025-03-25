@@ -47,10 +47,7 @@ char	**remove_env(char **envp, char *key)
 	{
 		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0
 			&& (envp[i][ft_strlen(key)] == '=' || envp[i][ft_strlen(key)] == '\0'))
-		{
-			free(envp[i]);
-			i++;
-		}
+			free(envp[i++]);
 		if (envp[i])
 		{
 			new_env[j] = ft_strdup(envp[i]);

@@ -116,12 +116,18 @@ char	**remove_env(char **envp, char *key);
 
 // Execute functions
 char	*find_exec(char *command, char *path_variable, int i, int j);
+void	handle_redirection(t_token **current, char **args, int *out_fd, char **heredoc_input);
+void	execute_with_redirection(char **args, t_env *env, int out_fd, int save_stdout);
 void	cell_launch(t_token *tokens, t_env *env);
 void exec_command(char **args, t_env *env, int out_fd);
 char **tokens_to_args(t_token *tokens);
+// execute with token functions
+void openfile_redirected(t_token **current, int *out_fd, char **args, int append);
+void    process_child_heredoc(t_token **current, char **heredoc_input, char **args, t_env *env);
 
 // Heredoc functions
-char *expanded_heredoc_line(char *line);
+char *close_heredoc_line(char *expand_line, t_env *env);
+char *expanded_heredoc_line(char *line, t_env *env);
 char *handler_heredoc(char *delimiter);
 
 // Deallocation functions

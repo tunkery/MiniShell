@@ -15,14 +15,30 @@
 
 char *expand_env(char *line, int *i)
 {
+    char *value;
+    char var_name[256];
+    int j;
+    int start;
+
+    j = 0;
     (*i)++; // skip the '$'
-    int start = *i;
+    start = *i;
     while(line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
+    {
+        var_name[j++] = line[*i];
         (*i)++;
-    char *variable_name = ft_substr(line, start, *i - start);
-    char *variable_value = getenv(variable_name); // get the value of the variable
-    free(variable_name);
-    return (variable_value ? ft_strdup(variable_value) : ft_strdup(""));
+    }
+    var_name[j] = '\0';
+    DEBUG_PRINT(CYAN"Expanding env var: '%s'\n"RESET, var_name);
+    value = getenv(var_name);
+    DEBUG_PRINT(CYAN"Found value: '%s'\n"RESET, value ? value : "NULL");
+    if(value)
+        return (ft_strdup(value));
+    return ft_strdup("");
+    // char *variable_name = ft_substr(line, start, *i - start);
+    // char *variable_value = getenv(variable_name); // get the value of the variable
+    // free(variable_name);
+    // return (variable_value ? ft_strdup(variable_value) : ft_strdup(""));
 
 }
 
