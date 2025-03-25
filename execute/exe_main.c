@@ -3,81 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exe_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/03/24 20:54:06 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/03/25 13:25:58 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void exec_command(char **args, t_env *env, int out_fd)
-{
-	pid_t	pid;
-	char *exec_path;
-
-	if (!args || !args[0])
-		return ;
-	if (ft_strchr(args[0], '/')) // if, yani eger, biri path ile yazmissa komutu burasi kontrol edip calistiriyo
-	{
-		exec_path = NULL;
-		if (access(args[0], X_OK) == 0)
-		{
-			pid = fork();
-			if (pid == 0)
-			{
-				if (out_fd != STDOUT_FILENO)
-				{
-					dup2(out_fd, STDOUT_FILENO);
-					close (out_fd);
-				}
-				if (execve(args[0], args, env->path) == -1)
-				{
-					perror("execvp Failed");
-					exit(127);
-				}
-			}
-			else if (pid < 0)
-				perror("fork Failed");
-			else
-				wait(NULL);
-		}
-		else
-			printf("minishell: %s: command not found.\n", args[0]);
-	}
-	else // eger pathsiz yazilmissa command burasi isi eline aliyo ve pathi bulup calistiriyo
-	{
-		exec_path = find_exec(args[0], env->path1, 0, 5);
-		if (!exec_path)
-		{
-			printf("minishell: %s: command not found.\n", args[0]);
-			return ;
-		}
-		pid = fork();
-		if (pid == 0)
-		{
-			/*Added the openfile in here*/
-			if(out_fd  != STDOUT_FILENO)
-			{
-				dup2(out_fd, STDOUT_FILENO);
-				close(out_fd);
-			}
-			if (execve(exec_path, args, env->path) == -1)
-			{
-				perror("execvp Failed");
-				free(exec_path);
-				exit(127);
-			}
-		}
-		else if (pid < 0)
-			perror("fork Failed");
-		else
-			wait(NULL);
-	}
-	if (exec_path)
-		free(exec_path);
-}
 char **tokens_to_args(t_token *tokens)
 {
     int count = 0;
