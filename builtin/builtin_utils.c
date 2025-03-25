@@ -47,14 +47,14 @@ int	builtin_check(char **tokens)
 	return (0);
 }
 
-void	run_builtin(char **args, t_env *env, char *line)
+void	run_builtin(char **args, t_env *env)
 {
 	if (builtin_check(args) == 1)
 		run_env(args, env);
 	else if (builtin_check(args) == 2)
 		run_pwd(args);
 	else if (builtin_check(args) == 3)
-		run_echo(args, line);
+		run_echo(args);
 	else if (builtin_check(args) == 4)
 		run_export(args, env);
 	else if (builtin_check(args) == 5)

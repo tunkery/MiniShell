@@ -129,7 +129,7 @@ char **tokens_to_args(t_token *tokens)
 */
 
 
-void	cell_launch(t_token *tokens, t_env *env, char *line)
+void	cell_launch(t_token *tokens, t_env *env)
 {
 	t_token *tmp = tokens;
 	char **args = NULL;
@@ -228,7 +228,7 @@ void	cell_launch(t_token *tokens, t_env *env, char *line)
 				close(out_fd);
 				DEBUG_PRINT(GRN"Output redirected to file\n"RESET);
 			}
-			run_builtin(args, env, line);
+			run_builtin(args, env);
 			if(out_fd != STDOUT_FILENO)
 			{
 				if(dup2(save_stdout, STDOUT_FILENO) == -1)

@@ -93,7 +93,7 @@ typedef	struct s_token
 
 int		key_check(char *args);
 int		builtin_check(char **tokens);
-void	run_builtin(char **args, t_env *env, char *line);
+void	run_builtin(char **args, t_env *env);
 void	run_export(char **args, t_env *env);
 void	run_exit(void);
 void	run_echo(char **args);
@@ -116,7 +116,7 @@ char	**remove_env(char **envp, char *key);
 
 // Execute functions
 char	*find_exec(char *command, char *path_variable, int i, int j);
-void	cell_launch(t_token *tokens, t_env *env, char *line);
+void	cell_launch(t_token *tokens, t_env *env);
 void exec_command(char **args, t_env *env, int out_fd);
 char **tokens_to_args(t_token *tokens);
 
