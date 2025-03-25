@@ -233,3 +233,31 @@
         Olmasi gereken cikti:
         minishell> wc -w < file.txt
                   14
+
+
+8-) echo 'Hello' Komutu " ' " ile birlikte print ediyor!
+    Bizim shell:
+        echo 'Hello'
+        [DEBUG] Starting token seperation for line: 'echo 'Hello''
+        [DEBUG] Extracted word: 'echo' (start = 0, end = 4) 
+        [DEBUG] Created token: type= 0, value = 'echo' 
+        [DEBUG] Processed quoted string: 'Hello' (start = 6, end = 12)
+        [DEBUG] Created token: type= 0, value = 'Hello' 
+        [DEBUG] Token seperation completed
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: echo
+        [DEBUG] Args[1]: Hello
+        [DEBUG] Running echo
+        'Hello'
+        [DEBUG] Echo completed
+        [DEBUG] Ending Cell_lounch
+        [DEBUG] Freeing token matrix
+        [DEBUG] Freeing token: type=0, value= 'echo'
+        [DEBUG] Freeing token: type=0, value= 'Hello'
+
+    Bash:
+    hpehliva$ echo 'Hello'
+            Hello
+

@@ -96,7 +96,7 @@ int		builtin_check(char **tokens);
 void	run_builtin(char **args, t_env *env, char *line);
 void	run_export(char **args, t_env *env);
 void	run_exit(void);
-void	run_echo(char **args, char *line);
+void	run_echo(char **args);
 char 	*echo_separate(char *line, int check);
 void	run_pwd(char **args);
 void	run_unset(char **args, t_env *env);

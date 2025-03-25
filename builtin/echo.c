@@ -17,12 +17,12 @@
 
 // artik duzgun calisiyooooo!!!
 
-void	run_echo(char **args, char *line)
+void	run_echo(char **args)
 {
 	int	check;
 	int	i;
-	// int first;
-	char *new;
+	int first;
+	// char *new;
 
 	DEBUG_PRINT(BLUE"Running echo\n"RESET);
 	check = 0;
@@ -39,16 +39,16 @@ void	run_echo(char **args, char *line)
 		i++;
 		DEBUG_PRINT(GRN"Check is 1: Flag detected\n"RESET);
 	}
-	new = echo_separate(line, check);
-	printf("%s", new);
-	// while (args[i])
-	// {
-	// 	if(!first)
-	// 		printf(" "); // Add space after first argument
-	// 	printf("%s ", args[i]); //  Print argument only once.
-	// 	first = 0;
-	// 	i++;
-	// }
+	// new = echo_separate(line, check);
+	// printf("%s", new);
+	while (args[i])
+	{
+		if(!first)
+			printf(" "); // Add space after first argument
+		printf("%s ", args[i]); //  Print argument only once.
+		first = 0;
+		i++;
+	}
 	if (check == 0)
 		printf("\n");
 	DEBUG_PRINT(GRN"Echo completed\n"RESET);
@@ -56,25 +56,25 @@ void	run_echo(char **args, char *line)
 
 // echo ve -n varsa onlari kaldirip onlarsiz olan stringi veriyor
 
-char *echo_separate(char *line, int check)
-{
-	int i;
-	char *temp;
+// char *echo_separate(char *line, int check)
+// {
+// 	int i;
+// 	char *temp;
 
-	i = 5;
-	if (!line)
-		return (NULL);
-	if (check > 0)
-		i = 7;
-	while ((line[i] >= 9 && line[i] <= 13) || (line[i] == 32))
-		i++;
-	if (line[i] == '"' && line[ft_strlen(line) - 1] == '"')
-	{
-		DEBUG_PRINT(BLUE"We're in the if statement now for the quotes\n"RESET);
-		i++;
-		temp = ft_substr(line, i, ft_strlen(line) - i - 1);
-	}
-	else
-		temp = ft_substr(line, i, ft_strlen(line) - i);
-	return (temp);
-}
+// 	i = 5;
+// 	if (!line)
+// 		return (NULL);
+// 	if (check > 0)
+// 		i = 7;
+// 	while ((line[i] >= 9 && line[i] <= 13) || (line[i] == 32))
+// 		i++;
+// 	if (line[i] == '"' && line[ft_strlen(line) - 1] == '"')
+// 	{
+// 		DEBUG_PRINT(BLUE"We're in the if statement now for the quotes\n"RESET);
+// 		i++;
+// 		temp = ft_substr(line, i, ft_strlen(line) - i - 1);
+// 	}
+// 	else
+// 		temp = ft_substr(line, i, ft_strlen(line) - i);
+// 	return (temp);
+// }
