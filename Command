@@ -80,5 +80,6 @@ C       ommand:** "unset TESTVAR; env | grep TESTVAR"
         Expected Output:** Prints username.
         Command:** "export TEST=42; echo "$TEST""
         Expected Output:** "42"
+
 ---
 **End of Test Plan**

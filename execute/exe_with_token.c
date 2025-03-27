@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void    process_child_heredoc(t_token **current, char **heredoc_input, char **args, t_env *env)
+void    process_child_heredoc(t_token **current, char **heredoc_input, char **args)
 {
     if(*current && (*current)->type == TOKEN_WORD)
     {
@@ -29,7 +29,7 @@ void    process_child_heredoc(t_token **current, char **heredoc_input, char **ar
         if(pid == 0)
         {
             close(pipe_fd[0]);
-            *heredoc_input = handler_heredoc((*current)->value, env);
+            *heredoc_input = handler_heredoc((*current)->value);
             write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
             close(pipe_fd[1]);
             free(*heredoc_input);

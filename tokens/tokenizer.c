@@ -18,11 +18,9 @@ char *expand_env(char *line, int *i)
     char *value;
     char var_name[256];
     int j;
-    int start;
 
     j = 0;
     (*i)++; // skip the '$'
-    start = *i;
     while(line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
     {
         var_name[j++] = line[*i];
