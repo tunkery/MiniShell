@@ -19,13 +19,6 @@ char **tokens_to_args(t_token *tokens)
     char **args;
     int i = 0;
 
-	/* Only count till pipe or directions */
-    // while(tmp && tmp->type != TOKEN_SEMIC)
-    // {
-    //     if (tmp->type == TOKEN_WORD)
-    //         count++;
-    //     tmp = tmp->next;
-    // }
 	while(tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND &&
 		 tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_REDIRECT_OUT  &&
 		 tmp->type != TOKEN_REDIRECT_IN && tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_PIPE)
@@ -34,7 +27,6 @@ char **tokens_to_args(t_token *tokens)
 			count++;
 		tmp = tmp->next;
 	}
-
     args = malloc((count + 1) * sizeof(char *));
     if(!args)
         return NULL;

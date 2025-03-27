@@ -33,11 +33,6 @@ char *expand_env(char *line, int *i)
     if(value)
         return (ft_strdup(value));
     return ft_strdup("");
-    // char *variable_name = ft_substr(line, start, *i - start);
-    // char *variable_value = getenv(variable_name); // get the value of the variable
-    // free(variable_name);
-    // return (variable_value ? ft_strdup(variable_value) : ft_strdup(""));
-
 }
 
 char *process_quoted(char *line, int *i, char quote_type)

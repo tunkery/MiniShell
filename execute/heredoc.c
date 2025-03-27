@@ -56,11 +56,9 @@ char *expanded_heredoc_line(char *line)
         }
         else
         {
-            char cpy[2] = {line[i], '\0'};
+            char cpy[2] = {line[i++], '\0'};
             result = ft_strjoin(result, cpy);
-            i++;
         }
-        // i++;
     }
     DEBUG_PRINT(CYAN"Expanded line: '%s'\n"RESET, result);
     return (result);
@@ -109,9 +107,9 @@ char *handler_heredoc(char *delimiter)
                 ++i;
             }
         }
-        // result = ft_strjoin(result, line);
         result = ft_strjoin(result, "\n");
         free(line);
     }
     return (result);
 }
+
