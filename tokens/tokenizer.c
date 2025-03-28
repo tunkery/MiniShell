@@ -57,7 +57,6 @@ char *process_quoted(char *line, int *i, char quote_type)
             result = ft_strjoin(result, cpy);
             (*i)++;
         }
-
     }
     if(line[*i] == quote_type)
         (*i)++;
@@ -202,8 +201,7 @@ void seperated_token(char *line, t_token **head)
 t_token    *tokenizer(char *line)
 {
     t_token *head = NULL;
-    // t_token *current;
-    // t_token *token;
+
 
     /* Be sure this is symbol or word */
     seperated_token(line, &head);

@@ -60,7 +60,7 @@ static void	run_with_path(char **args, t_env *env, int out_fd)
 			if (out_fd != STDOUT_FILENO)
 			{
 				dup2(out_fd, STDOUT_FILENO);
-				close (out_fd);
+				close(out_fd);
 			}
 			if (execve(args[0], args, env->path) == -1)
 			{
@@ -88,7 +88,8 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		exec_path = NULL;
 		run_with_path(args, env, out_fd);
 	}
-	else // eger pathsiz yazilmissa command burasi isi eline aliyo ve pathi bulup calistiriyo
+	else
+		// eger pathsiz yazilmissa command burasi isi eline aliyo ve pathi bulup calistiriyo
 	{
 		exec_path = find_exec(args[0], env->path1, 0, 5);
 		if (!exec_path)
@@ -98,7 +99,7 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		}
 		run_without_path(args, env, out_fd, exec_path);
 	}
-	DEBUG_PRINT(GRN"PID exit status: %d\n"RESET, env->exit_code);
+	DEBUG_PRINT(GRN "PID exit status: %d\n" RESET, env->exit_code);
 	if (exec_path)
 		free(exec_path);
 }

@@ -17,26 +17,26 @@ static char	*ft_strjoin_free(char *s1, char *s2)
 	char	*result;
 
 	result = ft_strjoin(s1, s2);
-	// free(s2);
+	free(s2);
 	return (result);
 }
 
-
 static char	*expand_command_substitution(char *line, int *index)
 {
-    char	expand_line[256];
-    char	*temp;
-    int		i = 0;
+	char	expand_line[256];
+	char	*temp;
+	int		i;
 
-    (*index) += 1;
-    while (line[*index] && line[*index] != ')')
-        expand_line[i++] = line[(*index)++];
-    expand_line[i] = '\0';
-    if (line[*index] == ')')
-        (*index)++;
 	i = 0;
-    temp = expand_env(expand_line, &i); // It was about j 
-    return (temp);
+	(*index) += 1;
+	while (line[*index] && line[*index] != ')')
+		expand_line[i++] = line[(*index)++];
+	expand_line[i] = '\0';
+	if (line[*index] == ')')
+		(*index)++;
+	i = 0;
+	temp = expand_env(expand_line, &i); // It was about j
+	return (temp);
 }
 /* This functions helps for expanded heredoc */
 
@@ -46,24 +46,27 @@ char	*expanded_heredoc_line(char *line)
 	char	*temp;
 	int		i;
 
-	DEBUG_PRINT(CYAN"Starting expanded_heredoc_line with input: '%s'\n" RESET, line);
+	DEBUG_PRINT(CYAN "Starting expanded_heredoc_line with input: '%s'\n" RESET,
+		line);
 	result = ft_strdup("");
 	i = 0;
 	while (line[i])
 	{
 		if (line[i] == '$' && line[i + 1] == '(')
 		{
-			DEBUG_PRINT(CYAN "Found command substitution at index %d\n" RESET, i);
+			DEBUG_PRINT(CYAN "Found command substitution at index %d\n" RESET,
+				i);
 			temp = expand_command_substitution(line, &i);
 			if (temp)
 			{
-				DEBUG_PRINT(CYAN "Expanded command substitution: '%s'\n" RESET, temp);
+				DEBUG_PRINT(CYAN "Expanded command substitution: '%s'\n" RESET,
+					temp);
 				result = ft_strjoin_free(result, temp);
 			}
 		}
 		else
 		{
-			DEBUG_PRINT(CYAN "Expanding environment variable or copying character at index %d\n" RESET, i);
+			DEBUG_PRINT(CYAN "Expanding environment variable or copying character at index :%d\n" RESET, i);
 			i = expanded_heredoc_env(line, &i, &result);
 		}
 	}
