@@ -12,6 +12,32 @@
 
 #include "../minishell.h"
 
+static void child_process_heredoc(int *pipe_fd, t_token **current, char **heredoc_input)
+{
+    close(pipe_fd[0]);
+    *heredoc_input = handler_heredoc((*current)->value);
+    write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
+    close(pipe_fd[1]);
+    free(*heredoc_input);
+    exit(0);
+}
+
+static  void parent_process_heredoc(int *pipe_fd, char **args)
+{
+    close(pipe_fd[1]);
+    if(dup2(pipe_fd[0], STDIN_FILENO) == -1)
+    {
+        perror("dub2 failed!\n");
+        clean_2d(args);
+        close(pipe_fd[0]);
+        return;
+    }
+    close(pipe_fd[0]);
+    wait(NULL); // Alt sureci bekle
+
+}
+
+
 void    process_child_heredoc(t_token **current, char **heredoc_input, char **args)
 {
     if(*current && (*current)->type == TOKEN_WORD)
@@ -27,21 +53,9 @@ void    process_child_heredoc(t_token **current, char **heredoc_input, char **ar
         } // Surecler arasi boruyu olusturur > alt surec icin
         pid = fork();
         if(pid == 0)
-        {
-            close(pipe_fd[0]);
-            *heredoc_input = handler_heredoc((*current)->value);
-            write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
-            close(pipe_fd[1]);
-            free(*heredoc_input);
-            exit(0);
-        }
+            child_process_heredoc(pipe_fd, current, heredoc_input);
         else if(pid > 0)
-        {
-            close(pipe_fd[1]);
-            dup2(pipe_fd[0], STDIN_FILENO);
-            close(pipe_fd[0]);
-            wait(NULL); // Alt sureci bekle
-        }
+            parent_process_heredoc(pipe_fd, args);
         else
         {
             perror("fork failed!");

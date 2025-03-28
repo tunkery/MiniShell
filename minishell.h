@@ -127,8 +127,9 @@ void openfile_redirected(t_token **current, int *out_fd, char **args, int append
 void    process_child_heredoc(t_token **current, char **heredoc_input, char **args);
 
 // Heredoc functions
-// char *close_heredoc_line(char *expand_line, t_env *env);
+int	expanded_heredoc_env(char *line, int *i, char **result);
 char *expanded_heredoc_line(char *line);
+char	*process_heredoc_line(char *line, char *result);
 char *handler_heredoc(char *delimiter);
 
 // Deallocation functions
