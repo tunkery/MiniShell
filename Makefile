@@ -6,7 +6,7 @@
 #    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/03/25 13:51:36 by bolcay           ###   ########.fr        #
+#    Updated: 2025/04/01 11:21:57 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		tokens/tokenizer.c builtin/builtin_utils.c tokens/tokenizer_utils.c builtin/env.c \
 		builtin/pwd.c builtin/echo.c builtin/export.c builtin/unset.c builtin/cd.c builtin/exit.c \
 		execute/exe_main.c execute/heredoc.c execute/exe_with_token.c execute/run_commands.c \
-		execute/heredoc_utils.c
+		execute/heredoc_utils.c envp/envp_utils2.c
 
 
 

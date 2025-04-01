@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/25 13:36:27 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/01 11:21:40 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	initiate_env(t_env *env, char **envp);
 int		key_size(char *str);
 int		value_size(char *str);
 int		env_size(char **envp);
+char	*find_path(t_env *env);
 void	copy_env(char **str, char ***envp);
 char	**update_env(char **envp, char *key);
 char	**get_tokens(char *str);

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/25 13:51:35 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/01 11:53:37 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 			dup2(out_fd, STDOUT_FILENO);
 			close(out_fd);
 		}
-		if (execve(exe, args, env->path) == -1)
+		if (execve(exe, args, env->envp) == -1)
 		{
 			perror("execvp Failed");
 			free(exe);
@@ -62,7 +62,7 @@ static void	run_with_path(char **args, t_env *env, int out_fd)
 				dup2(out_fd, STDOUT_FILENO);
 				close(out_fd);
 			}
-			if (execve(args[0], args, env->path) == -1)
+			if (execve(args[0], args, env->envp) == -1)
 			{
 				perror("execvp Failed");
 				exit(127);
@@ -80,9 +80,11 @@ static void	run_with_path(char **args, t_env *env, int out_fd)
 void	exec_command(char **args, t_env *env, int out_fd)
 {
 	char	*exec_path;
+	char	*path;
 
 	if (!args || !args[0])
 		return ;
+	path = find_path(env);
 	if (ft_strchr(args[0], '/')) // if, yani eger, biri path ile yazmissa komutu burasi kontrol edip calistiriyo
 	{
 		exec_path = NULL;
@@ -91,7 +93,7 @@ void	exec_command(char **args, t_env *env, int out_fd)
 	else
 		// eger pathsiz yazilmissa command burasi isi eline aliyo ve pathi bulup calistiriyo
 	{
-		exec_path = find_exec(args[0], env->path1, 0, 5);
+		exec_path = find_exec(args[0], path, 0, 5);
 		if (!exec_path)
 		{
 			printf("minishell: %s: command not found.\n", args[0]);
