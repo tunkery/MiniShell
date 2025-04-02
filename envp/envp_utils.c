@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:11:50 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/19 17:46:37 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/02 17:31:28 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	key_size(char *str)
 	while (str[i])
 	{
 		if (str[i] == '=')
-			return (i);
+			return (i - 1);
 		i++;
 	}
 	return (i);

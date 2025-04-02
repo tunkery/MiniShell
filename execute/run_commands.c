@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/02 15:48:28 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/02 17:49:30 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,37 @@ static void	run_with_path(char **args, t_env *env, int out_fd)
 		printf("minishell: %s: command not found.\n", args[0]);
 }
 
+static char	*get_path(char *str, t_env *env)
+{
+	int		i;
+	int		j;
+	int		size;
+	char	*key;
+	char	*temp;
+	char	*temp2;
+	char	*final;
+
+	i = 1;
+	j = 0;
+	key = ft_substr(str, 1, key_size(str));
+	size = ft_strlen(key);
+	while (env->envp[j] && ft_strncmp(env->envp[j], key, size) != 0)
+		j++;
+	if (!env->envp[j])
+		return (NULL);
+	temp = ft_substr(env->envp[j], size + 1, ft_strlen(env->envp[j]) - size);
+	temp2 = ft_substr(str, size + 1, ft_strlen(str) - size - 1);
+	final = ft_strjoin(temp, temp2);
+	free(temp);
+	free(temp2);
+	return (final);
+}
+
 void	exec_command(char **args, t_env *env, int out_fd)
 {
 	char	*exec_path;
 	char	*path;
+	char	*temp;
 
 	if (!args || !args[0])
 		return ;
@@ -96,6 +123,23 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		exec_path = find_exec(args[0], path, 0, 5);
 		if (!exec_path)
 		{
+			if (args[0] && args[0][0] == '$')
+			{
+				temp = get_path(args[0], env);
+				if (ft_strchr(args[0], '=') == 0)
+				{
+					printf("minishell: %s: is a directory\n", temp);
+					env->exit_code = 126;
+				}
+				else
+				{
+					printf("minishell: %s: No such file or directory\n", temp);
+					env->exit_code = 127;
+				}
+				DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
+				free(temp);
+				return ;
+			}
 			printf("minishell: %s: command not found.\n", args[0]);
 			env->exit_code = 127;
 			DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
@@ -103,7 +147,7 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		}
 		run_without_path(args, env, out_fd, exec_path);
 	}
-	DEBUG_PRINT(GRN "PID exit status: %d\n" RESET, env->exit_code);
+	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	if (exec_path)
 		free(exec_path);
 }
