@@ -12,6 +12,34 @@
 
 #include "../minishell.h"
 
+char	*ft_strjoin_heredoc(char const *s1, char const *s2)
+{
+	int		i;
+	int		j;
+	char	*new_s;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = 0;
+	j = 0;
+	new_s = malloc (ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!new_s)
+		return (NULL);
+	while (s1[i])
+	{
+		new_s[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+	{
+		new_s[i + j] = s2[j];
+		j++;
+	}
+	new_s[i + j] = '\0';
+	free((void*)s1);
+	return (new_s);
+}
+
 int	expanded_heredoc_env(char *line, int *i, char **result)
 {
 	char	*temp;
@@ -24,13 +52,13 @@ int	expanded_heredoc_env(char *line, int *i, char **result)
 		temp = expand_env(line, i);
 		if (temp)
 		{
-			*result = ft_strjoin(*result, temp);
+			*result = ft_strjoin_heredoc(*result, temp);
 			free(temp);
 		}
 	}
 	else
 	{
-		*result = ft_strjoin(*result, cpy);
+		*result = ft_strjoin_heredoc(*result, cpy);
 		(*i)++;
 	}
 	return (*i);
@@ -51,16 +79,16 @@ char	*process_heredoc_line(char *line, char *result)
 		{
 			start = i;
 			expand_line = expanded_heredoc_line(&line[i]);
-			result = ft_strjoin(result, expand_line);
+			result = ft_strjoin_heredoc(result, expand_line);
 			free(expand_line);
 			i = start + ft_strlen(&line[start]);
 		}
 		else
 		{
 			cpy[0] = line[i];
-			result = ft_strjoin(result, cpy);
+			result = ft_strjoin_heredoc(result, cpy);
 			i++;
 		}
 	}
-	return (ft_strjoin(result, "\n"));
+	return (ft_strjoin_heredoc(result, "\n"));
 }

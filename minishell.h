@@ -132,6 +132,7 @@ int	expanded_heredoc_env(char *line, int *i, char **result);
 char *expanded_heredoc_line(char *line);
 char	*process_heredoc_line(char *line, char *result);
 char *handler_heredoc(char *delimiter);
+char	*ft_strjoin_heredoc(char const *s1, char const *s2);
 
 // Deallocation functions
 

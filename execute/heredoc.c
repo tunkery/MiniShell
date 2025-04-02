@@ -16,7 +16,7 @@ static char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*result;
 
-	result = ft_strjoin(s1, s2);
+	result = ft_strjoin_heredoc(s1, s2);
 	free(s2);
 	return (result);
 }

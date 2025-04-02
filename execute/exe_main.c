@@ -39,15 +39,6 @@ char	**tokens_to_args(t_token *tokens)
 	count = 0;
 	tmp = tokens;
 	i = 0;
-	// while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
-	// 	&& tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_REDIRECT_OUT
-	// 	&& tmp->type != TOKEN_REDIRECT_IN && tmp->type != TOKEN_HEREDOC
-	// 	&& tmp->type != TOKEN_PIPE)
-	// {
-	// 	if (tmp->type == TOKEN_WORD)
-	// 		count++;
-	// 	tmp = tmp->next;
-	// }
 	args = malloc((count_token_args(tokens) + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);
