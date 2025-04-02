@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:56:22 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/02 14:34:31 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/02 16:28:38 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ void	run_echo(char **args, t_env *env)
 	check = 0;
 	i = 1;
 	// first = 1;
+	if (args[1] && args[1][0] == '$' && args[1][1] == '?')
+	{
+		printf("%d\n", env->exit_code);
+		env->exit_code = 0;
+		return ;
+	}
 	if (!args[1]) // If there is no argumant just print it new line!
 	{
 		printf("\n");

@@ -52,8 +52,8 @@
             [DEBUG] Freeing token: type=0, value= 'cat'
             [DEBUG] Freeing token: type=0, value= '-e'
 
-4-)  echo $? sembolun eklenmesi gerekiyorr!! Bunun sonucunda cikti bize bir numara veriyor. 
-    Konuyu arastirip kodu eklemeliyiz!
+# 4-)  echo $? sembolun eklenmesi gerekiyorr!! Bunun sonucunda cikti bize bir numara veriyor. 
+#     Konuyu arastirip kodu eklemeliyiz!
 
 # 5-)minishell> echo " yazdiktan sonra control-D ye bastigimizda cikis yapiyor terminalden Control C calisiyor."
 
