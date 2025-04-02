@@ -37,6 +37,7 @@
 #define CYAN         "\001\033[1;36m\002"
 #define BLUE  		 "\001\033[1;34m\002"
 #define RED   		 "\001\033[1;31m\002"
+#define MGNT   		 "\001\033[1;35m\002"
 #define GRN   		 "\001\033[1;32m\002"
 
 # define DEBUG 1
@@ -158,7 +159,12 @@ void    free_token_matrix(t_token *head);
 char *process_quoted(char *line, int *i, char quote_type);
 char *expand_env(char *line, int *i);
 char **tokens_to_args(t_token *tokens);
-
+// seperated tokenizer
+void    handle_pipe(t_token *token, int *i);
+void    handle_redirect_in(t_token *token, char *line, int *i);
+void    handle_redirect_out(t_token *token, char *line, int *i);
+void    handle_semic(t_token *token, int *i);
+void    handle_word(t_token *token, char *line, int *i);
 // Tokenizer utils
 int ft_strcmp(const char *s1, const char *s2);
 

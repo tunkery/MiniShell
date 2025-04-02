@@ -98,6 +98,39 @@ char    *extract_word( char *line, int *i)
     return (result);
 }
 
+
+t_token *handle_special_token(char *line, int *i)
+{
+    t_token *token;
+
+    token = malloc(sizeof(t_token));
+    if(!token)
+    {
+        DEBUG_PRINT(MGNT"Memory allocated failed for tokens!\n"RESET);
+        return NULL;
+    }
+    token->next = NULL;
+    if(line[*i] == '|')
+        handle_pipe(token, i);
+    else if(line[*i] == '<')
+        handle_redirect_in(token, line, i);
+    else if(line[*i] == '>')
+        handle_redirect_out(token, line, i);
+    else if(line[*i] == ';')
+        handle_semic(token, i);
+    else
+        handle_word(token, line, i);
+    if(!token->value)
+    {
+        DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", *i);
+        free(token);
+        return NULL;
+    }
+    // token->next = NULL;
+    DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
+    return token;    
+}
+
 void seperated_token(char *line, t_token **head)
 {
     t_token *current = NULL;
@@ -112,82 +145,16 @@ void seperated_token(char *line, t_token **head)
             i++;
         if(line[i] == '\0')
             break;
-        // create a new token
-        token = malloc(sizeof(t_token));
+        token = handle_special_token(line, &i);
         if(!token)
         {
-            DEBUG_PRINT(RED"Malloc failed\n"RESET);
-            free_token_matrix(*head); // free the token matrix when malloc is failed
-            *head = NULL;
-            return;
-        }
-
-        if(line[i] == '|')
-        {
-            token->type = TOKEN_PIPE;
-            token->value = ft_strdup("|");
-            i++;
-        }
-        else if(line[i] == '<')
-        {
-            if(line[i + 1] == '<')
-            {
-                token->type = TOKEN_HEREDOC;
-                token->value = ft_strdup("<<");
-                i += 2;
-            }
-            else
-            {
-                token->type = TOKEN_REDIRECT_IN;
-                token->value = ft_strdup("<");
-                i++;
-            }
-        }
-        else if(line[i] == '>')
-        {
-            if(line[i + 1] == '>')
-            {
-                token->type = TOKEN_REDIRECT_APPEND;
-                token->value = ft_strdup(">>");
-                i += 2;
-            }
-            else
-            {
-                token->type = TOKEN_REDIRECT_OUT;
-                token->value = ft_strdup(">");
-                i++;
-            }
-        }
-        else if(line[i] == ';')
-        {
-            token->type = TOKEN_SEMIC;
-            token->value = ft_strdup(";");
-            i++;
-        }
-        else if(line[i] == '"')
-        {
-            token->type = TOKEN_WORD;
-            token->value = process_quoted(line, &i, '"');
-        }
-        else if(line[i] == '\'') 
-        {
-            token->type = TOKEN_WORD;
-            token->value = process_quoted(line, &i, '\'');
-        }
-        else // without quote
-        {
-            token->type = TOKEN_WORD;
-            token->value = extract_word(line, &i);
-        }
-        if(!token->value)
-        {
             DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", i);
-            free(token);
+            // free(token);
             free_token_matrix(*head);
             *head = NULL;
             return;
         }
-        token->next = NULL;
+        // token->next = NULL;
         DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
         if(!*head)
             *head = token;
