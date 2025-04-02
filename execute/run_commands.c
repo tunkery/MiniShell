@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/02 14:29:26 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/02 15:48:28 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		if (!exec_path)
 		{
 			printf("minishell: %s: command not found.\n", args[0]);
+			env->exit_code = 127;
+			DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 			return ;
 		}
 		run_without_path(args, env, out_fd, exec_path);
