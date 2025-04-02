@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/01 11:21:40 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/02 14:45:54 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,9 @@ int		builtin_check(char **tokens);
 void	run_builtin(char **args, t_env *env);
 void	run_export(char **args, t_env *env);
 void	run_exit(void);
-void	run_echo(char **args);
+void	run_echo(char **args, t_env *env);
 char 	*echo_separate(char *line, int check);
-void	run_pwd(char **args);
+void	run_pwd(char **args, t_env *env);
 void	run_unset(char **args, t_env *env);
 void	run_env(char **args, t_env *env);
 void	run_cd(char **args, t_env *env);

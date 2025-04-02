@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:56:22 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/24 22:55:23 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/02 14:34:31 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 // artik duzgun calisiyooooo!!!
 
-void	run_echo(char **args)
+void	run_echo(char **args, t_env *env)
 {
 	int	check;
 	int	i;
@@ -31,6 +31,8 @@ void	run_echo(char **args)
 	if (!args[1]) // If there is no argumant just print it new line!
 	{
 		printf("\n");
+		env->exit_code = 0;
+		DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 		return ;
 	}
 	if (ft_strncmp(args[1], "-n", ft_strlen(args[1])) == 0 && ft_strlen(args[1]) == 2)
@@ -51,6 +53,8 @@ void	run_echo(char **args)
 	}
 	if (check == 0)
 		printf("\n");
+	env->exit_code = 0;
+	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	DEBUG_PRINT(GRN"Echo completed\n"RESET);
 }
 
