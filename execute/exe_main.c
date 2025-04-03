@@ -85,8 +85,9 @@ void	execute_with_redirection(char **args, t_env *env, int out_fd,
 }
 
 void	handle_redirection(t_token **current, char **args, int *out_fd,
-		char **heredoc_input)
+		char **heredoc_input, t_env *env)
 {
+	int in_fd = STDIN_FILENO;
 	while (*current && (*current)->type != TOKEN_SEMIC)
 	{
 		/* Sembolu eklemek */
@@ -94,6 +95,13 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 0);
+		}
+		else if (*current && (*current)->type == TOKEN_REDIRECT_IN) // <
+		{
+			*current = (*current)->next;
+			read_redirected_in(current, &in_fd, args, env);
+			if(!*args)
+				return ;
 		}
 		else if ((*current)->type == TOKEN_REDIRECT_APPEND) // >>
 		{
@@ -105,7 +113,8 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 			*current = (*current)->next;
 			process_child_heredoc(current, heredoc_input, args);
 		}
-		(*current) = (*current)->next;
+		else
+			(*current) = (*current)->next;
 	}
 }
 
@@ -157,8 +166,13 @@ void	cell_launch(t_token *tokens, t_env *env)
 			DEBUG_PRINT(BLUE "Args[%d]: %s\n" RESET, i, args[i]);
 			i++;
 		}
-		handle_redirection(&tmp, args, &out_fd, &heredoc_input);
-		execute_with_redirection(args, env, out_fd, save_stdout);
+		handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
+		if(args)
+		{
+			execute_with_redirection(args, env, out_fd, save_stdout);
+			args = NULL;
+		}
+		DEBUG_PRINT(RED"Skip execution due to redirection failed!"RESET);
 		clean_2d(args);
 		if (out_fd != STDOUT_FILENO)
 			close(out_fd);
@@ -166,9 +180,15 @@ void	cell_launch(t_token *tokens, t_env *env)
 		if (dup2(save_stdin, STDIN_FILENO) == -1)
 			perror("dup2 failed to restore STDIN");
 		while (tmp && tmp->type != TOKEN_SEMIC)
+		{
+			DEBUG_PRINT(RED"Advancing tmp: %p, type: %d\n"RESET, tmp, tmp->type);
 			tmp = tmp->next;
+		}
 		if (tmp)
+		{
+			DEBUG_PRINT(RED"Skipping semicol"RESET);
 			tmp = tmp->next;
+		}
 	}
 	close(save_stdout);
 	DEBUG_PRINT(BLUE "Ending Cell_lounch\n" RESET);

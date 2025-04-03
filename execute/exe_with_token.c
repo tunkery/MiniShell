@@ -12,6 +12,39 @@
 
 #include "../minishell.h"
 
+void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
+{
+	if(*current && (*current)->type == TOKEN_WORD)
+	{
+		*in_fd = open((*current)->value, O_RDONLY);
+		if(*in_fd < 0)
+		{
+			perror(CYAN"Open failed!"RESET);
+			DEBUG_PRINT(RED"This function didn't counted!"RESET);
+			clean_2d(args);
+			*args = NULL;
+			env->exit_code = 1;
+			return;
+		}
+		DEBUG_PRINT(RED"Redirected input is: %s\n"RESET, (*current)->value);
+		*current = (*current)->next;
+	}
+	if(*in_fd  != STDIN_FILENO)
+	{
+		if(dup2(*in_fd, STDIN_FILENO) == -1)
+		{
+			close(*in_fd);
+			perror("dub2 failed for redirected!");
+			*args = NULL;
+			clean_2d(args);
+			env->exit_code = 1;
+			return ;
+		}
+		close(*in_fd);
+		DEBUG_PRINT("Hello I'm here\n");
+	}
+}
+
 static void	child_process_heredoc(int *pipe_fd, t_token **current,
 		char **heredoc_input)
 {

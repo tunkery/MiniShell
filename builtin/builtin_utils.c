@@ -30,6 +30,8 @@ int	key_check(char *args)
 
 int	builtin_check(char **tokens)
 {
+	if(!tokens || !tokens[0])
+		return 0;
 	if (ft_strncmp(tokens[0], "env", ft_strlen(tokens[0])) == 0)
 		return (1);
 	if (ft_strncmp(tokens[0], "pwd", ft_strlen(tokens[0])) == 0)
