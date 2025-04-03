@@ -150,5 +150,5 @@ void	exec_command(char **args, t_env *env, int out_fd)
 	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	if (exec_path)
 		free(exec_path);
-	free(path);
+	// free(path);
 }

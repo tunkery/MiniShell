@@ -173,7 +173,7 @@ void	cell_launch(t_token *tokens, t_env *env)
 			args = NULL;
 		}
 		DEBUG_PRINT(RED"Skip execution due to redirection failed!"RESET);
-		clean_2d(args);
+		// clean_2d(args);
 		if (out_fd != STDOUT_FILENO)
 			close(out_fd);
 		out_fd = STDOUT_FILENO;

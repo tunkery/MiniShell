@@ -46,6 +46,7 @@ char *process_quoted(char *line, int *i, char quote_type)
     {
         if(quote_type == '"' && line[*i] == '$')
         {
+            DEBUG_PRINT(RED"Hello I'm here"RESET);
             temp = expand_env(line, i);
             if(temp)
                 result = ft_strjoin(result, temp);
@@ -83,6 +84,7 @@ char    *extract_word( char *line, int *i)
         char cpy[2] = {line[*i], '\0'};
         result = ft_strjoin(result, cpy);
         (*i)++;
+
     }
     // DEBUG_PRINT(RED"Extracted word: '%s' (start = %d, end = %d) \n"RESET, result, start, *i);
     return (result);
@@ -96,7 +98,7 @@ t_token *handle_special_token(char *line, int *i)
     token = malloc(sizeof(t_token));
     if(!token)
     {
-        // DEBUG_PRINT(MGNT"Memory allocated failed for tokens!\n"RESET);
+        DEBUG_PRINT(MGNT"Memory allocated failed for tokens!\n"RESET);
         return NULL;
     }
     token->next = NULL;
@@ -112,12 +114,12 @@ t_token *handle_special_token(char *line, int *i)
         handle_word(token, line, i);
     if(!token->value)
     {
-        // DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", *i);
+        DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", *i);
         free(token);
         return NULL;
     }
-    // token->next = NULL;
-    // DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
+    token->next = NULL;
+    DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
     return token;    
 }
 
@@ -144,7 +146,7 @@ void seperated_token(char *line, t_token **head)
             *head = NULL;
             return;
         }
-        // token->next = NULL;
+        token->next = NULL;
         // DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
         if(!*head)
             *head = token;

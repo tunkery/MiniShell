@@ -181,58 +181,58 @@
 #         [DEBUG] Freeing token matrix
 #         [DEBUG] Freeing token: type=0, value= 'env'
 
-7-)  "<" Sembolun testi
+# 7-)  "<" Sembolun testi
 
-        minishell> 
-        [DEBUG] Starting token seperation for line: ''
-        [DEBUG] Token seperation completed
-        [DEBUG] No tokens created
-        minishell> wc -w < file.txt
-        [DEBUG] Starting token seperation for line: 'wc -w < file.txt'
-        [DEBUG] Extracted word: 'wc' (start = 0, end = 2) 
-        [DEBUG] Created token: type= 0, value = 'wc' 
-        [DEBUG] Extracted word: '-w' (start = 3, end = 5) 
-        [DEBUG] Created token: type= 0, value = '-w' 
-        [DEBUG] Created token: type= 2, value = '<' 
-        [DEBUG] Extracted word: 'file.txt' (start = 8, end = 16) 
-        [DEBUG] Created token: type= 0, value = 'file.txt' 
-        [DEBUG] Token seperation completed
-        [DEBUG] Tokenizer finished, head token: type= 0, value = 'wc'
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: wc
-        [DEBUG] Args[1]: -w
+#         minishell> 
+#         [DEBUG] Starting token seperation for line: ''
+#         [DEBUG] Token seperation completed
+#         [DEBUG] No tokens created
+#         minishell> wc -w < file.txt
+#         [DEBUG] Starting token seperation for line: 'wc -w < file.txt'
+#         [DEBUG] Extracted word: 'wc' (start = 0, end = 2) 
+#         [DEBUG] Created token: type= 0, value = 'wc' 
+#         [DEBUG] Extracted word: '-w' (start = 3, end = 5) 
+#         [DEBUG] Created token: type= 0, value = '-w' 
+#         [DEBUG] Created token: type= 2, value = '<' 
+#         [DEBUG] Extracted word: 'file.txt' (start = 8, end = 16) 
+#         [DEBUG] Created token: type= 0, value = 'file.txt' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'wc'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: wc
+#         [DEBUG] Args[1]: -w
 
-        minishell>  [DEBUG] Command executed
-        [DEBUG] Ending Cell_lounch
-        [DEBUG] Freeing token matrix
-        [DEBUG] Freeing token: type=0, value= 'wc'
-        [DEBUG] Freeing token: type=0, value= '-w'
-        [DEBUG] Freeing token: type=2, value= '<'
-        [DEBUG] Freeing token: type=0, value= 'file.txt'
-        minishell> cat < file.txt
-        [DEBUG] Starting token seperation for line: 'cat < file.txt'
-        [DEBUG] Extracted word: 'cat' (start = 0, end = 3) 
-        [DEBUG] Created token: type= 0, value = 'cat' 
-        [DEBUG] Created token: type= 2, value = '<' 
-        [DEBUG] Extracted word: 'file.txt' (start = 6, end = 14) 
-        [DEBUG] Created token: type= 0, value = 'file.txt' 
-        [DEBUG] Token seperation completed
-        [DEBUG] Tokenizer finished, head token: type= 0, value = 'cat'
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: cat
+#         minishell>  [DEBUG] Command executed
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= 'wc'
+#         [DEBUG] Freeing token: type=0, value= '-w'
+#         [DEBUG] Freeing token: type=2, value= '<'
+#         [DEBUG] Freeing token: type=0, value= 'file.txt'
+#         minishell> cat < file.txt
+#         [DEBUG] Starting token seperation for line: 'cat < file.txt'
+#         [DEBUG] Extracted word: 'cat' (start = 0, end = 3) 
+#         [DEBUG] Created token: type= 0, value = 'cat' 
+#         [DEBUG] Created token: type= 2, value = '<' 
+#         [DEBUG] Extracted word: 'file.txt' (start = 6, end = 14) 
+#         [DEBUG] Created token: type= 0, value = 'file.txt' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'cat'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: cat
 
-        minishell>  [DEBUG] Command executed
-        [DEBUG] Ending Cell_lounch
-        [DEBUG] Freeing token matrix
-        [DEBUG] Freeing token: type=0, value= 'cat'
-        [DEBUG] Freeing token: type=2, value= '<'
-        [DEBUG] Freeing token: type=0, value= 'file.txt'
+#         minishell>  [DEBUG] Command executed
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= 'cat'
+#         [DEBUG] Freeing token: type=2, value= '<'
+#         [DEBUG] Freeing token: type=0, value= 'file.txt'
 
-        Olmasi gereken cikti:
-        minishell> wc -w < file.txt
-                  14
+#         Olmasi gereken cikti:
+#         minishell> wc -w < file.txt
+#                   14
 
 
 # 8-) echo 'Hello' Komutu " ' " ile birlikte print ediyor!
