@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/07 15:03:08 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/07 15:19:40 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,19 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 	if (stat(str, &info) != 0)
 	{
 		printf("minishell: %s: No such file or directory\n", str);
+		env->exit_code = 127;
 		return ;
 	}
 	else if (S_ISDIR(info.st_mode))
 	{
 		printf("minishell: %s: is a directory\n", str);
+		env->exit_code = 126;
 		return ;
 	}
 	else if (access(str, X_OK) != 0)
 	{
 		printf("minishell: %s: Permission denied\n", str);
+		env->exit_code = 126;
 		return ;
 	}
 	else if (access(str, X_OK) == 0)
@@ -113,7 +116,10 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 			wait_for_child(pid, env);
 	}
 	else
+	{
 		printf("minishell: %s: command not found.\n", str);
+		env->exit_code = 127;
+	}
 }
 
 // static char	*get_path(char *str, t_env *env)
