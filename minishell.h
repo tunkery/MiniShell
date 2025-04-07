@@ -63,6 +63,15 @@ typedef struct s_env
 	char	*path1;
 }	t_env;
 
+typedef struct s_pipe_command
+{
+	int count_pipe;
+    int index;
+    pid_t pipe_id;
+    int pipe_stdin;
+    int pipe_stdout;
+    char **args;
+} t_pipe_command;
 
 typedef struct s_process
 {
@@ -123,11 +132,22 @@ void	handle_redirection(t_token **current, char **args, int *out_fd, char **here
 void	execute_with_redirection(char **args, t_env *env, int out_fd, int save_stdout);
 void	cell_launch(t_token *tokens, t_env *env);
 void exec_command(char **args, t_env *env, int out_fd);
-char **tokens_to_args(t_token *tokens);
+// char **tokens_to_args(t_token *tokens, t_token *end);
 // execute with token functions
 void openfile_redirected(t_token **current, int *out_fd, char **args, int append);
 void    process_child_heredoc(t_token **current, char **heredoc_input, char **args, t_env *env);
 void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
+// execute with pipe functions
+void execute_pipes(t_pipe_command *pipes, t_env *env);
+t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count);
+char **split_args(char *command);
+char **split_pipes(char *command);
+// Pipe_utils functions
+void *ft_realloc(void *ptr, size_t size);
+size_t strspn(const char *s, const char *accept);
+size_t strcspn(const char *s, const char *reject);
+char *strtok(char *str, const char *delim);
+
 
 // Heredoc functions
 int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env);
@@ -159,7 +179,7 @@ char    *extract_word(char *line, int *i);
 void    free_token_matrix(t_token *head);
 char *process_quoted(char *line, int *i, char quote_type, t_env *env);
 char *expand_env(char *line, int *i, t_env *env);
-char **tokens_to_args(t_token *tokens);
+char **tokens_to_args(t_token *tokens, t_token *end);
 // seperated tokenizer
 void    handle_pipe(t_token *token, int *i);
 void    handle_redirect_in(t_token *token, char *line, int *i);
