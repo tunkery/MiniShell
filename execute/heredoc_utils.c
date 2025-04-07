@@ -40,7 +40,7 @@ char	*ft_strjoin_heredoc(char const *s1, char const *s2)
 	return (new_s);
 }
 
-int	expanded_heredoc_env(char *line, int *i, char **result)
+int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env)
 {
 	char	*temp;
 	char	cpy[2];
@@ -49,7 +49,7 @@ int	expanded_heredoc_env(char *line, int *i, char **result)
 	cpy[1] = '\0';
 	if (line[*i] == '$')
 	{
-		temp = expand_env(line, i);
+		temp = expand_env(line, i, env);
 		if (temp)
 		{
 			*result = ft_strjoin_heredoc(*result, temp);
@@ -64,7 +64,7 @@ int	expanded_heredoc_env(char *line, int *i, char **result)
 	return (*i);
 }
 
-char	*process_heredoc_line(char *line, char *result)
+char	*process_heredoc_line(char *line, char *result, t_env *env)
 {
 	char	*expand_line;
 	int		i;
@@ -78,7 +78,7 @@ char	*process_heredoc_line(char *line, char *result)
 		if (line[i] == '$')
 		{
 			start = i;
-			expand_line = expanded_heredoc_line(&line[i]);
+			expand_line = expanded_heredoc_line(&line[i], env);
 			result = ft_strjoin_heredoc(result, expand_line);
 			free(expand_line);
 			i = start + ft_strlen(&line[start]);

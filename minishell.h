@@ -63,6 +63,7 @@ typedef struct s_env
 	char	*path1;
 }	t_env;
 
+
 typedef struct s_process
 {
 	char	*line;
@@ -114,7 +115,6 @@ int		env_size(char **envp);
 char	*find_path(t_env *env);
 void	copy_env(char **str, char ***envp);
 char	**update_env(char **envp, char *key);
-char	**get_tokens(char *str);
 char	**remove_env(char **envp, char *key);
 
 // Execute functions
@@ -126,14 +126,14 @@ void exec_command(char **args, t_env *env, int out_fd);
 char **tokens_to_args(t_token *tokens);
 // execute with token functions
 void openfile_redirected(t_token **current, int *out_fd, char **args, int append);
-void    process_child_heredoc(t_token **current, char **heredoc_input, char **args);
+void    process_child_heredoc(t_token **current, char **heredoc_input, char **args, t_env *env);
 void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
 
 // Heredoc functions
-int	expanded_heredoc_env(char *line, int *i, char **result);
-char *expanded_heredoc_line(char *line);
-char	*process_heredoc_line(char *line, char *result);
-char *handler_heredoc(char *delimiter);
+int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env);
+char *expanded_heredoc_line(char *line, t_env *env);
+char	*process_heredoc_line(char *line, char *result, t_env *env);
+char *handler_heredoc(char *delimiter, t_env *env);
 char	*ft_strjoin_heredoc(char const *s1, char const *s2);
 
 // Deallocation functions
@@ -153,19 +153,19 @@ void    rest_signal_command(void);
 
 
 // Tokenizer
-t_token    *tokenizer(char *line);
-void    seperated_token(char *line, t_token **head);
+t_token    *tokenizer(char *line, t_env *env);
+void    seperated_token(char *line, t_token **head, t_env *env);
 char    *extract_word(char *line, int *i);
 void    free_token_matrix(t_token *head);
-char *process_quoted(char *line, int *i, char quote_type);
-char *expand_env(char *line, int *i);
+char *process_quoted(char *line, int *i, char quote_type, t_env *env);
+char *expand_env(char *line, int *i, t_env *env);
 char **tokens_to_args(t_token *tokens);
 // seperated tokenizer
 void    handle_pipe(t_token *token, int *i);
 void    handle_redirect_in(t_token *token, char *line, int *i);
 void    handle_redirect_out(t_token *token, char *line, int *i);
 void    handle_semic(t_token *token, int *i);
-void    handle_word(t_token *token, char *line, int *i);
+void    handle_word(t_token *token, char *line, int *i, t_env *env);
 // Tokenizer utils
 int ft_strcmp(const char *s1, const char *s2);
 

@@ -59,21 +59,34 @@ void    handle_semic(t_token *token, int *i)
     (*i)++;
 }
 
-void    handle_word(t_token *token, char *line, int *i)
+void    handle_word(t_token *token, char *line, int *i, t_env *env)
 {
     if(line[*i] == '"')
     {
         token->type = TOKEN_WORD;
-        token->value = process_quoted(line, i, '"');
+        token->value = process_quoted(line, i, '"', env);
     }
     else if(line[*i] == '\'') 
     {
         token->type = TOKEN_WORD;
-        token->value = process_quoted(line, i, '\'');
+        token->value = process_quoted(line, i, '\'', env);
     }
     else // without quote
     {
-        token->type = TOKEN_WORD;
-        token->value = extract_word(line, i);
+        if(line[*i] == '$')
+        {
+            token->value = expand_env(line, i, env);
+            if(!token->value)
+            {
+                DEBUG_PRINT(RED"Failed to process env variable\n"RESET);
+                free(token);
+                return ;
+            }
+        }
+        else
+        {
+            token->type = TOKEN_WORD;
+            token->value = extract_word(line, i);
+        }
     }
 }

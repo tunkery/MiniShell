@@ -111,7 +111,7 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 		else if ((*current)->type == TOKEN_HEREDOC) // <<
 		{
 			*current = (*current)->next;
-			process_child_heredoc(current, heredoc_input, args);
+			process_child_heredoc(current, heredoc_input, args, env);
 		}
 		else
 			(*current) = (*current)->next;

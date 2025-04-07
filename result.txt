@@ -1,0 +1,5 @@
+		envp/envp.c deallocation.c signals/set_signal.c \
+CFLAGS = -Wall -Werror -Wextra -g $(INCLUDE)
+all: ${NAME}
+re: fclean all
+.PHONY: all clean fclean re

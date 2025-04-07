@@ -282,46 +282,49 @@
         [DEBUG] Freeing token matrix
         [DEBUG] Freeing token: type=0, value= '/Users/hpehliva/MiniShell'
 
-10 -) minishell> echo $PWD
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: echo
-        [DEBUG] Args[1]: $PWD
-        [DEBUG] Running echo
-        $PWD 
-        [DEBUG] exit status: 0
-        [DEBUG] Echo completed
-        [DEBUG] Ending Cell_lounch
-        minishell> echo $USER
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: echo
-        [DEBUG] Args[1]: $USER
-        [DEBUG] Running echo
-        $USER 
-        [DEBUG] exit status: 0
-        [DEBUG] Echo completed
-        [DEBUG] Ending Cell_lounch
-        minishell> echo "$USER"
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: echo
-        [DEBUG] Args[1]: hpehliva
-        [DEBUG] Running echo
-        hpehliva 
-        [DEBUG] exit status: 0
-        [DEBUG] Echo completed
-        [DEBUG] Ending Cell_lounch
-        minishell> echo "$PWD"
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: echo
-        [DEBUG] Args[1]: /Users/hpehliva/MiniShell
-        [DEBUG] Running echo
-        /Users/hpehliva/MiniShell 
-        [DEBUG] exit status: 0
-        [DEBUG] Echo completed
-        [DEBUG] Ending Cell_lounch
+# 10 -) minishell> echo $PWD
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: $PWD
+#         [DEBUG] Running echo
+#         $PWD 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+#         minishell> echo $USER
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: $USER
+#         [DEBUG] Running echo
+#         $USER 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+#         minishell> echo "$USER"
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: hpehliva
+#         [DEBUG] Running echo
+#         hpehliva 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+#         minishell> echo "$PWD"
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: /Users/hpehliva/MiniShell
+#         [DEBUG] Running echo
+#         /Users/hpehliva/MiniShell 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+
+11-) echo "MErhabalar" << file.txt
+        Bu komutlari arastir!
 
 
 

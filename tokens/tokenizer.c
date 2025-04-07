@@ -13,31 +13,42 @@
 #include "../minishell.h"
 
 
-char *expand_env(char *line, int *i)
+char *expand_env(char *line, int *i, t_env *env)
 {
     char *value;
     char var_name[256];
+    char *exit_status;
     int j;
 
     j = 0;
     (*i)++; // skip the '$'
+
+    if(line[*i] == '?')
+    {
+        (*i)++;
+        exit_status = ft_itoa(env->exit_code);
+        printf("Exit status: %s\n", exit_status);
+        // free(exit_status); // don't need to free it here!.
+        return (exit_status);
+    }
+
     while(line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
     {
         var_name[j++] = line[*i];
         (*i)++;
     }
     var_name[j] = '\0';
-    // DEBUG_PRINT(CYAN"Expanding env var: '%s'\n"RESET, var_name);
+    DEBUG_PRINT(CYAN"Expanding env var: '%s'\n"RESET, var_name);
     value = getenv(var_name);
-    // DEBUG_PRINT(CYAN"Found value: '%s'\n"RESET, value ? value : "NULL");
+    DEBUG_PRINT(CYAN"Found value: '%s'\n"RESET, value ? value : "NULL");
     if(value)
         return (ft_strdup(value));
     return ft_strdup("");
 }
 
-char *process_quoted(char *line, int *i, char quote_type)
+char *process_quoted(char *line, int *i, char quote_type, t_env *env)
 {
-    // int start = *i + 1;
+    int start = *i + 1;
     char *result = ft_strdup("");
     char *temp;
 
@@ -47,7 +58,7 @@ char *process_quoted(char *line, int *i, char quote_type)
         if(quote_type == '"' && line[*i] == '$')
         {
             DEBUG_PRINT(RED"Hello I'm here"RESET);
-            temp = expand_env(line, i);
+            temp = expand_env(line, i, env);
             if(temp)
                 result = ft_strjoin(result, temp);
             free(temp);
@@ -64,10 +75,10 @@ char *process_quoted(char *line, int *i, char quote_type)
     else // single quote doesn't have expantation.
     {
         free(result);
-        // DEBUG_PRINT(RED"Failed to process quoted string\n"RESET);
+        DEBUG_PRINT(RED"Failed to process quoted string\n"RESET);
         return (NULL);
     }
-    // DEBUG_PRINT(RED"Processed quoted string: '%s' (start = %d, end = %d)\n"RESET, result, start, *i);
+    DEBUG_PRINT(RED"Processed quoted string: '%s' (start = %d, end = %d)\n"RESET, result, start, *i);
     return (result);
 }
 
@@ -91,7 +102,7 @@ char    *extract_word( char *line, int *i)
 }
 
 
-t_token *handle_special_token(char *line, int *i)
+t_token *handle_special_token(char *line, int *i, t_env *env)
 {
     t_token *token;
 
@@ -111,7 +122,7 @@ t_token *handle_special_token(char *line, int *i)
     else if(line[*i] == ';')
         handle_semic(token, i);
     else
-        handle_word(token, line, i);
+        handle_word(token, line, i,env);
     if(!token->value)
     {
         DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", *i);
@@ -123,13 +134,13 @@ t_token *handle_special_token(char *line, int *i)
     return token;    
 }
 
-void seperated_token(char *line, t_token **head)
+void seperated_token(char *line, t_token **head, t_env *env)
 {
     t_token *current = NULL;
     t_token *token;
     int i = 0;
 
-    // DEBUG_PRINT(RED"Starting token seperation for line: '%s'\n", line);
+    DEBUG_PRINT(RED"Starting token seperation for line: '%s'\n", line);
     while(line[i])
     {
         // split spaces
@@ -137,17 +148,17 @@ void seperated_token(char *line, t_token **head)
             i++;
         if(line[i] == '\0')
             break;
-        token = handle_special_token(line, &i);
+        token = handle_special_token(line, &i, env);
         if(!token)
         {
-            // DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", i);
-            // free(token);
+            DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", i);
+            free(token);
             free_token_matrix(*head);
             *head = NULL;
             return;
         }
         token->next = NULL;
-        // DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
+        DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
         if(!*head)
             *head = token;
         else
@@ -157,16 +168,16 @@ void seperated_token(char *line, t_token **head)
     // DEBUG_PRINT(RED"Token seperation completed\n"RESET);
 }
 
-t_token    *tokenizer(char *line)
+t_token    *tokenizer(char *line, t_env *env)
 {
     t_token *head = NULL;
 
 
     /* Be sure this is symbol or word */
-    seperated_token(line, &head);
-    // if(!head)
-    //     DEBUG_PRINT(RED"No tokens created\n"RESET);
-    // else
-    //     DEBUG_PRINT(GRN"Tokenizer finished, head token: type= %d, value = '%s'\n", head->type, head->value);
+    seperated_token(line, &head, env);
+    if(!head)
+        DEBUG_PRINT(RED"No tokens created\n"RESET);
+    else
+        DEBUG_PRINT(GRN"Tokenizer finished, head token: type= %d, value = '%s'\n", head->type, head->value);
     return (head);
 }

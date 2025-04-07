@@ -46,10 +46,10 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 }
 
 static void	child_process_heredoc(int *pipe_fd, t_token **current,
-		char **heredoc_input)
+		char **heredoc_input, t_env *env)
 {
 	close(pipe_fd[0]);
-	*heredoc_input = handler_heredoc((*current)->value);
+	*heredoc_input = handler_heredoc((*current)->value, env);
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
 	close(pipe_fd[1]);
 	free(*heredoc_input);
@@ -71,7 +71,7 @@ static void	parent_process_heredoc(int *pipe_fd, char **args)
 }
 
 void	process_child_heredoc(t_token **current, char **heredoc_input,
-		char **args)
+		char **args, t_env *env)
 {
 		int pipe_fd[2];
 		pid_t pid;
@@ -86,7 +86,7 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		} // Surecler arasi boruyu olusturur > alt surec icin
 		pid = fork();
 		if (pid == 0)
-			child_process_heredoc(pipe_fd, current, heredoc_input);
+			child_process_heredoc(pipe_fd, current, heredoc_input, env);
 		else if (pid > 0)
 			parent_process_heredoc(pipe_fd, args);
 		else

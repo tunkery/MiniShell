@@ -37,7 +37,25 @@
 //     DEBUG_PRINT(RED"Line processing completed\n"RESET);
 // }
 
+// void    initialized_env(t_env *env, char **envp)
+// {
+//     env->envp = envp;
+//     env->exit_code = 0;
+//     env->curr_pwd = getcwd(NULL, 0);
+//     env->old_pwd = NULL;
+//     env->path = NULL;
+//     env->path1 = NULL;
+//     env->export = NULL;
 
+//     g_env = *env;
+//     g_env.exit_code = 0;
+//     g_env.curr_pwd = ft_strdup(env->curr_pwd);
+//     g_env.old_pwd = NULL;
+//     g_env.path = NULL;
+//     g_env.path1 = NULL;
+//     g_env.export = NULL;
+//     DEBUG_PRINT(CYAN"Environment initialized\n"RESET);
+// }
 
 /*
     Standart file descriptors:
@@ -80,7 +98,6 @@ int main(int ac, char **av, char **envp)
     char   *line;
     t_env   *env = NULL;
     t_token *tokens;
-    // char **args;
 	(void)av;
 
 	if (ac != 1)
@@ -98,7 +115,7 @@ int main(int ac, char **av, char **envp)
         line = user_input();
         if(!line)
             break; // We can add free(line) here. or each links free it.
-        tokens = tokenizer(line);
+        tokens = tokenizer(line, env);
         if(!tokens)
         {
             free(line);
