@@ -64,6 +64,7 @@ void	execute_with_redirection(char **args, t_env *env, int out_fd,
 	{
 		if (out_fd != STDOUT_FILENO)
 		{
+			dup2(out_fd, STDOUT_FILENO);
 			if (dup2(out_fd, STDOUT_FILENO) == -1)
 				perror("dup2 failed!");
 			close(out_fd);
@@ -72,6 +73,7 @@ void	execute_with_redirection(char **args, t_env *env, int out_fd,
 		run_builtin(args, env);
 		if (out_fd != STDOUT_FILENO)
 		{
+			dup2(save_stdout, STDOUT_FILENO);
 			if (dup2(save_stdout, STDOUT_FILENO) == -1)
 				perror("dup2 failed!");
 			DEBUG_PRINT(GRN "STDOUT restored\n" RESET);
@@ -157,6 +159,11 @@ void	cell_launch(t_token *tokens, t_env *env)
 		t_pipe_command *pipes = parse_pipe(tokens, &pipe_count);
 		if(pipes)
 			execute_pipes(pipes, env);
+		else
+		{
+			env->exit_code = 1;
+			free_token_matrix(tokens);
+		}
 	}
 	else
 	{
