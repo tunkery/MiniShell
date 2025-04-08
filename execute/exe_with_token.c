@@ -113,7 +113,7 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 	if (*current && (*current)->type == TOKEN_WORD)
 	{
 		*out_fd = open((*current)->value, flag, 0644); // Uzerine yazdiriyor.
-		if (out_fd < 0)
+		if (*out_fd < 0)
 		{
 			perror("open failed!");
 			clean_2d(args);
