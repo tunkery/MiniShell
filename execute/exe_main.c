@@ -139,61 +139,74 @@ void	cell_launch(t_token *tokens, t_env *env)
 	int		save_stdout;
 	int		save_stdin;
 	char	*heredoc_input;
+	int		pipe_count = 0;
+	t_pipe_command *pipes;
 	int		i;
 
+	if(has_pipes(tokens))
+	{
+		DEBUG_PRINT(BLUE "Pipe detected, using pipe execution path\n" RESET);
+		pipes = parse_pipe(tokens, &pipe_count);
+		if (pipes)
+		{
+			execute_pipes(pipes, env);
+			return ;
+		}
+		DEBUG_PRINT(RED "Pipe parsing failed, falling back to normal execution\n" RESET);
+	}
 
 	tmp = tokens;
-		args = NULL;
-		out_fd = STDOUT_FILENO;
-		save_stdout = dup(STDOUT_FILENO);
-		save_stdin = dup(STDIN_FILENO);
-		heredoc_input = NULL;
-		DEBUG_PRINT(BLUE "Starting Cell_lounch\n" RESET);
-		while (tmp)
+	args = NULL;
+	out_fd = STDOUT_FILENO;
+	save_stdout = dup(STDOUT_FILENO);
+	save_stdin = dup(STDIN_FILENO);
+	heredoc_input = NULL;
+	DEBUG_PRINT(BLUE "Starting Cell_lounch\n" RESET);
+	while (tmp)
+	{
+		args = tokens_to_args(tmp);
+		if (!args)
 		{
-			args = tokens_to_args(tmp);
-			if (!args)
-			{
-				DEBUG_PRINT(RED "Failed to convert tokens to args\n" RESET);
-				while (tmp && tmp->type != TOKEN_SEMIC)
-					tmp = tmp->next;
-				if (tmp)
-					tmp = tmp->next;
-				continue ;
-			}
-			DEBUG_PRINT(BLUE "Args created\n" RESET);
-			/* Check it all aguments in here*/
-			i = 0;
-			while (args[i])
-			{
-				DEBUG_PRINT(BLUE "Args[%d]: %s\n" RESET, i, args[i]);
-				i++;
-			}
-			handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
-			if(args)
-			{
-				execute_with_redirection(args, env, out_fd, save_stdout);
-				args = NULL;
-			}
-			DEBUG_PRINT(RED"Skip execution due to redirection failed!"RESET);
-			// clean_2d(args);
-			if (out_fd != STDOUT_FILENO)
-				close(out_fd);
-			out_fd = STDOUT_FILENO;
-			if (dup2(save_stdin, STDIN_FILENO) == -1)
-				perror("dup2 failed to restore STDIN");
+			DEBUG_PRINT(RED "Failed to convert tokens to args\n" RESET);
 			while (tmp && tmp->type != TOKEN_SEMIC)
-			{
-				DEBUG_PRINT(RED"Advancing tmp: %p, type: %d\n"RESET, tmp, tmp->type);
 				tmp = tmp->next;
-			}
 			if (tmp)
-			{
-				DEBUG_PRINT(RED"Skipping semicol"RESET);
 				tmp = tmp->next;
-			}
+			continue ;
 		}
-		close(save_stdout);
-		DEBUG_PRINT(BLUE "Ending Cell_lounch\n" RESET);
+		DEBUG_PRINT(BLUE "Args created\n" RESET);
+		/* Check it all aguments in here*/
+		i = 0;
+		while (args[i])
+		{
+			DEBUG_PRINT(BLUE "Args[%d]: %s\n" RESET, i, args[i]);
+			i++;
+		}
+		handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
+		if(args)
+		{
+			execute_with_redirection(args, env, out_fd, save_stdout);
+			args = NULL;
+		}
+		DEBUG_PRINT(RED"Skip execution due to redirection failed!"RESET);
+		// clean_2d(args);
+		if (out_fd != STDOUT_FILENO)
+			close(out_fd);
+		out_fd = STDOUT_FILENO;
+		if (dup2(save_stdin, STDIN_FILENO) == -1)
+			perror("dup2 failed to restore STDIN");
+		while (tmp && tmp->type != TOKEN_SEMIC)
+		{
+			DEBUG_PRINT(RED"Advancing tmp: %p, type: %d\n"RESET, tmp, tmp->type);
+			tmp = tmp->next;
+		}
+		if (tmp)
+		{
+			DEBUG_PRINT(RED"Skipping semicol"RESET);
+			tmp = tmp->next;
+		}
+	}
+	close(save_stdout);
+	DEBUG_PRINT(BLUE "Ending Cell_lounch\n" RESET);
 
 }

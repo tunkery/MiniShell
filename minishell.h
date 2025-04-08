@@ -102,6 +102,8 @@ typedef	struct s_token
 }	t_token;
 
 
+
+
 // Builtin functions
 
 int		key_check(char *args);
@@ -138,16 +140,24 @@ void exec_command(char **args, t_env *env, int out_fd);
 void openfile_redirected(t_token **current, int *out_fd, char **args, int append);
 void    process_child_heredoc(t_token **current, char **heredoc_input, char **args, t_env *env);
 void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
+
+
+
 // execute with pipe functions
+char **ext_cmd_arg(t_token *start, t_token *end);
+void    free_pipe_command(t_pipe_command *pipes, int pipe_count);
 void execute_pipes(t_pipe_command *pipes, t_env *env);
 t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count);
 char **split_args(char *command);
 char **split_pipes(char *command);
+
 // Pipe_utils functions
+int has_pipes(t_token *tokens);
 void *ft_realloc(void *ptr, size_t size);
 size_t strspn(const char *s, const char *accept);
 size_t strcspn(const char *s, const char *reject);
 char *strtok(char *str, const char *delim);
+
 
 
 // execute_pipe functions

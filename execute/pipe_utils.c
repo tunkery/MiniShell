@@ -62,3 +62,15 @@ char *strtok(char *str, const char *delim)
     last = end;
     return start;
 }
+
+int has_pipes(t_token *tokens)
+{
+    t_token *tmp = tokens;
+    while (tmp)
+    {
+        if (tmp->type == TOKEN_PIPE)
+            return 1;
+        tmp = tmp->next;
+    }
+    return 0;
+}
