@@ -324,7 +324,46 @@
 #         [DEBUG] Ending Cell_lounch
 
 11-) echo "MErhabalar" << file.txt
-        Bu komutlari arastir!
+        Bu komutlari arastir.
+
+12-) Bash:
+        1-D-25:MiniShell hpehliva$ '$PWD'
+        bash: $PWD: command not found
+        1-D-25:MiniShell hpehliva$ "$PWD"
+        bash: /Users/hpehliva/MiniShell: is a directory
+    Minishell:
+        minishell> '$PWD'
+        [DEBUG] Starting token seperation for line: ''$PWD''
+        [DEBUG] Processed quoted string: '$PWD' (start = 1, end = 6)
+        [DEBUG] Created token: type= 0, value = '$PWD' 
+        [DEBUG] Created token: type= 0, value = '$PWD' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = '$PWD'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: $PWD
+        minishell: /Users/hpehliva/MiniShell: is a directory
+        [DEBUG] exit status: 126
+        [DEBUG] Command executed
+        [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
+        minishell> "$PWD"
+        [DEBUG] Starting token seperation for line: '"$PWD"'
+        [DEBUG] Hello I'm here [DEBUG] Expanding env var: 'PWD'
+        [DEBUG] Found value: '/Users/hpehliva/MiniShell'
+        [DEBUG] Processed quoted string: '/Users/hpehliva/MiniShell' (start = 1, end = 6)
+        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = '/Users/hpehliva/MiniShell'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: /Users/hpehliva/MiniShell
+        execvp Failed: Permission denied
+        [DEBUG] exit status: 127
+        [DEBUG] Command executed
+        [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
+        minishell> 
+    
+
+
 
 
 

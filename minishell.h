@@ -64,6 +64,16 @@ typedef struct s_env
 }	t_env;
 
 
+typedef struct s_pipe
+{
+	int nbr_command;
+	int index;
+	pid_t pipe_id;
+	int pipe_stin;
+	int pipe_stout;
+	char **args;
+}	t_pipe;
+
 typedef struct s_process
 {
 	char	*line;
@@ -128,6 +138,13 @@ char **tokens_to_args(t_token *tokens);
 void openfile_redirected(t_token **current, int *out_fd, char **args, int append);
 void    process_child_heredoc(t_token **current, char **heredoc_input, char **args, t_env *env);
 void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
+
+// execute_pipe functions
+t_pipe    *initialized_pipe(char *current, int *comd_count);
+// Pipe utils
+char   *ft_strtok(char *restrict str, const char *restrict sep);
+size_t ft_strcspn(const char *str, const char *reject);
+void *ft_realloc(void *ptr, size_t size);
 
 // Heredoc functions
 int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env);
