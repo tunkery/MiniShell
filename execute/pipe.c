@@ -60,7 +60,7 @@ t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
                 pipes[i].pipe_stdout = STDOUT_FILENO;
             else
                 pipes[i].pipe_stdout = -1;
-            pipes[i].args = tokens_to_args(start, end);
+            pipes[i].args = tokens_to_args(start);
             if(!pipes[i].args)
             {
                 free_pipe_command(pipes, *pipe_count);

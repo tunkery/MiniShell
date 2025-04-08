@@ -12,12 +12,12 @@
 
 #include "../minishell.h"
 
-static int count_token_args(t_token *tmp, t_token *end)
+static int count_token_args(t_token *tmp)
 {
 	int count;
 
 	count = 0;
-	while (tmp && tmp != end &&  tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
+	while (tmp &&  tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
 		&& tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_REDIRECT_OUT
 		&& tmp->type != TOKEN_REDIRECT_IN && tmp->type != TOKEN_HEREDOC
 		&& tmp->type != TOKEN_PIPE)
@@ -29,7 +29,7 @@ static int count_token_args(t_token *tmp, t_token *end)
 	return (count);
 }
 
-char	**tokens_to_args(t_token *tokens, t_token *end)
+char	**tokens_to_args(t_token *tokens)
 {
 	// int		count;
 	t_token	*tmp;
@@ -39,11 +39,11 @@ char	**tokens_to_args(t_token *tokens, t_token *end)
 	// count = 0;
 	tmp = tokens;
 	i = 0;
-	args = malloc((count_token_args(tokens, end) + 1) * sizeof(char *));
+	args = malloc((count_token_args(tokens) + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);
 	tmp = tokens;
-	while (tmp && tmp != end && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
+	while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
 		&& tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_REDIRECT_OUT
 		&& tmp->type != TOKEN_REDIRECT_IN && tmp->type != TOKEN_HEREDOC
 		&& tmp->type != TOKEN_PIPE)
@@ -140,33 +140,9 @@ void	cell_launch(t_token *tokens, t_env *env)
 	int		save_stdin;
 	char	*heredoc_input;
 	int		i;
-	int implement_pipes =0;
 
 
 	tmp = tokens;
-	while(tmp)
-	{
-		if (tmp->type == TOKEN_PIPE)
-		{
-			implement_pipes = 1;
-			break ;
-		}
-		tmp = tmp->next;
-	}
-	if(implement_pipes)
-	{
-		int pipe_count = 0;
-		t_pipe_command *pipes = parse_pipe(tokens, &pipe_count);
-		if(pipes)
-			execute_pipes(pipes, env);
-		else
-		{
-			env->exit_code = 1;
-			free_token_matrix(tokens);
-		}
-	}
-	else
-	{
 		args = NULL;
 		out_fd = STDOUT_FILENO;
 		save_stdout = dup(STDOUT_FILENO);
@@ -175,7 +151,7 @@ void	cell_launch(t_token *tokens, t_env *env)
 		DEBUG_PRINT(BLUE "Starting Cell_lounch\n" RESET);
 		while (tmp)
 		{
-			args = tokens_to_args(tmp, NULL);
+			args = tokens_to_args(tmp);
 			if (!args)
 			{
 				DEBUG_PRINT(RED "Failed to convert tokens to args\n" RESET);
@@ -219,5 +195,5 @@ void	cell_launch(t_token *tokens, t_env *env)
 		}
 		close(save_stdout);
 		DEBUG_PRINT(BLUE "Ending Cell_lounch\n" RESET);
-	}
+
 }

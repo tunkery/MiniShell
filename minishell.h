@@ -73,15 +73,6 @@ typedef struct s_pipe_command
     char **args;
 } t_pipe_command;
 
-typedef struct s_pipe
-{
-	int nbr_command;
-	int index;
-	pid_t pipe_id;
-	int pipe_stin;
-	int pipe_stout;
-	char **args;
-}	t_pipe;
 
 typedef struct s_process
 {
@@ -99,44 +90,17 @@ typedef enum e_token_type
 	TOKEN_REDIRECT_APPEND, // >>
 	TOKEN_HEREDOC, // <<
 	TOKEN_SEMIC, // ;
-	TOKEN_SPACE,
-	TOKEN_COMMAND,
-	TOKEN_ARGUMENTS,
-	TOKEN_VAR,
-	TOKEN_EXPAND,
-	TOKEN_EXIT,
-	TOKEN_FILE,
+	TOKEN_END,
 }	t_token_type;
 
 
 typedef	struct s_token
 {
-	char *value;
-	int type;
+	t_token_type  type; // token type
+	char  *value; // token value
 	struct s_token *next; // next token
-	struct s_token *prev;
 }	t_token;
 
-
-typedef struct s_cmd
-{
-	char *command;
-	char *exc_path;
-	char **args;
-	struct s_cmd *next;
-	struct s_cmd *prev;
-}	t_cmd;
-
-
-typedef struct s_parse
-{
-	t_token **head;
-	t_env *env;
-	char *user;
-	int *i;
-	char *buffer;
-	int *buf_i;
-} t_parse;
 
 // Builtin functions
 
@@ -187,7 +151,6 @@ char *strtok(char *str, const char *delim);
 
 
 // execute_pipe functions
-t_pipe    *initialized_pipe(char *current, int *comd_count);
 // Pipe utils
 char   *ft_strtok(char *restrict str, const char *restrict sep);
 size_t ft_strcspn(const char *str, const char *reject);
@@ -223,7 +186,7 @@ char    *extract_word(char *line, int *i);
 void    free_token_matrix(t_token *head);
 char *process_quoted(char *line, int *i, char quote_type, t_env *env);
 char *expand_env(char *line, int *i, t_env *env);
-char **tokens_to_args(t_token *tokens, t_token *end);
+char **tokens_to_args(t_token *tokens);
 // seperated tokenizer
 void    handle_pipe(t_token *token, int *i);
 void    handle_redirect_in(t_token *token, char *line, int *i);
