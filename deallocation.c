@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:33:02 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/17 12:20:31 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/02 17:10:53 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	clean_2d(char **str)
 	while (str[i])
 	{
 		free(str[i]);
+        str[i] = NULL;
 		i++;
 	}
 	free(str);
@@ -31,12 +32,12 @@ void free_token_matrix(t_token *token)
 {
     t_token *temp;
 
-    DEBUG_PRINT(RED"Freeing token matrix\n"RESET);
+    // DEBUG_PRINT(RED"Freeing token matrix\n"RESET);
     while(token)
     {
         temp = token;
         token = token->next;
-        DEBUG_PRINT(RED"Freeing token: type=%d, value= '%s'\n"RESET, temp->type, temp->value);
+        // DEBUG_PRINT(RED"Freeing token: type=%d, value= '%s'\n"RESET, temp->type, temp->value);
         free(temp->value); // free the vaue of token
         free(temp); // free the struct of token
     }

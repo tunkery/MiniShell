@@ -1,0 +1,10 @@
+[0m [DEBUG] [1;32mOutput redirected to file
+[0m [DEBUG] [1;34mRunning echo
+[0mMErhaba 
+ [DEBUG] [1;32mexit status: 0
+[0m [DEBUG] [1;32mEcho completed
+[0m [DEBUG] [1;32mOutput redirected to file
+[0m [DEBUG] [1;34mRunning echo
+[0mMErhabalar 
+ [DEBUG] [1;32mexit status: 0
+[0m [DEBUG] [1;32mEcho completed

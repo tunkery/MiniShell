@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/20 16:19:20 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/01 11:32:03 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,19 @@
 
 char	**update_env(char **envp, char *key)
 {
-	int i;
 	int size;
 	char **new_env;
 	
-	i = 0;
 	size = env_size(envp) + 1;
-	new_env = malloc(sizeof(char **) * size);
+	new_env = malloc(sizeof(char *) * size);
 	if (!new_env)
 		return (NULL);
 	copy_env(envp, &new_env);
 	new_env[size - 1] = ft_strdup(key);
-	clean_2d(envp);
+	new_env[size] = NULL;
+	DEBUG_PRINT(GRN"New env created with key: %s\n"RESET, key);
+	// asko freeleme cunku hata veriyo
+	DEBUG_PRINT(GRN"Updated env with key: %s\n"RESET, key);
 	return (new_env);
 }
 
@@ -38,30 +39,47 @@ char	**remove_env(char **envp, char *key)
 
 	i = 0;
 	j = 0;
-	size = env_size(envp) - 1;
-	new_env = malloc(sizeof(char **) * size);
+	size = env_size(envp);
+	new_env = malloc(sizeof(char *) * size);
 	if (!new_env)
 		return (NULL);
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0)
+		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0
+			&& (envp[i][ft_strlen(key)] == '=' || envp[i][ft_strlen(key)] == '\0'))
+			free(envp[i++]);
+		if (envp[i])
+		{
+			new_env[j] = ft_strdup(envp[i]);
 			i++;
-		new_env[j] = ft_strdup(envp[i]);
-		i++;
-		j++;
+			j++;
+		}
 	}
-	clean_2d(envp);
+	new_env[j] = NULL;
+	// asko freeleme cunku hata veriyo
+	DEBUG_PRINT(GRN"Removed env with key: %s\n"RESET, key);
 	return (new_env);
 }
 
 void	initiate_env(t_env *env, char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	copy_env(envp, &(env->envp));
-	if (!env->envp)
-		return ;
+	copy_env(envp, &(env->export));
+	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
+		i++;
+	env->curr_pwd = ft_strdup(env->envp[i]);
+	i = 0;
+	while (env->envp[i] && ft_strncmp(env->envp[i], "OLDPWD", 6) != 0)
+		i++;
+	if (env->envp[i])
+	{
+		env->old_pwd = ft_strdup(env->envp[i]);
+		if (!env->envp)
+			return ;
+	}
 	env->path = malloc(sizeof(char **) * 2);
 	if (!env->path)
 		return ;
@@ -98,6 +116,9 @@ static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len)
 }
 
 // finds the path to the executable we want to run
+/*
+	Execution part start in here!!
+*/
 
 char	*find_exec(char *command, char *path, int i, int j)
 {
@@ -107,7 +128,7 @@ char	*find_exec(char *command, char *path, int i, int j)
 		return (NULL);
 	while(path[i])
 	{
-		while (path[i] && path[i] != ':')
+		while (path[i] && path[i] && path[i] != ':')
 			i++;
 		temp = ft_gnls_substr(path, j, i - 4);
 		if(!temp)
@@ -125,36 +146,3 @@ char	*find_exec(char *command, char *path, int i, int j)
 	return (temp);
 }
 
-// a function that runs the programs in the computer
-
-void	cell_launch(char **args, t_env *env)
-{
-	pid_t	pid;
-	int		status;
-	char *exec_path;
-
-	if (!args || !args[0])
-		return ;
-	exec_path = find_exec(args[0], env->path1, 0, 5);
-	if (!exec_path)
-	{
-		printf("minishell: %s: command not found.\n", args[0]);
-		return ;
-	}
-	pid = fork();
-	if (pid == 0)
-	{
-		
-		if (execve(exec_path, args, env->path) == -1)
-		{
-			perror("execvp Failed");
-			free(exec_path);
-			exit(127);
-		}
-	}
-	else if (pid < 0)
-		perror("fork Failed");
-	else
-		waitpid(pid, &status, 0);
-	free(exec_path);
-}

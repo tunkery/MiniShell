@@ -1,0 +1,211 @@
+/* COMMANDS */
+
+/** Minishell Test Plan **/
+
+1. Compilation Check
+        Command:** make -n | grep -E "(-Wall|-Wextra|-Werror)"
+        Expected Output:** Compilation flags should be present.
+        Command:** make && make
+        Expected Output:** Second make should return "Nothing to be done for 'all'."
+2. Simple Commands & Global Variables
+        Command:** /bin/ls
+        Expected Output:** Lists files in the current directory.
+        Test empty command:** Press Enter with no input.
+        Expected Output:** New prompt without error.
+3. Arguments
+        Command:** /bin/ls -l -a
+        Expected Output:** Detailed list including hidden files.
+4. "echo" Tests
+        Command:** "echo "Hello, world!""
+        Expected Output:** "Hello, world!"
+        Command:** "echo -n "No newline""        
+        Expected Output:** "No newline" (without newline at the end)
+5. "exit" Command
+        Command:** "exit 42"
+        Expected Output:** Shell exits with status "42".
+6. Return Value of a Process
+        Command:** "/bin/ls filethatdoesntexist; echo $?"
+        Expected Output:** Error message and "2" as return value.
+7. Signals
+        Ctrl+C:** Interrupts process, shows new prompt.
+        Ctrl+D:** Exits shell.
+        Ctrl+\:** Nothing happens at prompt.
+8. Double Quotes
+        Command:** "echo "cat lol.c | cat > lol.c""
+        Expected Output:** Prints the string as-is.
+9. Single Quotes
+        Command:** "echo '$USER'"
+        Expected Output:** "$USER" (not expanded)
+10. "env" Command
+        Command:** "env"
+        Expected Output:** Prints all environment variables.
+11. "export" Command
+        Command:** "export TESTVAR="Hello"; env | grep TESTVAR"
+        Expected Output:** "TESTVAR=Hello"
+12. "unset" Command
+C       ommand:** "unset TESTVAR; env | grep TESTVAR"
+        Expected Output:** No output if unset successfully.
+13. "cd" Command
+        Command:** "cd /; pwd"
+        Expected Output:** "/"
+        Command:** "cd non_existing_dir"
+        Expected Output:** Error: "No such file or directory"
+14. "pwd" Command
+        Command:** "pwd"
+        Expected Output:** Prints current directory.
+15. Relative Path Execution
+        Command:** "./myscript.sh"
+        Expected Output:** Executes if "myscript.sh" exists.
+16. Environment Path
+        Command:** "unset PATH; ls"
+        Expected Output:** "command not found"
+        Command:** "export PATH="/bin:/usr/bin""
+        Expected Output:** Commands like "ls" should work again.
+17. Redirection Tests : ">", ">>", "<"
+        Command:** "echo "Hello" > testfile.txt; cat < testfile.txt"
+        Expected Output:** "Hello"
+        Command:** "echo "Hello again" >> testfile.txt; cat testfile.txt"
+        Expected Output:** "Hello" and "Hello again" on separate lines.
+18. Pipe Tests
+        Command:** "cat file | grep bla | more"
+        Expected Output:** Filters and paginates content.
+        Command:** "ls filethatdoesntexist | grep bla | more"
+        Expected Output:** "ls" error message.
+19. History and Miscellaneous
+        Up/Down Arrow:** Navigate command history.
+        Invalid Command:** "dsbksdgbksdghsd"
+        Expected Output:** "command not found"
+20. Environment Variable Handling
+        Command:** "echo $USER"
+        Expected Output:** Prints username.
+        Command:** "export TEST=42; echo "$TEST""
+        Expected Output:** "42"
+
+NOT: Test kodlari:
+✅ 1. Pipe zinciri örnekleri
+🔹 cat Makefile | grep all | more
+makefile
+Copy
+Edit
+all: minishell
+
+all: $(NAME)
+🔹 ls -l | grep minishell | wc -l
+Copy
+Edit
+1
+(bulunan dosya sayısıdır, senin dizine göre değişir)
+
+🔹 ps aux | grep bash | grep -v grep | sort
+python-repl
+Copy
+Edit
+halime    1347  0.0  0.1  27044  5928 pts/0    Ss   12:00   0:00 -bash
+...
+✅ 2. Hatalı komut içeren pipe zinciri
+🔹 ls filethatdoesntexist | grep bla | more
+yaml
+Copy
+Edit
+ls: cannot access 'filethatdoesntexist': No such file or directory
+grep yine çalışır ama boş veri alır, sonuç göstermez. Shell çökmez.
+
+🔹 abcd | grep test
+bash
+Copy
+Edit
+bash: abcd: command not found
+🔹 cat | nonexistentcmd | grep bla
+bash
+Copy
+Edit
+bash: nonexistentcmd: command not found
+✅ 3. Pipe + yönlendirme
+🔹 cat < Makefile | grep all > result.txt
+result.txt içeriği:
+
+makefile
+Copy
+Edit
+all: minishell
+all: $(NAME)
+Terminal çıktısı yok, çünkü çıktı dosyaya yönlendirildi.
+
+✅ 4. Çift tırnak, boşluklu argümanlar
+🔹 echo "Hello world"
+nginx
+Copy
+Edit
+Hello world
+🔹 echo "cat lol.c | cat > lol.c"
+bash
+Copy
+Edit
+cat lol.c | cat > lol.c
+Gerçek cat çalışmaz, sadece metin olarak gösterir.
+
+🔹 grep "int main" minishell.c
+java
+Copy
+Edit
+int main(void)
+(Dosyanda varsa)
+
+🔹 ls -l "/tmp/my folder with spaces"
+sql
+Copy
+Edit
+drwxr-xr-x 2 user user 4096 Apr 7 12:00 /tmp/my folder with spaces
+✅ 5. Ctrl-C sonrası buffer temiz
+🔹 ping google.com
+sql
+Copy
+Edit
+PING google.com (142.250.185.142) 56(84) bytes of data.
+64 bytes from ...: icmp_seq=1 ttl=117 time=20.2 ms
+64 bytes from ...: icmp_seq=2 ttl=117 time=21.0 ms
+^C
+--- google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+Ctrl-C bastıktan sonra işlem durur, yeni satıra geçer, buffer boş olur.
+
+✅ 6. Komut geçmişi
+Bu sadece etkileşimli shell'de geçerlidir. Yukarı/Aşağı ok tuşları ile önceki komutlar tekrar görünmelidir. Örneğin:
+
+⬆️ → echo "Hello world"
+⬆️ → ls
+⬇️ → echo "Hello world"
+
+✅ 7. Geçersiz komutlar
+🔹 asdjaskdjaksdj
+bash
+Copy
+Edit
+bash: asdjaskdjaksdj: command not found
+🔹 /not/a/command
+yaml
+Copy
+Edit
+bash: /not/a/command: No such file or directory
+✅ 8. cat | cat | ls
+🔹 cat | cat | ls
+ls komutu çalışır, diğer cat'ler stdin bekler.
+
+nginx
+Copy
+Edit
+Makefile  minishell.c  test.txt
+(Senin dizinindeki dosyalar)
+
+✅ 9. Uzun komut
+🔹 echo arg1 arg2 arg3 arg4 arg5 ...
+nginx
+Copy
+Edit
+arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9 arg10 ...
+Shell çökmemeli, hepsini sırayla yazdırır.
+
+
+
+---
+**End of Test Plan**

@@ -1,0 +1,467 @@
+/* EKSIKLER */
+
+# 1-) Ctrl + D (EOF)
+#     Expectation: Nothing should happen.
+#     Test:
+#     Start minishell.
+#     Type:
+#             echo Hello
+#     Before pressing Enter, press Ctrl + D.
+#     Verify that nothing happens (the command is still in the input buffer).
+
+# 2-) *Ctrl + * (SIGQUIT)
+#     Expectation: The process should terminate and display "Quit" with a signal number.
+#     Test:
+#     Start minishell.
+#     Run:
+#         cat
+#     Press Ctrl + \.
+#     Verify that cat is terminated with a "Quit" message.
+    
+3-) Pipe komutu:
+    3.1-) Test 1
+            echo -n "No new line" | cat -e
+            [DEBUG] Starting token seperation for line: 'echo -n "No new line" | cat -e'
+            [DEBUG] Extracted word: 'echo' (start = 0, end = 4) 
+            [DEBUG] Created token: type= 0, value = 'echo' 
+            [DEBUG] Extracted word: '-n' (start = 5, end = 7) 
+            [DEBUG] Created token: type= 0, value = '-n' 
+            [DEBUG] Processed quoted string: 'No new line' (start = 9, end = 21)
+            [DEBUG] Created token: type= 0, value = 'No new line' 
+            [DEBUG] Created token: type= 1, value = '|' 
+            [DEBUG] Extracted word: 'cat' (start = 24, end = 27) 
+            [DEBUG] Created token: type= 0, value = 'cat' 
+            [DEBUG] Extracted word: '-e' (start = 28, end = 30) 
+            [DEBUG] Created token: type= 0, value = '-e' 
+            [DEBUG] Token seperation completed
+            [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
+            [DEBUG] Starting Cell_lounch
+            [DEBUG] Args created
+            [DEBUG] Args[0]: echo
+            [DEBUG] Args[1]: -n
+            [DEBUG] Args[2]: No new line
+            [DEBUG] Running echo
+            [DEBUG] Check is 1: Flag detected
+            No new line  [DEBUG] Echo completed // Dolar sembolu fln yok burayi pipe ekleyip gelistirmek lazim!!
+            [DEBUG] Ending Cell_lounch
+            [DEBUG] Freeing token matrix
+            [DEBUG] Freeing token: type=0, value= 'echo'
+            [DEBUG] Freeing token: type=0, value= '-n'
+            [DEBUG] Freeing token: type=0, value= 'No new line'
+            [DEBUG] Freeing token: type=1, value= '|'
+            [DEBUG] Freeing token: type=0, value= 'cat'
+            [DEBUG] Freeing token: type=0, value= '-e'
+
+# 4-)  echo $? sembolun eklenmesi gerekiyorr!! Bunun sonucunda cikti bize bir numara veriyor. 
+#     Konuyu arastirip kodu eklemeliyiz!
+
+# 5-)minishell> echo " yazdiktan sonra control-D ye bastigimizda cikis yapiyor terminalden Control C calisiyor."
+
+
+# 6-) env de unset calismiyor! yoo calisiyo, freeleme guzelim orayi yoksa calismaz yine.
+#        Test ciktisi:
+#         ➜  MiniShell git:(develop) ✗ ./minishell
+#             minishell> env
+#         [DEBUG] Starting token seperation for line: 'env'
+#         [DEBUG] Extracted word: 'env' (start = 0, end = 3) 
+#         [DEBUG] Created token: type= 0, value = 'env' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'env'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: env
+#         SECURITYSESSIONID=18c19
+#         USER=hpehliva
+#         MallocNanoZone=0
+#         COMMAND_MODE=unix2003
+#         PATH=/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin
+#         HOME=/Users/hpehliva
+#         SHELL=/bin/zsh
+#         LaunchInstanceID=A409725D-7234-4E93-AF15-F4F67D61784B
+#         __CF_USER_TEXT_ENCODING=0x193F4:0x0:0x2
+#         XPC_SERVICE_NAME=0
+#         SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.Zhdk8PIiJV/Listeners
+#         XPC_FLAGS=0x0
+#         LOGNAME=hpehliva
+#         TMPDIR=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/
+#         ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+#         SHLVL=1
+#         PWD=/Users/hpehliva/MiniShell
+#         OLDPWD=/Users/hpehliva/MiniShell
+#         ZSH=/Users/hpehliva/.oh-my-zsh
+#         PAGER=less
+#         LESS=-R
+#         LSCOLORS=Gxfxcxdxbxegedabagacad
+#         LS_COLORS=di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43
+#         TERM_PROGRAM=vscode
+#         TERM_PROGRAM_VERSION=1.97.2
+#         LANG=en_US.UTF-8
+#         COLORTERM=truecolor
+#         GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+#         VSCODE_GIT_ASKPASS_NODE=/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin)
+#         VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+#         VSCODE_GIT_ASKPASS_MAIN=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass-main.js
+#         VSCODE_GIT_IPC_HANDLE=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/vscode-git-194c01b131.sock
+#         VSCODE_INJECTION=1
+#         ZDOTDIR=/Users/hpehliva
+#         USER_ZDOTDIR=/Users/hpehliva
+#         TERM=xterm-256color
+#         VSCODE_PROFILE_INITIALIZED=1
+#         _=/Users/hpehliva/MiniShell/./minishell
+#         MY_VAR=42
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= 'env'
+#         minishell> unset MY_VAR
+#         [DEBUG] Starting token seperation for line: 'unset MY_VAR'
+#         [DEBUG] Extracted word: 'unset' (start = 0, end = 5) 
+#         [DEBUG] Created token: type= 0, value = 'unset' 
+#         [DEBUG] Extracted word: 'MY_VAR' (start = 6, end = 12) 
+#         [DEBUG] Created token: type= 0, value = 'MY_VAR' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'unset'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: unset
+#         [DEBUG] Args[1]: MY_VAR
+#         minishell(34875,0x1066dedc0) malloc: *** error for object 0x7f92cdd05cd0: pointer being freed was not allocated
+#         minishell(34875,0x1066dedc0) malloc: *** set a breakpoint in malloc_error_break to debug
+#         [1]    34875 abort      ./minishell
+#         ➜  MiniShell git:(develop) ✗ unset MY_VAR=42
+#         unset: MY_VAR=42: invalid parameter name
+#         ➜  MiniShell git:(develop) ✗ ./minishell    
+#         minishell> env
+#         [DEBUG] Starting token seperation for line: 'env'
+#         [DEBUG] Extracted word: 'env' (start = 0, end = 3) 
+#         [DEBUG] Created token: type= 0, value = 'env' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'env'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: env
+#         SECURITYSESSIONID=18c19
+#         USER=hpehliva
+#         MallocNanoZone=0
+#         COMMAND_MODE=unix2003
+#         PATH=/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin
+#         HOME=/Users/hpehliva
+#         SHELL=/bin/zsh
+#         LaunchInstanceID=A409725D-7234-4E93-AF15-F4F67D61784B
+#         __CF_USER_TEXT_ENCODING=0x193F4:0x0:0x2
+#         XPC_SERVICE_NAME=0
+#         SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.Zhdk8PIiJV/Listeners
+#         XPC_FLAGS=0x0
+#         LOGNAME=hpehliva
+#         TMPDIR=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/
+#         ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+#         SHLVL=1
+#         PWD=/Users/hpehliva/MiniShell
+#         OLDPWD=/Users/hpehliva/MiniShell
+#         ZSH=/Users/hpehliva/.oh-my-zsh
+#         PAGER=less
+#         LESS=-R
+#         LSCOLORS=Gxfxcxdxbxegedabagacad
+#         LS_COLORS=di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43
+#         TERM_PROGRAM=vscode
+#         TERM_PROGRAM_VERSION=1.97.2
+#         LANG=en_US.UTF-8
+#         COLORTERM=truecolor
+#         GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+#         VSCODE_GIT_ASKPASS_NODE=/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin)
+#         VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+#         VSCODE_GIT_ASKPASS_MAIN=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass-main.js
+#         VSCODE_GIT_IPC_HANDLE=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/vscode-git-194c01b131.sock
+#         VSCODE_INJECTION=1
+#         ZDOTDIR=/Users/hpehliva
+#         USER_ZDOTDIR=/Users/hpehliva
+#         TERM=xterm-256color
+#         VSCODE_PROFILE_INITIALIZED=1
+#         _=/Users/hpehliva/MiniShell/./minishell
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= 'env'
+
+# 7-)  "<" Sembolun testi
+
+#         minishell> 
+#         [DEBUG] Starting token seperation for line: ''
+#         [DEBUG] Token seperation completed
+#         [DEBUG] No tokens created
+#         minishell> wc -w < file.txt
+#         [DEBUG] Starting token seperation for line: 'wc -w < file.txt'
+#         [DEBUG] Extracted word: 'wc' (start = 0, end = 2) 
+#         [DEBUG] Created token: type= 0, value = 'wc' 
+#         [DEBUG] Extracted word: '-w' (start = 3, end = 5) 
+#         [DEBUG] Created token: type= 0, value = '-w' 
+#         [DEBUG] Created token: type= 2, value = '<' 
+#         [DEBUG] Extracted word: 'file.txt' (start = 8, end = 16) 
+#         [DEBUG] Created token: type= 0, value = 'file.txt' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'wc'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: wc
+#         [DEBUG] Args[1]: -w
+
+#         minishell>  [DEBUG] Command executed
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= 'wc'
+#         [DEBUG] Freeing token: type=0, value= '-w'
+#         [DEBUG] Freeing token: type=2, value= '<'
+#         [DEBUG] Freeing token: type=0, value= 'file.txt'
+#         minishell> cat < file.txt
+#         [DEBUG] Starting token seperation for line: 'cat < file.txt'
+#         [DEBUG] Extracted word: 'cat' (start = 0, end = 3) 
+#         [DEBUG] Created token: type= 0, value = 'cat' 
+#         [DEBUG] Created token: type= 2, value = '<' 
+#         [DEBUG] Extracted word: 'file.txt' (start = 6, end = 14) 
+#         [DEBUG] Created token: type= 0, value = 'file.txt' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'cat'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: cat
+
+#         minishell>  [DEBUG] Command executed
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= 'cat'
+#         [DEBUG] Freeing token: type=2, value= '<'
+#         [DEBUG] Freeing token: type=0, value= 'file.txt'
+
+#         Olmasi gereken cikti:
+#         minishell> wc -w < file.txt
+#                   14
+
+
+# 8-) echo 'Hello' Komutu " ' " ile birlikte print ediyor!
+#     Bizim shell:
+#         echo 'Hello'
+#         [DEBUG] Starting token seperation for line: 'echo 'Hello''
+#         [DEBUG] Extracted word: 'echo' (start = 0, end = 4) 
+#         [DEBUG] Created token: type= 0, value = 'echo' 
+#         [DEBUG] Processed quoted string: 'Hello' (start = 6, end = 12)
+#         [DEBUG] Created token: type= 0, value = 'Hello' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: Hello
+#         [DEBUG] Running echo
+#         'Hello'
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= 'echo'
+#         [DEBUG] Freeing token: type=0, value= 'Hello'
+
+#     Bash:
+#     hpehliva$ echo 'Hello'
+#             Hello
+
+9-) Hatayi yanlis veriyor ! hata yazimini duzeltmeliyiz!!
+    1-C-32:MiniShell hpehliva$ $PWD
+        bash: /Users/hpehliva/MiniShell: is a directory
+    minishell> $PWD
+        [DEBUG] Starting token seperation for line: '$PWD'
+        [DEBUG] Expanding env var: 'PWD'
+        [DEBUG] Found value: '/Users/hpehliva/MiniShell'
+        [DEBUG] Extracted word: '/Users/hpehliva/MiniShell' (start = 0, end = 4) 
+        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+        [DEBUG] Token seperation completed
+        [DEBUG] Tokenizer finished, head token: type= 0, value = '/Users/hpehliva/MiniShell'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: /Users/hpehliva/MiniShell
+        execvp Failed: Permission denied
+        [DEBUG] PID exit status: 127
+        [DEBUG] Command executed
+        [DEBUG] Ending Cell_lounch
+        [DEBUG] Freeing token matrix
+        [DEBUG] Freeing token: type=0, value= '/Users/hpehliva/MiniShell'
+
+# 10 -) minishell> echo $PWD
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: $PWD
+#         [DEBUG] Running echo
+#         $PWD 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+#         minishell> echo $USER
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: $USER
+#         [DEBUG] Running echo
+#         $USER 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+#         minishell> echo "$USER"
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: hpehliva
+#         [DEBUG] Running echo
+#         hpehliva 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+#         minishell> echo "$PWD"
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: echo
+#         [DEBUG] Args[1]: /Users/hpehliva/MiniShell
+#         [DEBUG] Running echo
+#         /Users/hpehliva/MiniShell 
+#         [DEBUG] exit status: 0
+#         [DEBUG] Echo completed
+#         [DEBUG] Ending Cell_lounch
+
+11-) echo "MErhabalar" << file.txt
+        Bu komutlari arastir.
+
+12-) Bash:
+        1-D-25:MiniShell hpehliva$ '$PWD'
+        bash: $PWD: command not found
+        1-D-25:MiniShell hpehliva$ "$PWD"
+        bash: /Users/hpehliva/MiniShell: is a directory
+    Minishell:
+        minishell> '$PWD'
+        [DEBUG] Starting token seperation for line: ''$PWD''
+        [DEBUG] Processed quoted string: '$PWD' (start = 1, end = 6)
+        [DEBUG] Created token: type= 0, value = '$PWD' 
+        [DEBUG] Created token: type= 0, value = '$PWD' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = '$PWD'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: $PWD
+        minishell: /Users/hpehliva/MiniShell: is a directory
+        [DEBUG] exit status: 126
+        [DEBUG] Command executed
+        [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
+        minishell> "$PWD"
+        [DEBUG] Starting token seperation for line: '"$PWD"'
+        [DEBUG] Hello I'm here [DEBUG] Expanding env var: 'PWD'
+        [DEBUG] Found value: '/Users/hpehliva/MiniShell'
+        [DEBUG] Processed quoted string: '/Users/hpehliva/MiniShell' (start = 1, end = 6)
+        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = '/Users/hpehliva/MiniShell'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Args created
+        [DEBUG] Args[0]: /Users/hpehliva/MiniShell
+        execvp Failed: Permission denied
+        [DEBUG] exit status: 127
+        [DEBUG] Command executed
+        [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
+        minishell> 
+    
+
+
+
+
+
+NOTES ABOUT CODE:
+        Step 2: Check args in cell_launch
+        In cell_launch, check if args is NULL after handle_redirection (indicating a failure) and skip execution if so. Also, set the exit status appropriately.
+        void cell_launch(t_token *tokens, t_env *env)
+        {
+            t_token *tmp;
+            char **args;
+            int out_fd;
+            int save_stdout;
+            int save_stdin;
+            char *heredoc_input;
+            int i;
+
+            tmp = tokens;
+            args = NULL;
+            out_fd = STDOUT_FILENO;
+            save_stdout = dup(STDOUT_FILENO);
+            save_stdin = dup(STDIN_FILENO);
+            heredoc_input = NULL;
+            DEBUG_PRINT(BLUE "Starting Cell_lounch\n" RESET);
+            while (tmp)
+            {
+                args = tokens_to_args(tmp);
+                if (!args)
+                {
+                    DEBUG_PRINT(RED "Failed to convert tokens to args\n" RESET);
+                    while (tmp && tmp->type != TOKEN_SEMIC)
+                        tmp = tmp->next;
+                    if (tmp)
+                        tmp = tmp->next;
+                    continue;
+                }
+                DEBUG_PRINT(BLUE "Args created\n" RESET);
+                i = 0;
+                while (args[i])
+                {
+                    DEBUG_PRINT(BLUE "Args[%d]: %s\n" RESET, i, args[i]);
+                    i++;
+                }
+                handle_redirection(&tmp, args, &out_fd, &heredoc_input);
+                if (args) // Only proceed if args is still valid
+                {
+                    execute_with_redirection(args, env, out_fd, save_stdout);
+                    clean_2d(args);
+                }
+                else
+                {
+                    env->exit_code = 1; // Set exit status for failure (e.g., file not found)
+                    DEBUG_PRINT(RED "Skipping execution due to redirection failure\n" RESET);
+                }
+                if (out_fd != STDOUT_FILENO)
+                    close(out_fd);
+                out_fd = STDOUT_FILENO;
+                if (dup2(save_stdin, STDIN_FILENO) == -1)
+                    perror("dup2 failed to restore STDIN");
+                while (tmp && tmp->type != TOKEN_SEMIC)
+                    tmp = tmp->next;
+                if (tmp)
+                    tmp = tmp->next;
+            }
+            close(save_stdout);
+            DEBUG_PRINT(BLUE "Ending Cell_lounch\n" RESET);
+        }
+        Change: Check args after handle_redirection. If it’s NULL, skip execute_with_redirection and set env->exit_code to indicate failure.
+        Step 3: Debug Memory Corruption
+        The malloc error suggests a double-free or invalid free. Common culprits in your code:
+
+        clean_2d(args): Ensure this function correctly frees a 2D array and doesn’t attempt to free already-freed pointers. Here’s a safe implementation:
+
+        void clean_2d(char **array)
+        {
+            int i;
+
+            if (!array)
+                return;
+            i = 0;
+            while (array[i])
+            {
+                free(array[i]);
+                array[i] = NULL; // Prevent double-free
+                i++;
+            }
+            free(array);
+        }
+
+
+(lldb) target create "./minishell"
+Current executable set to '/Users/hpehliva/MiniShell/minishell' (x86_64).
+(lldb) b cell_launch
+Breakpoint 1: where = minishell`cell_launch + 16 at exe_main.c:162:8, address = 0x0000000100005630
+(lldb) b handle_redirection
+Breakpoint 2: where = minishell`handle_redirection + 28 at exe_main.c:90:6, address = 0x00000001000054ac
+(lldb) b read_redirected_in
+Breakpoint 3: where = minishell`read_redirected_in + 24 at exe_with_token.c:17:6, address = 0x0000000100005c58
+(lldb) b execute_with_redirection
+Breakpoint 4: where = minishell`execute_with_redirection + 22 at exe_main.c:63:20, address = 0x00000001000053c6
+(lldb) b exec_command
+Breakpoint 5: where = minishell`exec_command + 19 at run_commands.c:112:7, address = 0x00000001000060a3

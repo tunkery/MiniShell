@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/20 15:35:19 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/03/25 12:36:27 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,25 @@
 //     DEBUG_PRINT(RED"Line processing completed\n"RESET);
 // }
 
+// void    initialized_env(t_env *env, char **envp)
+// {
+//     env->envp = envp;
+//     env->exit_code = 0;
+//     env->curr_pwd = getcwd(NULL, 0);
+//     env->old_pwd = NULL;
+//     env->path = NULL;
+//     env->path1 = NULL;
+//     env->export = NULL;
 
+//     g_env = *env;
+//     g_env.exit_code = 0;
+//     g_env.curr_pwd = ft_strdup(env->curr_pwd);
+//     g_env.old_pwd = NULL;
+//     g_env.path = NULL;
+//     g_env.path1 = NULL;
+//     g_env.export = NULL;
+//     DEBUG_PRINT(CYAN"Environment initialized\n"RESET);
+// }
 
 /*
     Standart file descriptors:
@@ -56,93 +74,23 @@ char    *user_input(void)
     
 
     if(isatty(STDIN_FILENO))
-        return(readline(CYAN"minishell> "RESET));
-
-    line = readline(CYAN"minishell> "RESET);
-    if(isatty(STDIN_FILENO)) // If it is terminal
     {
+        line = readline(CYAN"minishell> "RESET);
         if(!line)
             return (NULL); // Control D and EOF situation
-        if(!*line)
+        if(*line)
             add_history(line);
         return line;
     }
-    line = get_next_line(STDIN_FILENO);
-    if(!line)
-        return (NULL);
-    trimmer = ft_strtrim(line, "\n");
-    free(line);
-
+    else
+    {
+        line = get_next_line(STDIN_FILENO);
+        if(!line)
+            return (NULL);
+        trimmer = ft_strtrim(line, "\n");
+        free(line);
+    }
     return (trimmer);
-}
-
-// just a temporary function for word separation in the arguments
-
-// static char **split_input(char *line)
-// {
-//     int i = 0;
-//     char **args;
-//     char *token;
-//     int count = 0;
-//     char *temp = strdup(line); // Copy to count tokens
-
-//     if (!temp)
-//         return NULL;
-
-//     // Count words
-//     token = strtok(temp, " ");
-//     while (token)
-//     {
-//         count++;
-//         token = strtok(NULL, " ");
-//     }
-//     free(temp);
-
-//     // Allocate array (+1 for NULL)
-//     args = malloc((count + 1) * sizeof(char *));
-//     if (!args)
-//         return NULL;
-
-//     // Fill array
-//     token = strtok(line, " ");
-//     while (token)
-//     {
-//         args[i++] = strdup(token);
-//         token = strtok(NULL, " ");
-//     }
-//     args[i] = NULL;
-//     return args;
-// }
-
-static char **tokens_to_args(t_token *tokens)
-{
-    int count = 0;
-    t_token *tmp = tokens;
-    char **args;
-    int i = 0;
-
-    while(tmp)
-    {
-        if (tmp->type == TOKEN_WORD)
-            count++;
-        tmp = tmp->next;
-    }
-
-    args = malloc((count + 1) * sizeof(char *));
-    if(!args)
-        return NULL;
-    tmp = tokens;
-    while(tmp)
-    {
-        if(tmp->type == TOKEN_WORD)
-        {
-            args[i] = strdup(tmp->value);
-            i++;
-        }
-        tmp = tmp->next;
-    }
-    args[i] = NULL;
-    return args;
 }
 
 int main(int ac, char **av, char **envp)
@@ -150,10 +98,7 @@ int main(int ac, char **av, char **envp)
     char   *line;
     t_env   *env = NULL;
     t_token *tokens;
-    char **args;
-    // char **args;
 	(void)av;
-	(void)envp;
 
 	if (ac != 1)
 	{
@@ -169,22 +114,18 @@ int main(int ac, char **av, char **envp)
         signal_mode_read();
         line = user_input();
         if(!line)
-            break; // We can add free(line) here. or each links free it.
-        tokens = tokenizer(line);
+            break; // We can add free(line) here. or each links free it. // TODO Exit_shell add here!
+        tokens = tokenizer(line, env);
         if(!tokens)
         {
             free(line);
             continue;
         }
-        args = tokens_to_args(tokens);
-        if (builtin_check(args) != 0)
-            run_builtin(args, env);
-        else if (args && args[0])
-            cell_launch(args, env); // a function that runs the programs in the computer
-        free_token_matrix(tokens);
-        clean_2d(args);
-        free(line);
+        // initiate_env(env, envp);
         signal_mode_command();
+        cell_launch(tokens, env); // a function that runs the programs in the computer
+        free_token_matrix(tokens);
+        free(line);
         // added_process(line, envp);
     }
     free(env);
