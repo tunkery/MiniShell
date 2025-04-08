@@ -74,9 +74,12 @@ void	initiate_env(t_env *env, char **envp)
 	i = 0;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "OLDPWD", 6) != 0)
 		i++;
-	env->old_pwd = ft_strdup(env->envp[i]);
-	if (!env->envp)
-		return ;
+	if (env->envp[i])
+	{
+		env->old_pwd = ft_strdup(env->envp[i]);
+		if (!env->envp)
+			return ;
+	}
 	env->path = malloc(sizeof(char **) * 2);
 	if (!env->path)
 		return ;

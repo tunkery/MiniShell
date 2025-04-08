@@ -114,7 +114,7 @@ int main(int ac, char **av, char **envp)
         signal_mode_read();
         line = user_input();
         if(!line)
-            break; // We can add free(line) here. or each links free it.
+            break; // We can add free(line) here. or each links free it. // TODO Exit_shell add here!
         tokens = tokenizer(line, env);
         if(!tokens)
         {
@@ -122,10 +122,10 @@ int main(int ac, char **av, char **envp)
             continue;
         }
         // initiate_env(env, envp);
+        signal_mode_command();
         cell_launch(tokens, env); // a function that runs the programs in the computer
         free_token_matrix(tokens);
         free(line);
-        signal_mode_command();
         // added_process(line, envp);
     }
     free(env);

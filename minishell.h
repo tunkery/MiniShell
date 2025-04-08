@@ -99,17 +99,44 @@ typedef enum e_token_type
 	TOKEN_REDIRECT_APPEND, // >>
 	TOKEN_HEREDOC, // <<
 	TOKEN_SEMIC, // ;
-	TOKEN_END
+	TOKEN_SPACE,
+	TOKEN_COMMAND,
+	TOKEN_ARGUMENTS,
+	TOKEN_VAR,
+	TOKEN_EXPAND,
+	TOKEN_EXIT,
+	TOKEN_FILE,
 }	t_token_type;
 
 
 typedef	struct s_token
 {
-	t_token_type  type; // token type
-	char  *value; // token value
+	char *value;
+	int type;
 	struct s_token *next; // next token
+	struct s_token *prev;
 }	t_token;
 
+
+typedef struct s_cmd
+{
+	char *command;
+	char *exc_path;
+	char **args;
+	struct s_cmd *next;
+	struct s_cmd *prev;
+}	t_cmd;
+
+
+typedef struct s_parse
+{
+	t_token **head;
+	t_env *env;
+	char *user;
+	int *i;
+	char *buffer;
+	int *buf_i;
+} t_parse;
 
 // Builtin functions
 
