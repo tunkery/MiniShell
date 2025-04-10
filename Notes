@@ -261,26 +261,26 @@
 #     hpehliva$ echo 'Hello'
 #             Hello
 
-9-) Hatayi yanlis veriyor ! hata yazimini duzeltmeliyiz!!
-    1-C-32:MiniShell hpehliva$ $PWD
-        bash: /Users/hpehliva/MiniShell: is a directory
-    minishell> $PWD
-        [DEBUG] Starting token seperation for line: '$PWD'
-        [DEBUG] Expanding env var: 'PWD'
-        [DEBUG] Found value: '/Users/hpehliva/MiniShell'
-        [DEBUG] Extracted word: '/Users/hpehliva/MiniShell' (start = 0, end = 4) 
-        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
-        [DEBUG] Token seperation completed
-        [DEBUG] Tokenizer finished, head token: type= 0, value = '/Users/hpehliva/MiniShell'
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: /Users/hpehliva/MiniShell
-        execvp Failed: Permission denied
-        [DEBUG] PID exit status: 127
-        [DEBUG] Command executed
-        [DEBUG] Ending Cell_lounch
-        [DEBUG] Freeing token matrix
-        [DEBUG] Freeing token: type=0, value= '/Users/hpehliva/MiniShell'
+# 9-) Hatayi yanlis veriyor ! hata yazimini duzeltmeliyiz!!
+#     1-C-32:MiniShell hpehliva$ $PWD
+#         bash: /Users/hpehliva/MiniShell: is a directory
+#     minishell> $PWD
+#         [DEBUG] Starting token seperation for line: '$PWD'
+#         [DEBUG] Expanding env var: 'PWD'
+#         [DEBUG] Found value: '/Users/hpehliva/MiniShell'
+#         [DEBUG] Extracted word: '/Users/hpehliva/MiniShell' (start = 0, end = 4) 
+#         [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+#         [DEBUG] Token seperation completed
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = '/Users/hpehliva/MiniShell'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: /Users/hpehliva/MiniShell
+#         execvp Failed: Permission denied
+#         [DEBUG] PID exit status: 127
+#         [DEBUG] Command executed
+#         [DEBUG] Ending Cell_lounch
+#         [DEBUG] Freeing token matrix
+#         [DEBUG] Freeing token: type=0, value= '/Users/hpehliva/MiniShell'
 
 # 10 -) minishell> echo $PWD
 #         [DEBUG] Starting Cell_lounch
