@@ -69,112 +69,6 @@ void    free_pipe_command(t_pipe_command *pipes, int pipe_count)
 //     return count;
 // }
 
-// t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
-// {
-//     // Count pipes and calculate command count
-//     // *pipe_count = 1; // Start with 1 command
-//     // t_token *count_tmp = tokens;
-//     // while (count_tmp) {
-//     //     if (count_tmp->type == TOKEN_PIPE)
-//     //         (*pipe_count)++;
-//     //     count_tmp = count_tmp->next;
-//     // }
-
-//     t_token *tmp = tokens;
-//     t_pipe_command *pipes = NULL;
-//     int count = 0;
-    
-//     // First, count the number of pipe commands
-//     while (tmp && tmp->type != TOKEN_SEMIC)
-//     {
-//         if (tmp->type == TOKEN_PIPE)
-//             count++;
-//         tmp = tmp->next;
-//     }
-//     count++; // Add one for the last command
-    
-//     // Allocate memory for pipe commands
-//     pipes = malloc(sizeof(t_pipe_command) * count);
-//     if (!pipes)
-//         return NULL;
-    
-//     // Initialize pipe commands
-//     for (int i = 0; i < count; i++)
-//     {
-//         pipes[i].count_pipe = count;
-//         pipes[i].index = i;
-//         pipes[i].pipe_id = -1;
-//         pipes[i].pipe_stdin = STDIN_FILENO;
-//         pipes[i].pipe_stdout = STDOUT_FILENO;
-//         pipes[i].args = NULL;
-//     }
-    
-//     // Parse tokens into pipe commands
-//     tmp = tokens;
-//     int cmd_index = 0;
-//     t_token *cmd_start = tmp;
-    
-//     while (tmp && tmp->type != TOKEN_SEMIC)
-//     {
-//         if (tmp->type == TOKEN_PIPE)
-//         {
-//             // Extract arguments for current command
-//             // Temporarily mark end for argument extraction
-//             t_token_type original_type = tmp->type;
-//             tmp->type = TOKEN_END;
-//             pipes[cmd_index].args = tokens_to_args(cmd_start);
-//             tmp->type = original_type; // Restore type
-            
-//             cmd_index++;
-//             cmd_start = tmp->next;
-//         }
-//         tmp = tmp->next;
-//     }
-    
-//     // Handle the last command
-//     if (cmd_start && cmd_start->type != TOKEN_SEMIC)
-//     {
-//         pipes[cmd_index].args = tokens_to_args(cmd_start);
-//     }
-    
-//     *pipe_count = count;
-//     return pipes;
-//         // t_token *cmd_end = tmp;
-//         // while (cmd_end && cmd_end->type != TOKEN_PIPE)
-//         //     cmd_end = cmd_end->next;
-        
-//         // // Extract arguments for this command
-//         // pipes[cmd_index].args = extract_command_args(cmd_start, cmd_end);
-//         // if (!pipes[cmd_index].args) {
-//         //     DEBUG_PRINT(RED "Failed to extract command arguments for cmd %d\n" RESET, cmd_index);
-            
-//         //     // Clean up already allocated commands
-//         //     for (int j = 0; j < cmd_index; j++) {
-//         //         if (pipes[j].args)
-//         //             clean_2d(pipes[j].args);
-//         //     }
-//         //     free(pipes);
-//         //     return NULL;
-        
-        
-
-//         // Debug output for this command
-//         // DEBUG_PRINT(BLUE "Command %d args: ", cmd_index);
-//         // for (int i = 0; pipes[cmd_index].args[i]; i++) {
-//         //     DEBUG_PRINT("'%s' ", pipes[cmd_index].args[i]);
-//         // }
-//         // DEBUG_PRINT("\n" RESET);
-        
-//         // // Move to next command
-//         // cmd_index++;
-//         // if (cmd_end && cmd_end->type == TOKEN_PIPE) {
-//         //     cmd_start = cmd_end->next;
-//         //     tmp = cmd_end->next;
-//         // } else {
-//         //     break; // End of tokens
-//         // }
-// }
-
 t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
 {
     t_token *tmp = tokens;
@@ -194,13 +88,15 @@ t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
         return NULL;
     
     // Initialize the pipe commands
-    for (int i = 0; i < count; i++) {
+    int i = 0;
+    while (i < count) {
         pipes[i].count_pipe = count;
         pipes[i].index = i;
         pipes[i].pipe_id = -1;
         pipes[i].pipe_stdin = STDIN_FILENO;
         pipes[i].pipe_stdout = STDOUT_FILENO;
         pipes[i].args = NULL;
+        i++;
     }
     
     // Parse the tokens into pipe commands
@@ -212,31 +108,46 @@ t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
         if (tmp->type == TOKEN_PIPE) {
             // Collect all tokens between cmd_start and tmp as args for the current command
             int arg_count = 0;
-            t_token *arg_tmp = cmd_start;
+            t_token *curr = cmd_start;
             
             // Count arguments
-            while (arg_tmp != tmp) {
-                if (!tmp)
-                    return NULL;
-                if (arg_tmp->type == TOKEN_WORD)
+            while (curr != tmp) {
+                if (curr->type == TOKEN_WORD)
                     arg_count++;
-                arg_tmp = arg_tmp->next;
+                curr = curr->next;
             }
             
             // Allocate memory for arguments
-            pipes[cmd_index].args = malloc(sizeof(char*) * (arg_count + 1));
+            pipes[cmd_index].args = malloc(sizeof(char*) * (arg_count + 1));// You can remove +1 in here!!
             if (!pipes[cmd_index].args)
+            {
+                free_pipe_command(pipes, count);
                 return NULL;
+            }
             
             // Copy arguments
-            arg_tmp = cmd_start;
+            curr = cmd_start;
             int arg_index = 0;
-            while (arg_tmp != tmp) {
-                if (arg_tmp->type == TOKEN_WORD) {
-                    pipes[cmd_index].args[arg_index] = ft_strdup(arg_tmp->value);
-                    arg_index++;
+            while (curr != tmp) {
+                if(curr->type == TOKEN_REDIRECT_OUT || curr->type == TOKEN_REDIRECT_APPEND || 
+                    curr->type == TOKEN_REDIRECT_IN || curr->type == TOKEN_HEREDOC)
+                {
+                    // t_token *redirect_token = curr;
+                    curr = curr->next;
+                    if(curr->type == TOKEN_WORD)
+                    {
+                        curr = curr->next;
+                        continue;
+                    }
                 }
-                arg_tmp = arg_tmp->next;
+                else if (curr->type == TOKEN_WORD) {
+                    pipes[cmd_index].args[arg_index] = ft_strdup(curr->value);
+                    arg_index++;
+                    curr = curr->next;
+                }
+                else
+                    curr = curr->next;
+                // curr = curr->next; // Be carefull to say next
             }
             pipes[cmd_index].args[arg_index] = NULL;
             
@@ -267,21 +178,46 @@ t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
         }
         
         // Allocate memory for arguments
-        pipes[cmd_index].args = malloc(sizeof(char*) * (arg_count + 1));
+        pipes[cmd_index].args = malloc(sizeof(char*) * (arg_count + 1));// You can remove it "+1"
         if (!pipes[cmd_index].args)
+        {
+            free_pipe_command(pipes, count);
             return NULL;
+        }
         
         // Copy arguments
         arg_tmp = cmd_start;
         int arg_index = 0;
         while (arg_tmp && arg_tmp->type != TOKEN_SEMIC) {
-            if (arg_tmp->type == TOKEN_WORD) {
+            if(arg_tmp->type == TOKEN_REDIRECT_OUT || arg_tmp->type == TOKEN_REDIRECT_APPEND || 
+                arg_tmp->type == TOKEN_REDIRECT_IN || arg_tmp->type == TOKEN_HEREDOC)
+            {
+                // t_token *redirect_token = arg_tmp;
+                arg_tmp = arg_tmp->next;
+                if(arg_tmp->type == TOKEN_WORD)
+                {
+                    arg_tmp = arg_tmp->next;
+                    continue;
+                }
+            }
+            else if (arg_tmp->type == TOKEN_WORD) {
                 pipes[cmd_index].args[arg_index] = ft_strdup(arg_tmp->value);
                 arg_index++;
+                arg_tmp = arg_tmp->next;
             }
-            arg_tmp = arg_tmp->next;
+            else
+                arg_tmp = arg_tmp->next;
+            // curr = curr->next; // Be carefull to say next
         }
         pipes[cmd_index].args[arg_index] = NULL;
+        // while (arg_tmp && arg_tmp->type != TOKEN_SEMIC) {
+        //     if (arg_tmp->type == TOKEN_WORD) {
+        //         pipes[cmd_index].args[arg_index] = ft_strdup(arg_tmp->value);
+        //         arg_index++;
+        //     }
+        //     arg_tmp = arg_tmp->next;
+        // }
+        // pipes[cmd_index].args[arg_index] = NULL;
         
         // Debug output
         DEBUG_PRINT(BLUE "Command %d args: ", cmd_index);
@@ -296,6 +232,105 @@ t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
     
     return pipes;
 }
+
+
+void    handle_pipe_redirection(t_token *cmd_start, t_token *cmd_end, t_env *env)
+{
+    t_token *curr = cmd_start;
+    int fd = STDIN_FILENO;
+
+    while(curr && curr != cmd_end)
+    {
+        if(curr->type == TOKEN_REDIRECT_OUT)
+        {
+            if(curr->next && curr->next->type == TOKEN_WORD)
+            {
+                fd = open(curr->next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                if(fd < 0)
+                {
+                    perror("open failed");
+                    return;
+                }
+                if(dup2(fd, STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 failed");
+                    close(fd);
+                    return;
+                }
+                close(fd);
+                DEBUG_PRINT(RED"Redirecting output to '%s'\n" RESET,curr->next->value);
+            }
+        }
+        else if(curr->type == TOKEN_REDIRECT_APPEND)
+        {
+            if(curr->next && curr->next->type == TOKEN_WORD)
+            {
+                fd = open(curr->next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+                if(fd < 0)
+                {
+                    perror("open failed");
+                    return;
+                }
+                if(dup2(fd, STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 failed");
+                    close(fd);
+                    return;
+                }
+                close(fd);
+                DEBUG_PRINT(RED"Redirecting output to '%s'\n" RESET,curr->next->value);
+            }
+        }
+        else if(curr->type == TOKEN_REDIRECT_IN)
+        {
+            if(curr->next && curr->next->type == TOKEN_WORD)
+            {
+                fd = open(curr->next->value, O_RDONLY);
+                if(fd < 0)
+                {
+                    perror("open failed");
+                    return;
+                }
+                if(dup2(fd, STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 failed");
+                    close(fd);
+                    return;
+                }
+                close(fd);
+                DEBUG_PRINT(RED"Redirecting output to '%s'\n" RESET,curr->next->value);
+            }
+        }
+        else if(curr->type == TOKEN_HEREDOC)
+        {
+            if(curr->next && curr->next->type == TOKEN_WORD)
+            {
+                char *heredoc_input = handler_heredoc(curr->next->value, env);
+                if (heredoc_input) {
+                int pipe_fd[2];
+                if (pipe(pipe_fd) == -1) {
+                    perror("pipe failed");
+                    free(heredoc_input);
+                    return;
+                }
+                write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
+                close(pipe_fd[1]);
+                if (dup2(pipe_fd[0], STDIN_FILENO) == -1) {
+                    perror("dup2 failed");
+                    close(pipe_fd[0]);
+                    free(heredoc_input);
+                    return;
+                }
+                close(pipe_fd[0]);
+                free(heredoc_input);
+                DEBUG_PRINT(BLUE "Applied heredoc with delimiter '%s'\n" RESET, curr->next->value);
+                }
+            }
+        }
+        curr = curr->next;
+    }
+}
+
 
 // static int **setup_pipes(t_pipe_command *pipes, int pipe_count)
 // {
@@ -533,12 +568,17 @@ t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
 //     DEBUG_PRINT(BLUE "Pipe execution completed\n" RESET);
 // }
 
-void execute_pipes(t_pipe_command *pipes, t_env *env)
+void execute_pipes(t_pipe_command *pipes, t_env *env, t_token *tokens)
 {
     int i;
     int pipes_count = pipes[0].count_pipe;
     int pipe_fds[pipes_count - 1][2]; // Array to hold pipe file descriptors
     pid_t pids[pipes_count]; // Array to hold process IDs
+
+
+    // t_token *cmd_start = NULL;
+    // t_token *cmd_end = NULL;
+    // t_token *tokens = NULL;
     
     DEBUG_PRINT(BLUE "Executing pipe chain with %d commands\n" RESET, pipes_count);
     
@@ -552,6 +592,32 @@ void execute_pipes(t_pipe_command *pipes, t_env *env)
                    i, pipe_fds[i][0], pipe_fds[i][1]);
     }
     
+    t_token **cmd_start = malloc(sizeof(t_token *) * pipes_count);
+    t_token **cmd_ends = malloc(sizeof(t_token *) * pipes_count);
+    if(!cmd_start || !cmd_ends)
+    {
+        free(cmd_start);
+        free(cmd_ends);
+        return;
+    }
+
+    // Identify token boundaries for each command segment
+    t_token *curr = tokens; // You'll need to pass the original tokens list into this function
+    t_token *start = curr;
+    int cmd_idx = 0;
+    
+    while (curr) {
+        if (curr->type == TOKEN_PIPE || curr->type == TOKEN_SEMIC) {
+            cmd_ends[cmd_idx] = curr;
+            cmd_idx++;
+            if (curr->next) {
+                start = curr->next;
+                cmd_start[cmd_idx] = start;
+            }
+        }
+        curr = curr->next;
+    }
+
     // Create processes for each command
     for (i = 0; i < pipes_count; i++) {
         pids[i] = fork();
@@ -581,7 +647,7 @@ void execute_pipes(t_pipe_command *pipes, t_env *env)
                     exit(EXIT_FAILURE);
                 }
             }
-            
+            handle_pipe_redirection(cmd_start[i], cmd_ends[i], env);
             // Close all pipe file descriptors
             for (int j = 0; j < pipes_count - 1; j++) {
                 close(pipe_fds[j][0]);
@@ -648,6 +714,7 @@ void execute_pipes(t_pipe_command *pipes, t_env *env)
             env->exit_code = 128 + WTERMSIG(status);
         }
     }
-    
+    free(cmd_start);
+    free(cmd_ends);
     DEBUG_PRINT(BLUE "Pipe execution completed\n" RESET);
 }

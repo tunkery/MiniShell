@@ -71,6 +71,8 @@ typedef struct s_pipe_command
     int pipe_stdin;
     int pipe_stdout;
     char **args;
+	// t_token *start_token;
+	// t_token *end_token;
 } t_pipe_command;
 
 
@@ -98,7 +100,8 @@ typedef	struct s_token
 {
 	t_token_type  type; // token type
 	char  *value; // token value
-	struct s_token *next; // next token
+	struct s_token *next;
+	struct s_token *prev; // next token
 }	t_token;
 
 
@@ -146,8 +149,11 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
 // execute with pipe functions
 char **ext_cmd_arg(t_token *start, t_token *end);
 void    free_pipe_command(t_pipe_command *pipes, int pipe_count);
-void execute_pipes(t_pipe_command *pipes, t_env *env);
+void execute_pipes(t_pipe_command *pipes, t_env *env, t_token *tokens);
 t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count);
+void    handle_pipe_redirection(t_token *cmd_start, t_token *cmd_end, t_env *env);
+t_token **find_pipe_seg(t_token *tokens, int *seg_count);
+void	exec_command_seg(t_token *start, t_token *end, t_env *env);
 char **split_args(char *command);
 char **split_pipes(char *command);
 

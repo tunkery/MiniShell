@@ -1,0 +1,11 @@
+drwxr-xr-x   23 hpehliva  2024_heilbronn    782 Apr 10 20:16 .
+drwxr-xr-x  112 hpehliva  2024_heilbronn   3876 Apr 10 20:09 ..
+drwxr-xr-x   12 hpehliva  2024_heilbronn    408 Apr 10 14:42 .git
+drwxr-xr-x    3 hpehliva  2024_heilbronn    102 Apr 10 14:42 .vscode
+drwxr-xr-x   18 hpehliva  2024_heilbronn    612 Apr 10 20:04 builtin
+drwxr-xr-x    8 hpehliva  2024_heilbronn    272 Apr 10 20:09 envp
+drwxr-xr-x   16 hpehliva  2024_heilbronn    544 Apr 10 20:09 execute
+drwxr-xr-x    7 hpehliva  2024_heilbronn    238 Apr 10 20:04 get_next_line
+drwxr-xr-x   39 hpehliva  2024_heilbronn   1326 Apr 10 20:04 libft
+drwxr-xr-x    4 hpehliva  2024_heilbronn    136 Apr 10 20:04 signals
+drwxr-xr-x    8 hpehliva  2024_heilbronn    272 Apr 10 20:09 tokens
