@@ -323,8 +323,10 @@
 #         [DEBUG] Echo completed
 #         [DEBUG] Ending Cell_lounch
 
+
 11-) echo "MErhabalar" << file.txt
         Bu komutlari arastir.
+
 
 12-) Bash:
         1-D-25:MiniShell hpehliva$ '$PWD'
@@ -364,8 +366,545 @@
     
 
 
+------------------------------------------------------------------------------------
 
+#Pipe 
+1-) MY SHELL:
+    minishell> ls | wc -l
+        [DEBUG] Starting token seperation for line: 'ls | wc -l'
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'ls'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'ls'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-l'  [DEBUG] 
+        [DEBUG] Detected 2 commands in pipe chain
+        [DEBUG] Executing pipe chain with 2 commands
+        [DEBUG] Created pipe 0: read_fd=5, write_fd=6
+        [DEBUG] Waiting for child process 0 (pid: 31513)
+        [DEBUG] Child process 0 (command: ls)
+        [DEBUG] Redirecting stdout to fd 6
+        [DEBUG] Child process 1 (command: wc)
+        [DEBUG] Redirecting stdin from fd 5
+        [DEBUG] Executing external command: wc
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 31514)
+            18
+        [DEBUG] Child process 1 exited with status 0
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    hpehliva$ ls | wc -l
+      17
+2-) MY SHELL:
+    minishell> cat file.txt | grep "hello"
+        [DEBUG] Starting token seperation for line: 'cat file.txt | grep "hello"'
+        [DEBUG] Created token: type= 0, value = 'cat' 
+        [DEBUG] Created token: type= 0, value = 'cat' 
+        [DEBUG] Created token: type= 0, value = 'file.txt' 
+        [DEBUG] Created token: type= 0, value = 'file.txt' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Processed quoted string: 'hello' (start = 21, end = 27)
+        [DEBUG] Created token: type= 0, value = 'hello' 
+        [DEBUG] Created token: type= 0, value = 'hello' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'cat'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'cat'  [DEBUG]  [DEBUG] 'file.txt'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'grep'  [DEBUG]  [DEBUG] 'hello'  [DEBUG] 
+        [DEBUG] Detected 2 commands in pipe chain
+        [DEBUG] Executing pipe chain with 2 commands
+        [DEBUG] Created pipe 0: read_fd=7, write_fd=8
+        [DEBUG] Waiting for child process 0 (pid: 31738)
+        [DEBUG] Child process 0 (command: cat)
+        [DEBUG] Redirecting stdout to fd 8
+        [DEBUG] Child process 1 (command: grep)
+        [DEBUG] Redirecting stdin from fd 7
+        [DEBUG] Executing external command: grep
+        cat: file.txt: No such file or directory
+        [DEBUG] Child process 0 exited with status 1
+        [DEBUG] Waiting for child process 1 (pid: 31739)
+        [DEBUG] Child process 1 exited with status 1
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    hpehliva$ cat file.txt | grep "hello"
+        cat: file.txt: No such file or directory
+3-) MY SHELL:
+    minishell> echo "Hello World" | wc -w
+        [DEBUG] Starting token seperation for line: 'echo "Hello World" | wc -w'
+        [DEBUG] Created token: type= 0, value = 'echo' 
+        [DEBUG] Created token: type= 0, value = 'echo' 
+        [DEBUG] Processed quoted string: 'Hello World' (start = 6, end = 18)
+        [DEBUG] Created token: type= 0, value = 'Hello World' 
+        [DEBUG] Created token: type= 0, value = 'Hello World' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-w' 
+        [DEBUG] Created token: type= 0, value = '-w' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'echo'  [DEBUG]  [DEBUG] 'Hello World'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-w'  [DEBUG] 
+        [DEBUG] Detected 2 commands in pipe chain
+        [DEBUG] Executing pipe chain with 2 commands
+        [DEBUG] Created pipe 0: read_fd=9, write_fd=10
+        [DEBUG] Waiting for child process 0 (pid: 31885)
+        [DEBUG] Child process 0 (command: echo)
+        [DEBUG] Redirecting stdout to fd 10
+        [DEBUG] Child process 1 (command: wc)
+        [DEBUG] Redirecting stdin from fd 9
+        [DEBUG] Executing external command: wc
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 31886)
+            21
+        [DEBUG] Child process 1 exited with status 0
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    hpehliva$ echo "Hello World" | wc -w
+        2
+4-) MY SHELL:
+    minishell> ls -la | grep "^d" | wc -l
+        [DEBUG] Starting token seperation for line: 'ls -la | grep "^d" | wc -l'
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 0, value = '-la' 
+        [DEBUG] Created token: type= 0, value = '-la' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Processed quoted string: '^d' (start = 15, end = 18)
+        [DEBUG] Created token: type= 0, value = '^d' 
+        [DEBUG] Created token: type= 0, value = '^d' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'ls'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'ls'  [DEBUG]  [DEBUG] '-la'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'grep'  [DEBUG]  [DEBUG] '^d'  [DEBUG] 
+        [DEBUG] Command 2 args:  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-l'  [DEBUG] 
+        [DEBUG] Detected 3 commands in pipe chain
+        [DEBUG] Executing pipe chain with 3 commands
+        [DEBUG] Created pipe 0: read_fd=11, write_fd=12
+        [DEBUG] Created pipe 1: read_fd=13, write_fd=14
+        [DEBUG] Child process 0 (command: ls)
+        [DEBUG] Redirecting stdout to fd 12
+        [DEBUG] Waiting for child process 0 (pid: 31958)
+        [DEBUG] Child process 1 (command: grep)
+        [DEBUG] Redirecting stdin from fd 11
+        [DEBUG] Redirecting stdout to fd 14
+        [DEBUG] Child process 2 (command: wc)
+        [DEBUG] Redirecting stdin from fd 13
+        [DEBUG] Executing external command: wc
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 31959)
+        [DEBUG] Child process 1 exited with status 0
+        [DEBUG] Waiting for child process 2 (pid: 31960)
+            12
+        [DEBUG] Child process 2 exited with status 0
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ ls -la | grep "^d" | wc -l
+        11
+5-) MY SHELL:
+    minishell> echo $PATH | tr ':' '\n' | wc -l
+        [DEBUG] Starting token seperation for line: 'echo $PATH | tr ':' '\n' | wc -l'
+        [DEBUG] Created token: type= 0, value = 'echo' 
+        [DEBUG] Created token: type= 0, value = 'echo' 
+        [DEBUG] Expanding env var: 'PATH'
+        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin' 
+        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'tr' 
+        [DEBUG] Created token: type= 0, value = 'tr' 
+        [DEBUG] Processed quoted string: ':' (start = 17, end = 19)
+        [DEBUG] Created token: type= 0, value = ':' 
+        [DEBUG] Created token: type= 0, value = ':' 
+        [DEBUG] Processed quoted string: '\n' (start = 21, end = 24)
+        [DEBUG] Created token: type= 0, value = '\n' 
+        [DEBUG] Created token: type= 0, value = '\n' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'echo'  [DEBUG]  [DEBUG] '/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'tr'  [DEBUG]  [DEBUG] ':'  [DEBUG]  [DEBUG] '\n'  [DEBUG] 
+        [DEBUG] Command 2 args:  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-l'  [DEBUG] 
+        [DEBUG] Detected 3 commands in pipe chain
+        [DEBUG] Executing pipe chain with 3 commands
+        [DEBUG] Created pipe 0: read_fd=13, write_fd=14
+        [DEBUG] Created pipe 1: read_fd=15, write_fd=16
+        [DEBUG] Child process 0 (command: echo)
+        [DEBUG] Redirecting stdout to fd 14
+        [DEBUG] Waiting for child process 0 (pid: 32026)
+        [DEBUG] Child process 1 (command: tr)
+        [DEBUG] Redirecting stdin from fd 13
+        [DEBUG] Redirecting stdout to fd 16
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 32027)
+        [DEBUG] Child process 2 (command: wc)
+        [DEBUG] Redirecting stdin from fd 15
+        [DEBUG] Executing external command: wc
+            21
+        [DEBUG] Child process 1 exited with status 0
+        [DEBUG] Waiting for child process 2 (pid: 32028)
+        [DEBUG] Child process 2 exited with status 0
+        [DEBUG] Pipe execution completed
 
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ echo $PATH | tr ':' '\n' | wc -l
+        11
+6-) MY SHELL:
+    minishell> env | grep "HOME" | cut -d= -f2
+        [DEBUG] Starting token seperation for line: 'env | grep "HOME" | cut -d= -f2'
+        [DEBUG] Created token: type= 0, value = 'env' 
+        [DEBUG] Created token: type= 0, value = 'env' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Processed quoted string: 'HOME' (start = 12, end = 17)
+        [DEBUG] Created token: type= 0, value = 'HOME' 
+        [DEBUG] Created token: type= 0, value = 'HOME' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'cut' 
+        [DEBUG] Created token: type= 0, value = 'cut' 
+        [DEBUG] Created token: type= 0, value = '-d=' 
+        [DEBUG] Created token: type= 0, value = '-d=' 
+        [DEBUG] Created token: type= 0, value = '-f2' 
+        [DEBUG] Created token: type= 0, value = '-f2' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'env'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'env'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'grep'  [DEBUG]  [DEBUG] 'HOME'  [DEBUG] 
+        [DEBUG] Command 2 args:  [DEBUG]  [DEBUG] 'cut'  [DEBUG]  [DEBUG] '-d='  [DEBUG]  [DEBUG] '-f2'  [DEBUG] 
+        [DEBUG] Detected 3 commands in pipe chain
+        [DEBUG] Executing pipe chain with 3 commands
+        [DEBUG] Created pipe 0: read_fd=15, write_fd=16
+        [DEBUG] Created pipe 1: read_fd=17, write_fd=18
+        [DEBUG] Child process 0 (command: env)
+        [DEBUG] Redirecting stdout to fd 16
+        [DEBUG] Waiting for child process 0 (pid: 32089)
+        [DEBUG] Child process 1 (command: grep)
+        [DEBUG] Redirecting stdin from fd 15
+        [DEBUG] Redirecting stdout to fd 18
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 32090)
+        [DEBUG] Child process 2 (command: cut)
+        [DEBUG] Redirecting stdin from fd 17
+        [DEBUG] Executing external command: cut
+        [DEBUG] Child process 1 exited with status 0
+        [DEBUG] Waiting for child process 2 (pid: 32091)
+        [DEBUG] Executing external command: grep
+        /Users/hpehliva
+        [DEBUG] Child process 2 exited with status 0
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ env | grep "HOME" | cut -d= -f2
+        /Users/hpehliva
+7-) MY SHELL:
+    minishell> ls | grep nonexistent | wc -l
+        [DEBUG] Starting token seperation for line: 'ls | grep nonexistent | wc -l'
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Created token: type= 0, value = 'nonexistent' 
+        [DEBUG] Created token: type= 0, value = 'nonexistent' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'ls'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'ls'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'grep'  [DEBUG]  [DEBUG] 'nonexistent'  [DEBUG] 
+        [DEBUG] Command 2 args:  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-l'  [DEBUG] 
+        [DEBUG] Detected 3 commands in pipe chain
+        [DEBUG] Executing pipe chain with 3 commands
+        [DEBUG] Created pipe 0: read_fd=17, write_fd=18
+        [DEBUG] Created pipe 1: read_fd=19, write_fd=20
+        [DEBUG] Child process 0 (command: ls)
+        [DEBUG] Redirecting stdout to fd 18
+        [DEBUG] Waiting for child process 0 (pid: 32156)
+        [DEBUG] Child process 1 (command: grep)
+        [DEBUG] Redirecting stdin from fd 17
+        [DEBUG] Redirecting stdout to fd 20
+        [DEBUG] Child process 2 (command: wc)
+        [DEBUG] Redirecting stdin from fd 19
+        [DEBUG] Executing external command: wc
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 32157)
+            1
+        [DEBUG] Child process 1 exited with status 1
+        [DEBUG] Waiting for child process 2 (pid: 32158)
+        [DEBUG] Child process 2 exited with status 0
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ ls | grep nonexistent | wc -l
+        0
+8-) MY SHELL:
+    minishell> ls |  | wc -l
+        [DEBUG] Starting token seperation for line: 'ls |  | wc -l'
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'ls'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'ls'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG] 
+        [DEBUG] Command 2 args:  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-l'  [DEBUG] 
+        [DEBUG] Detected 3 commands in pipe chain
+        [DEBUG] Executing pipe chain with 3 commands
+        [DEBUG] Created pipe 0: read_fd=19, write_fd=20
+        [DEBUG] Created pipe 1: read_fd=21, write_fd=22
+        [DEBUG] Child process 0 (command: ls)
+        [DEBUG] Redirecting stdout to fd 20
+        [DEBUG] Waiting for child process 0 (pid: 32216)
+        [DEBUG] Child process 1 (command: (null))
+        [DEBUG] Redirecting stdin from fd 19
+        [DEBUG] Redirecting stdout to fd 22
+        [DEBUG] Child process 2 (command: wc)
+        [DEBUG] Redirecting stdin from fd 21
+        [DEBUG] Executing external command: wc
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 32217)
+            1
+        [DEBUG] Child process 1 terminated by signal 11
+        [DEBUG] Waiting for child process 2 (pid: 32218)
+        [DEBUG] Child process 2 exited with status 0
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ ls |  | wc -l
+        bash: syntax error near unexpected token `|'
+9-) MY SHELL:
+    minishell> ls -la | grep "^d" > dirs.txt
+        [DEBUG] Starting token seperation for line: 'ls -la | grep "^d" > dirs.txt'
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 0, value = 'ls' 
+        [DEBUG] Created token: type= 0, value = '-la' 
+        [DEBUG] Created token: type= 0, value = '-la' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Created token: type= 0, value = 'grep' 
+        [DEBUG] Processed quoted string: '^d' (start = 15, end = 18)
+        [DEBUG] Created token: type= 0, value = '^d' 
+        [DEBUG] Created token: type= 0, value = '^d' 
+        [DEBUG] Created token: type= 3, value = '>' 
+        [DEBUG] Created token: type= 3, value = '>' 
+        [DEBUG] Created token: type= 0, value = 'dirs.txt' 
+        [DEBUG] Created token: type= 0, value = 'dirs.txt' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'ls'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'ls'  [DEBUG]  [DEBUG] '-la'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'grep'  [DEBUG]  [DEBUG] '^d'  [DEBUG]  [DEBUG] 'dirs.txt'  [DEBUG] 
+        [DEBUG] Detected 2 commands in pipe chain
+        [DEBUG] Executing pipe chain with 2 commands
+        [DEBUG] Created pipe 0: read_fd=21, write_fd=22
+        [DEBUG] Waiting for child process 0 (pid: 32345)
+        [DEBUG] Child process 0 (command: ls)
+        [DEBUG] Redirecting stdout to fd 22
+        [DEBUG] Child process 1 (command: grep)
+        [DEBUG] Redirecting stdin from fd 21
+        [DEBUG] Executing external command: grep
+        grep: dirs.txt: No such file or directory
+        [DEBUG] Child process 0 terminated by signal 13
+        [DEBUG] Waiting for child process 1 (pid: 32346)
+        [DEBUG] Child process 1 exited with status 2
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ ls -la | grep "^d" > dirs.txt
+    1-B-32:MiniShell hpehliva$ 
+    // Open the file dirs.txt
+    drwxr-xr-x   22 hpehliva  2024_heilbronn    748 Apr 10 10:25 .
+    drwxr-xr-x  112 hpehliva  2024_heilbronn   3876 Apr 10 10:17 ..
+    drwxr-xr-x   12 hpehliva  2024_heilbronn    408 Apr 10 10:09 .git
+    drwxr-xr-x    3 hpehliva  2024_heilbronn    102 Apr 10 10:09 .vscode
+    drwxr-xr-x   18 hpehliva  2024_heilbronn    612 Apr 10 10:17 builtin
+    drwxr-xr-x    8 hpehliva  2024_heilbronn    272 Apr 10 10:17 envp
+    drwxr-xr-x   16 hpehliva  2024_heilbronn    544 Apr 10 10:17 execute
+    drwxr-xr-x    7 hpehliva  2024_heilbronn    238 Apr 10 10:17 get_next_line
+    drwxr-xr-x   39 hpehliva  2024_heilbronn   1326 Apr 10 10:17 libft
+    drwxr-xr-x    4 hpehliva  2024_heilbronn    136 Apr 10 10:17 signals
+    drwxr-xr-x    8 hpehliva  2024_heilbronn    272 Apr 10 10:17 tokens
+
+10-) MY SHELL:
+    minishell> find . -type f -name "*.c" | xargs wc -l | sort -n | tail -5
+        [DEBUG] Starting token seperation for line: 'find . -type f -name "*.c" | xargs wc -l | sort -n | tail -5'
+        [DEBUG] Created token: type= 0, value = 'find' 
+        [DEBUG] Created token: type= 0, value = 'find' 
+        [DEBUG] Created token: type= 0, value = '.' 
+        [DEBUG] Created token: type= 0, value = '.' 
+        [DEBUG] Created token: type= 0, value = '-type' 
+        [DEBUG] Created token: type= 0, value = '-type' 
+        [DEBUG] Created token: type= 0, value = 'f' 
+        [DEBUG] Created token: type= 0, value = 'f' 
+        [DEBUG] Created token: type= 0, value = '-name' 
+        [DEBUG] Created token: type= 0, value = '-name' 
+        [DEBUG] Processed quoted string: '*.c' (start = 22, end = 26)
+        [DEBUG] Created token: type= 0, value = '*.c' 
+        [DEBUG] Created token: type= 0, value = '*.c' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'xargs' 
+        [DEBUG] Created token: type= 0, value = 'xargs' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'sort' 
+        [DEBUG] Created token: type= 0, value = 'sort' 
+        [DEBUG] Created token: type= 0, value = '-n' 
+        [DEBUG] Created token: type= 0, value = '-n' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'tail' 
+        [DEBUG] Created token: type= 0, value = 'tail' 
+        [DEBUG] Created token: type= 0, value = '-5' 
+        [DEBUG] Created token: type= 0, value = '-5' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'find'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'find'  [DEBUG]  [DEBUG] '.'  [DEBUG]  [DEBUG] '-type'  [DEBUG]  [DEBUG] 'f'  [DEBUG]  [DEBUG] '-name'  [DEBUG]  [DEBUG] '*.c'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'xargs'  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-l'  [DEBUG] 
+        [DEBUG] Command 2 args:  [DEBUG]  [DEBUG] 'sort'  [DEBUG]  [DEBUG] '-n'  [DEBUG] 
+        [DEBUG] Command 3 args:  [DEBUG]  [DEBUG] 'tail'  [DEBUG]  [DEBUG] '-5'  [DEBUG] 
+        [DEBUG] Detected 4 commands in pipe chain
+        [DEBUG] Executing pipe chain with 4 commands
+        [DEBUG] Created pipe 0: read_fd=23, write_fd=24
+        [DEBUG] Created pipe 1: read_fd=25, write_fd=26
+        [DEBUG] Created pipe 2: read_fd=27, write_fd=28
+        [DEBUG] Child process 0 (command: find)
+        [DEBUG] Redirecting stdout to fd 24
+        [DEBUG] Child process 1 (command: xargs)
+        [DEBUG] Redirecting stdin from fd 23
+        [DEBUG] Redirecting stdout to fd 26
+        [DEBUG] Waiting for child process 0 (pid: 32486)
+        [DEBUG] Child process 2 (command: sort)
+        [DEBUG] Redirecting stdin from fd 25
+        [DEBUG] Redirecting stdout to fd 28
+        [DEBUG] Child process 3 (command: tail)
+        [DEBUG] Redirecting stdin from fd 27
+        [DEBUG] Executing external command: tail
+        [DEBUG] Child process 0 exited with status 0
+        [DEBUG] Waiting for child process 1 (pid: 32487)
+        wc: \001\033[0m\002: open: No such file or directory
+        wc: [DEBUG]: open: No such file or directory
+        wc: \001\033[1;34m\002Executing: open: No such file or directory
+        wc: external: open: No such file or directory
+        wc: command:: open: No such file or directory
+        wc: find: open: No such file or directory
+        [DEBUG] Child process 1 exited with status 1
+        [DEBUG] Waiting for child process 2 (pid: 32488)
+            182 ./execute/run_commands.c
+            201 ./tokens/tokenizer.c
+            224 ./execute/exe_main.c
+            650 ./execute/pipe.c
+            4372 total
+        [DEBUG] Child process 2 exited with status 0
+        [DEBUG] Waiting for child process 3 (pid: 32489)
+        [DEBUG] Child process 3 exited with status 0
+        [DEBUG] Pipe execution completed
+
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ find . -type f -name "*.c" | xargs wc -l | sort -n | tail -5
+        182 ./execute/run_commands.c
+        201 ./tokens/tokenizer.c
+        224 ./execute/exe_main.c
+        650 ./execute/pipe.c
+        4372 total
+
+------------------------------------------------------------------
+#Heredoc:
+11-) MY SHELL:
+    minishell> cat << END | wc -l
+        [DEBUG] Starting token seperation for line: 'cat << END | wc -l'
+        [DEBUG] Created token: type= 0, value = 'cat' 
+        [DEBUG] Created token: type= 0, value = 'cat' 
+        [DEBUG] Created token: type= 5, value = '<<' 
+        [DEBUG] Created token: type= 5, value = '<<' 
+        [DEBUG] Created token: type= 0, value = 'END' 
+        [DEBUG] Created token: type= 0, value = 'END' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 1, value = '|' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = 'wc' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Created token: type= 0, value = '-l' 
+        [DEBUG] Tokenizer finished, head token: type= 0, value = 'cat'
+        [DEBUG] Starting Cell_lounch
+        [DEBUG] Pipe detected, using pipe execution path
+        [DEBUG] Command 0 args:  [DEBUG]  [DEBUG] 'cat'  [DEBUG]  [DEBUG] 'END'  [DEBUG] 
+        [DEBUG] Command 1 args:  [DEBUG]  [DEBUG] 'wc'  [DEBUG]  [DEBUG] '-l'  [DEBUG] 
+        [DEBUG] Detected 2 commands in pipe chain
+        [DEBUG] Executing pipe chain with 2 commands
+        [DEBUG] Created pipe 0: read_fd=5, write_fd=6
+        [DEBUG] Waiting for child process 0 (pid: 32943)
+        [DEBUG] Child process 0 (command: cat)
+        [DEBUG] Redirecting stdout to fd 6
+        [DEBUG] Child process 1 (command: wc)
+        [DEBUG] Redirecting stdin from fd 5
+        [DEBUG] Executing external command: wc
+        cat: END: No such file or directory
+            1
+        [DEBUG] Child process 0 exited with status 1
+        [DEBUG] Waiting for child process 1 (pid: 32944)
+        [DEBUG] Child process 1 exited with status 0
+        [DEBUG] Pipe execution completed
+    NORMAL BASH:
+    1-B-32:MiniShell hpehliva$ cat << END | wc -l
+    > Merhaba
+    > NAsilsin
+    > END
+        2
+12-) MY SHELL:
+
+    NORMAL BASH:
+13-) MY SHELL:
+
+    NORMAL BASH:
 
 NOTES ABOUT CODE:
         Step 2: Check args in cell_launch

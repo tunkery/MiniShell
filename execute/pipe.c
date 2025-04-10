@@ -216,6 +216,8 @@ t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count)
             
             // Count arguments
             while (arg_tmp != tmp) {
+                if (!tmp)
+                    return NULL;
                 if (arg_tmp->type == TOKEN_WORD)
                     arg_count++;
                 arg_tmp = arg_tmp->next;
