@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/10 18:30:20 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/10 20:20:30 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ static int	export_check(char **args)
 	if (ft_isdigit(args[1][0]) != 0)
 		return (-1);
 	return (0);
+}
+
+static int	dupicate_check(char **args, t_env *env)
+{
 }
 
 void	run_export(char **args, t_env *env)
