@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/07 15:19:40 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/10 19:32:53 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,31 +77,39 @@ static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 // 		printf("minishell: %s: command not found.\n", args[0]);
 // }
 
-static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
+static int	permission_check(char *str, t_env *env)
 {
-	pid_t	pid;
-	struct stat info;
+	struct stat	info;
 
-	(void)out_fd;
 	if (stat(str, &info) != 0)
 	{
 		printf("minishell: %s: No such file or directory\n", str);
 		env->exit_code = 127;
-		return ;
+		return (1);
 	}
 	else if (S_ISDIR(info.st_mode))
 	{
 		printf("minishell: %s: is a directory\n", str);
 		env->exit_code = 126;
-		return ;
+		return (1);
 	}
 	else if (access(str, X_OK) != 0)
 	{
 		printf("minishell: %s: Permission denied\n", str);
 		env->exit_code = 126;
-		return ;
+		return (1);
 	}
-	else if (access(str, X_OK) == 0)
+	return (0);
+}
+
+static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
+{
+	pid_t	pid;
+	int		check;
+
+	(void)out_fd;
+	check = permission_check(str, env);
+	if (access(str, X_OK) == 0 && check == 0)
 	{
 		pid = fork();
 		if (pid == 0)
@@ -115,7 +123,7 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 		else
 			wait_for_child(pid, env);
 	}
-	else
+	else if (check == 0)
 	{
 		printf("minishell: %s: command not found.\n", str);
 		env->exit_code = 127;
@@ -158,15 +166,12 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		return ;
 	final = args[0];
 	path = find_path(env);
+	exec_path = find_exec(final, path, 0, 5);
 	if (ft_strchr(final, '/')) // if, yani eger, biri path ile yazmissa komutu burasi kontrol edip calistiriyo
-	{
-		exec_path = NULL;
 		run_with_path(final, args, env, out_fd);
-	}
 	else
 		// eger pathsiz yazilmissa command burasi isi eline aliyo ve pathi bulup calistiriyo
 	{
-		exec_path = find_exec(final, path, 0, 5);
 		if (!exec_path)
 		{
 			printf("minishell: %s: command not found.\n", args[0]);
@@ -178,5 +183,4 @@ void	exec_command(char **args, t_env *env, int out_fd)
 	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	if (exec_path)
 		free(exec_path);
-	// free(path);
 }
