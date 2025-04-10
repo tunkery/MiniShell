@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/03/25 13:25:58 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/10 15:36:58 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,8 @@ void	cell_launch(t_token *tokens, t_env *env)
 			
 		}
 		DEBUG_PRINT(RED"Skip execution due to redirection failed!"RESET);
-		clean_2d(args);
+		// if (args)
+		// 	clean_2d(args);
 		args = NULL;
 		if (out_fd != STDOUT_FILENO)
 			close(out_fd);
