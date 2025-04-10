@@ -39,8 +39,28 @@ char *expand_env(char *line, int *i, t_env *env)
     }
     var_name[j] = '\0';
     DEBUG_PRINT(CYAN"Expanding env var: '%s'\n"RESET, var_name);
+
+    // try to get env structure!
+    int k = 0;
+    while (env->envp[k])
+    {
+        // Extract key from env variable
+        size_t key_len = 0;
+        while (env->envp[k][key_len] && env->envp[k][key_len] != '=')
+            key_len++;
+        
+        // Compare key with var_name
+        if (key_len == ft_strlen(var_name) && 
+            ft_strncmp(env->envp[k], var_name, key_len) == 0)
+        {
+            // Return value part (after the '=')
+            return ft_strdup(env->envp[k] + key_len + 1);
+        }
+        k++;
+    }
+    
+    // Fallback to getenv
     value = getenv(var_name);
-    DEBUG_PRINT(CYAN"Found value: '%s'\n"RESET, value ? value : "NULL");
     if(value)
         return (ft_strdup(value));
     return ft_strdup("");
@@ -152,12 +172,10 @@ void seperated_token(char *line, t_token **head, t_env *env)
         if(!token)
         {
             DEBUG_PRINT(RED"FAILED TO EXTRACT WORD AT POSITION %d\n", i);
-            free(token);
             free_token_matrix(*head);
             *head = NULL;
             return;
         }
-        token->next = NULL;
         DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
         if(!*head)
             *head = token;

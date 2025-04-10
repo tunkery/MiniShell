@@ -143,18 +143,6 @@ void	cell_launch(t_token *tokens, t_env *env)
 	t_pipe_command *pipes;
 	int		i;
 
-	if(has_pipes(tokens))
-	{
-		DEBUG_PRINT(BLUE "Pipe detected, using pipe execution path\n" RESET);
-		pipes = parse_pipe(tokens, &pipe_count);
-		if (pipes)
-		{
-			execute_pipes(pipes, env);
-			return ;
-		}
-		DEBUG_PRINT(RED "Pipe parsing failed, falling back to normal execution\n" RESET);
-	}
-
 	tmp = tokens;
 	args = NULL;
 	out_fd = STDOUT_FILENO;
@@ -162,6 +150,28 @@ void	cell_launch(t_token *tokens, t_env *env)
 	save_stdin = dup(STDIN_FILENO);
 	heredoc_input = NULL;
 	DEBUG_PRINT(BLUE "Starting Cell_lounch\n" RESET);
+
+	if(has_pipes(tokens))
+	{
+		DEBUG_PRINT(BLUE "Pipe detected, using pipe execution path\n" RESET);
+		pipes = parse_pipe(tokens, &pipe_count);
+		if (pipes)
+		{
+			execute_pipes(pipes, env);
+			i = 0;
+			while(i < pipe_count)
+			{
+				if(pipes[i].args)
+					clean_2d(pipes[i].args);
+				i++;
+			}
+			free(pipes);
+			return ;
+		}
+		DEBUG_PRINT(RED "Pipe parsing failed, falling back to normal execution\n" RESET);
+	}
+
+
 	while (tmp)
 	{
 		args = tokens_to_args(tmp);
@@ -183,13 +193,14 @@ void	cell_launch(t_token *tokens, t_env *env)
 			i++;
 		}
 		handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
-		if(args)
+		if(args && args[0])
 		{
 			execute_with_redirection(args, env, out_fd, save_stdout);
-			args = NULL;
+			
 		}
 		DEBUG_PRINT(RED"Skip execution due to redirection failed!"RESET);
-		// clean_2d(args);
+		clean_2d(args);
+		args = NULL;
 		if (out_fd != STDOUT_FILENO)
 			close(out_fd);
 		out_fd = STDOUT_FILENO;
@@ -207,6 +218,7 @@ void	cell_launch(t_token *tokens, t_env *env)
 		}
 	}
 	close(save_stdout);
+	close(save_stdin);
 	DEBUG_PRINT(BLUE "Ending Cell_lounch\n" RESET);
 
 }

@@ -49,6 +49,9 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 		char **heredoc_input, t_env *env)
 {
 	close(pipe_fd[0]);
+	// close the signal
+	signal(SIGINT,SIG_DFL);
+
 	*heredoc_input = handler_heredoc((*current)->value, env);
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
 	close(pipe_fd[1]);
@@ -56,7 +59,7 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 	exit(0);
 }
 
-static void	parent_process_heredoc(int *pipe_fd, char **args)
+static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 {
 	close(pipe_fd[1]);
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
@@ -67,7 +70,16 @@ static void	parent_process_heredoc(int *pipe_fd, char **args)
 		return ;
 	}
 	close(pipe_fd[0]);
-	wait(NULL); // Alt sureci bekle
+	// wait(NULL); // Alt sureci bekle
+	int status;
+	waitpid(pid, &status, 0);
+	if(WIFSIGNALED(status)) // IF child was terminated by a signal!
+	{
+		clean_2d(args);
+		*args = NULL;
+		return;
+	}
+
 }
 
 void	process_child_heredoc(t_token **current, char **heredoc_input,
@@ -88,7 +100,7 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		if (pid == 0)
 			child_process_heredoc(pipe_fd, current, heredoc_input, env);
 		else if (pid > 0)
-			parent_process_heredoc(pipe_fd, args);
+			parent_process_heredoc(pipe_fd, args,pid);
 		else
 		{
 			perror("fork failed!");
@@ -97,6 +109,7 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		}
 		DEBUG_PRINT(GRN "HEredoc process for delimiter '%s'\n" RESET,
 			(*current)->value);
+		*current = (*current)->next;
 	}
 }
 
