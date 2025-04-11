@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/11 13:50:53 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/11 13:53:23 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static void	update_old_pwd(t_env *env, int check)
 		temp = ft_strjoin("OLDPWD=", buf);
 		env->envp = update_env(env->envp, temp);
 		env->export = update_env(env->export, temp);
+		return ;
 	}
 	while (env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
 		j++;
