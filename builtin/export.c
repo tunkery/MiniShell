@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/10 20:20:30 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/11 13:37:16 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	export_check(char **args)
+static int	name_check(char **args)
 {
 	if (ft_strchr(args[1], '-') != 0)
 		return (-1);
@@ -33,8 +33,37 @@ static int	export_check(char **args)
 	return (0);
 }
 
-static int	dupicate_check(char **args, t_env *env)
+static int	duplicate_check(char **args, t_env *env)
 {
+	int	i;
+	
+	i = 0;
+	while (env->export[i] && ft_strncmp(env->export[i], args[1], ft_strlen(args[1])) == 0)
+		i++;
+	if (!env->export[i])
+		return (1);
+	return (0);
+}
+
+static void	duplicate_fix(char *str, t_env *env)
+{
+	int	i;
+	int	size;
+
+	i = 0;
+	size = key_size(str);
+	while (env->export[i])
+	{
+		if (ft_strncmp(env->export[i], str, size) == 0)
+		{
+			free(env->export[i]);
+			env->export[i] = ft_strdup(str);
+			break ;
+		}
+		i++;
+	}
+	env->envp = update_env(env->envp, str);
+	env->exit_code = 0;
 }
 
 void	run_export(char **args, t_env *env)
@@ -46,11 +75,16 @@ void	run_export(char **args, t_env *env)
 	if (!args[1])
 	{
 		while (env->export[i])
+		{
+			printf("declare -x ");
 			printf("%s\n", env->export[i++]);
+		}
 		env->exit_code = 0;
 	}
-	else if (export_check(args) != 0)
+	else if (name_check(args) != 0)
 		printf("minishell: export: '%s': not a valid identifier\n", args[1]);
+	else if (ft_strchr(args[1], '=') != 0 && duplicate_check(args, env) == 0)
+		duplicate_fix(args[1], env);
 	else if (ft_strchr(args[1], '=') != 0)
 	{
 		env->envp = update_env(env->envp, args[1]);
