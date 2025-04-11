@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/10 18:56:09 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/11 13:50:53 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,29 @@ static char	*get_old_pwd(t_env *env)
 	j = 0;
 	while (env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
 		j++;
-	temp = ft_strdup(env->envp[j]);
+	if (env->envp[j])
+		temp = ft_strdup(env->envp[j]);
+	else
+		temp = NULL;
 	return (temp);
 }
 
-static void	update_old_pwd(t_env *env)
+static void	update_old_pwd(t_env *env, int check)
 {
 	char	*temp;
+	char	buf[BUFSIZ];
 	int		i;
 	int		j;
 
 	i = 0;
 	j = 0;
+	if (check == 1)
+	{
+		getcwd(buf, BUFSIZ);
+		temp = ft_strjoin("OLDPWD=", buf);
+		env->envp = update_env(env->envp, temp);
+		env->export = update_env(env->export, temp);
+	}
 	while (env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
 		j++;
 	while (env->envp[i])
@@ -73,11 +84,15 @@ void	run_cd(char **args, t_env *env)
 	char	*path;
 	char	*old_pwd;
 	char	*temp;
+	int		check;
 
 	temp = NULL;
+	check = 0;
 	path = getenv("HOME");
 	old_pwd = get_old_pwd(env);
-	update_old_pwd(env);
+	if (!old_pwd)
+		check = 1;
+	update_old_pwd(env, check);
 	if (!args[1] || (args[1] && args[1][0] == '~'))
 		env->exit_code = chdir(path);
 	else if (args[1][0] == '-')
