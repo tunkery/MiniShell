@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/11 15:25:50 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/12 14:37:36 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,25 +59,20 @@ char	**remove_env(char **envp, char *key)
 	return (new_env);
 }
 
-static void	shell_level(char ***str)
+static void	shell_level(char ***str, int i)
 {
-	int		i;
-	// int		j;
 	char	*value;
 	char	*temp;
 	int		digit;
 
-	i = 0;
-	printf("hii\n");
-	// j = 0;
 	while ((*str)[i] && ft_strncmp((*str)[i], "SHLVL", 5) != 0)
 		i++;
-	printf("hii\n");
-	if ((*str)[i])
-		value = ft_substr((*str)[i], 7, 1);
+	if ((*str)[i][8])
+		value = ft_substr((*str)[i], 6, 3);
+	else if ((*str)[i][7])
+		value = ft_substr((*str)[i], 6, 2);
 	else
-		value = ft_substr((*str)[i], 7, 1);
-	printf("hii\n");
+		value = ft_substr((*str)[i], 6, 1);
 	digit = ft_atoi(value);
 	free((*str)[i]);
 	digit++;
@@ -99,7 +94,8 @@ void	initiate_env(t_env *env, char **envp)
 	i = 0;
 	copy_env(envp, &(env->envp));
 	copy_env(envp, &(env->export));
-	shell_level(&(env->envp));
+	shell_level(&(env->envp), 0);
+	shell_level(&(env->export), 0);
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
 	env->curr_pwd = ft_strdup(env->envp[i]);
