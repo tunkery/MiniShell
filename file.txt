@@ -1,1 +1,5 @@
-Hello
+[0m [DEBUG] [1;34mRunning echo
+[0mMerhaba
+ [DEBUG] [1;32mexit status: 0
+[0m [DEBUG] [1;32mEcho completed
+[0m

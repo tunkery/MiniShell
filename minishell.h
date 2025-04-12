@@ -115,7 +115,6 @@ void	run_builtin(char **args, t_env *env);
 void	run_export(char **args, t_env *env);
 void	run_exit(void);
 void	run_echo(char **args, t_env *env);
-char 	*echo_separate(char *line, int check);
 void	run_pwd(char **args, t_env *env);
 void	run_unset(char **args, t_env *env);
 void	run_env(char **args, t_env *env);
@@ -136,6 +135,10 @@ char	**remove_env(char **envp, char *key);
 char	*find_exec(char *command, char *path_variable, int i, int j);
 void	handle_redirection(t_token **current, char **args, int *out_fd, char **heredoc_input, t_env *env);
 void	execute_with_redirection(char **args, t_env *env, int out_fd, int save_stdout);
+void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env);
+void	exec_without_pipes(t_token *tokens, t_env *env);
+char **create_args_from_tokens(t_token *start, t_token *end);
+t_token **find_pipe_seg(t_token *tokens, int *seg_count);
 void	cell_launch(t_token *tokens, t_env *env);
 void exec_command(char **args, t_env *env, int out_fd);
 // char **tokens_to_args(t_token *tokens, t_token *end);
@@ -147,30 +150,27 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
 
 
 // execute with pipe functions
-char **ext_cmd_arg(t_token *start, t_token *end);
-void    free_pipe_command(t_pipe_command *pipes, int pipe_count);
-void execute_pipes(t_pipe_command *pipes, t_env *env, t_token *tokens);
-t_pipe_command *parse_pipe(t_token *tokens, int *pipe_count);
-void    handle_pipe_redirection(t_token *cmd_start, t_token *cmd_end, t_env *env);
+void execute_piped_command(t_token *tokens, t_env *env);
+int **create_pipes(int seg_count);
+void cleanup_pipes(int **pipes, int seg_count);
+void find_seg_redirect(int *in_fd, int *out_fd, t_token *start, t_token *end, t_env *env);
+void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_fd);
+int setup_io(int in_fd, int out_fd);
+void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pipes, int i, int seg_count);
+int fork_cmd_process(t_token **segments, int seg_count, t_env *env, int **pipes, pid_t *pids);
+void wait_child_pipes(pid_t *pids, int seg_count, t_env *env);
+
+// Parsing
+void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env);
+
+char **create_args_from_tokens(t_token *start, t_token *end);
 t_token **find_pipe_seg(t_token *tokens, int *seg_count);
-void	exec_command_seg(t_token *start, t_token *end, t_env *env);
-char **split_args(char *command);
-char **split_pipes(char *command);
+
 
 // Pipe_utils functions
 int has_pipes(t_token *tokens);
-void *ft_realloc(void *ptr, size_t size);
-size_t strspn(const char *s, const char *accept);
-size_t strcspn(const char *s, const char *reject);
-char *strtok(char *str, const char *delim);
 
 
-
-// execute_pipe functions
-// Pipe utils
-char   *ft_strtok(char *restrict str, const char *restrict sep);
-size_t ft_strcspn(const char *str, const char *reject);
-void *ft_realloc(void *ptr, size_t size);
 
 // Heredoc functions
 int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env);
@@ -183,8 +183,6 @@ char	*ft_strjoin_heredoc(char const *s1, char const *s2);
 
 void	clean_2d(char **str);
 
-// Readline functions
-void    read_line(void);
 
 // Signal functions
 void    signal_mode_read(void);
@@ -192,7 +190,7 @@ void    sigint_handler_read(int signo);
 void    signal_mode_command(void);
 void    sigint_handler_command(int signo);
 void    turn_off_echo(void);
-void    rest_signal_command(void);
+
 
 
 // Tokenizer

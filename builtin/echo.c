@@ -16,53 +16,133 @@
 */
 
 // artik duzgun calisiyooooo!!!
-
-void	run_echo(char **args, t_env *env)
+/*
+ * Check if the string is a valid -n flag
+ * A valid -n flag is "-n" or "-nnn..." (one or more 'n's after the dash)
+ */
+static int is_n_flag(char *str)
 {
-	int	check;
-	int	i;
-	int first;
-	// char *new;
-
-	DEBUG_PRINT(BLUE"Running echo\n"RESET);
-	check = 0;
-	i = 1;
-	// first = 1;
-	if (args[1] && args[1][0] == '$' && args[1][1] == '?')
-	{
-		printf("%d\n", env->exit_code);
-		env->exit_code = 0;
-		return ;
-	}
-	if (!args[1]) // If there is no argumant just print it new line!
-	{
-		printf("\n");
-		env->exit_code = 0;
-		DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
-		return ;
-	}
-	if (ft_strncmp(args[1], "-n", ft_strlen(args[1])) == 0 && ft_strlen(args[1]) == 2)
-	{
-		check = 1;
-		i++;
-		DEBUG_PRINT(GRN"Check is 1: Flag detected\n"RESET);
-	}
-	// new = echo_separate(line, check);
-	// printf("%s", new);
-	while (args[i])
-	{
-		if(!first)
-			printf(" "); // Add space after first argument
-		printf("%s ", args[i]); //  Print argument only once.
-		first = 0;
-		i++;
-	}
-	if (check == 0)
-		printf("\n");
-	env->exit_code = 0;
-	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
-	DEBUG_PRINT(GRN"Echo completed\n"RESET);
+    if (!str || str[0] != '-')
+        return (0);
+    
+    int i = 1;
+    while (str[i])
+    {
+        if (str[i] != 'n')
+            return (0);
+        i++;
+    }
+    
+    return (i > 1); // At least one 'n' after the dash
 }
+
+/*
+ * Handle the special case of $? (exit status)
+ */
+static int handle_exit_status(char **args, t_env *env)
+{
+    if (args[1] && args[1][0] == '$' && args[1][1] == '?' && !args[1][2])
+    {
+        printf("%d\n", env->exit_code);
+        env->exit_code = 0;
+        return (1);
+    }
+    return (0);
+}
+
+void run_echo(char **args, t_env *env)
+{
+    int check;
+    int i;
+
+    DEBUG_PRINT(BLUE"Running echo\n"RESET);
+    
+    // Check for $? (exit status)
+    if (handle_exit_status(args, env))
+        return;
+    
+    // If no arguments, just print newline
+    if (!args[1])
+    {
+        printf("\n");
+        env->exit_code = 0;
+        DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
+        return;
+    }
+    
+    // Check for -n flag(s)
+    check = 0;
+    i = 1;
+    while (args[i] && is_n_flag(args[i]))
+    {
+        check = 1;
+        i++;
+    }
+    
+    // Print arguments with spaces between them
+    int first = 1;
+    while (args[i])
+    {
+        if (!first)
+            printf(" ");
+        printf("%s", args[i]);
+        first = 0;
+        i++;
+    }
+    
+    // Add newline if -n flag wasn't provided
+    if (check == 0)
+        printf("\n");
+    
+    env->exit_code = 0;
+    DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
+    DEBUG_PRINT(GRN"Echo completed\n"RESET);
+}
+
+	// int	check;
+	// int	i;
+	// int first;
+	// // char *new;
+
+	// DEBUG_PRINT(BLUE"Running echo\n"RESET);
+	// check = 0;
+	// i = 1;
+	// // first = 1;
+	// if (args[1] && args[1][0] == '$' && args[1][1] == '?')
+	// {
+	// 	printf("%d\n", env->exit_code);
+	// 	env->exit_code = 0;
+	// 	return ;
+	// }
+	// if (!args[1]) // If there is no argumant just print it new line!
+	// {
+	// 	printf("\n");
+	// 	env->exit_code = 0;
+	// 	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
+	// 	return ;
+	// }
+	// if (ft_strncmp(args[1], "-n", ft_strlen(args[1])) == 0 && ft_strlen(args[1]) == 2)
+	// {
+	// 	check = 1;
+	// 	i++;
+	// 	DEBUG_PRINT(GRN"Check is 1: Flag detected\n"RESET);
+	// }
+	// // new = echo_separate(line, check);
+	// // printf("%s", new);
+	// while (args[i])
+	// {
+	// 	if(!first)
+	// 		printf(" "); // Add space after first argument
+	// 	printf("%s ", args[i]); //  Print argument only once.
+	// 	first = 0;
+	// 	i++;
+	// }
+	// if (check == 0)
+	// 	printf("\n");
+	// env->exit_code = 0;
+	// DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
+	// DEBUG_PRINT(GRN"Echo completed\n"RESET);
+
 
 // echo ve -n varsa onlari kaldirip onlarsiz olan stringi veriyor
 

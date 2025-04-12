@@ -61,14 +61,15 @@ void    handle_semic(t_token *token, int *i)
 
 void    handle_word(t_token *token, char *line, int *i, t_env *env)
 {
+    token->type = TOKEN_WORD;
     if(line[*i] == '"')
     {
-        token->type = TOKEN_WORD;
+        // token->type = TOKEN_WORD;
         token->value = process_quoted(line, i, '"', env);
     }
     else if(line[*i] == '\'') 
     {
-        token->type = TOKEN_WORD;
+        // token->type = TOKEN_WORD;
         token->value = process_quoted(line, i, '\'', env);
     }
     else // without quote
@@ -79,13 +80,14 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
             if(!token->value)
             {
                 DEBUG_PRINT(RED"Failed to process env variable\n"RESET);
-                free(token);
-                return ;
+                token->value = ft_strdup("");
+                // free(token);
+                // return ;
             }
         }
         else
         {
-            token->type = TOKEN_WORD;
+            // token->type = TOKEN_WORD;
             token->value = extract_word(line, i);
         }
     }
