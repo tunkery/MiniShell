@@ -42,7 +42,7 @@
 
 # define DEBUG 1
 	#if DEBUG
-		# define DEBUG_PRINT(fmt, ...) printf(" [DEBUG] " fmt, ##__VA_ARGS__)
+		# define DEBUG_PRINT(fmt, ...) fprintf(stderr, " [DEBUG] " fmt, ##__VA_ARGS__)
 	#else
 		# define DEBUG_PRINT(fmt, ...) do {} while(0) // Dont do anything when the debug closed
 #endif
