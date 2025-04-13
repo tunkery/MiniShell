@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/11 13:53:23 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/13 19:36:17 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,25 +98,37 @@ void	run_cd(char **args, t_env *env)
 		env->exit_code = chdir(path);
 	else if (args[1][0] == '-')
 	{
-		temp = ft_substr(old_pwd, 7, ft_strlen(old_pwd) - 7);
-		env->exit_code = chdir(temp);
-		printf("%s\n", temp);
-		free(temp);
+		if (!old_pwd || ft_strncmp(old_pwd, "OLDPWD=", 7) != 0)
+		{
+			printf("minishell: cd: OLDPWD not set\n");
+			env->exit_code = 1;
+		}
+		else
+		{
+			temp = ft_substr(old_pwd, 7, ft_strlen(old_pwd) - 7);
+			env->exit_code = chdir(temp);
+			printf("%s\n", temp);
+			free(temp);
+		}
 	}
 	else
 		env->exit_code = chdir(args[1]);
 	if (env->exit_code == -1)
 	{
 		env->envp = remove_env(env->envp, "OLDPWD");
-		env->envp = update_env(env->envp, old_pwd);
+		if (old_pwd != NULL)
+			env->envp = update_env(env->envp, old_pwd);
+		env->exit_code = 1;
 		DEBUG_PRINT(CYAN"old_pwd : %s\n"RESET, old_pwd);
 		DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	}
 	else
 	{
 		update_pwd(env);
+		env->exit_code = 0;
 		DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	}
 	if (old_pwd)
 		free(old_pwd);
+	printf("%s\n", args[1]);
 }
