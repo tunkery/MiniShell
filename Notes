@@ -328,6 +328,7 @@
         Bu komutlari arastir.
 
 
+
 12-) Bash:
         1-D-25:MiniShell hpehliva$ '$PWD'
         bash: $PWD: command not found
@@ -363,6 +364,8 @@
         [DEBUG] Command executed
         [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
         minishell> 
+
+13-) echo $? komutu cat << END (heredoc için düzgün çalışmıyor sebep sinyalle alakali!!)
     
 
 

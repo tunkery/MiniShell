@@ -27,8 +27,7 @@ char *expand_env(char *line, int *i, t_env *env)
     {
         (*i)++;
         exit_status = ft_itoa(env->exit_code);
-        printf("Exit status: %s\n", exit_status);
-        // free(exit_status); // don't need to free it here!.
+        DEBUG_PRINT(CYAN"Expanding $? to exit status: %s\n"RESET, exit_status);
         return (exit_status);
     }
 
@@ -39,26 +38,6 @@ char *expand_env(char *line, int *i, t_env *env)
     }
     var_name[j] = '\0';
     DEBUG_PRINT(CYAN"Expanding env var: '%s'\n"RESET, var_name);
-
-    // try to get env structure!
-    int k = 0;
-    while (env->envp[k])
-    {
-        // Extract key from env variable
-        size_t key_len = 0;
-        while (env->envp[k][key_len] && env->envp[k][key_len] != '=')
-            key_len++;
-        
-        // Compare key with var_name
-        if (key_len == ft_strlen(var_name) && 
-            ft_strncmp(env->envp[k], var_name, key_len) == 0)
-        {
-            // Return value part (after the '=')
-            return ft_strdup(env->envp[k] + key_len + 1);
-        }
-        k++;
-    }
-    
     // Fallback to getenv
     value = getenv(var_name);
     if(value)
@@ -80,13 +59,19 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
             DEBUG_PRINT(RED"Hello I'm here"RESET);
             temp = expand_env(line, i, env);
             if(temp)
+            {
+                char *old_res = result;
                 result = ft_strjoin(result, temp);
-            free(temp);
+                free(old_res);
+                free(temp);
+            } // check it all free as lldb.
         }
         else
         {
             char cpy[2] = {line[*i], '\0'};
+            char *old_res = result;
             result = ft_strjoin(result, cpy);
+            free(old_res);
             (*i)++;
         }
     }
@@ -113,7 +98,9 @@ char    *extract_word( char *line, int *i)
     while(line[*i] && line[*i] != ' ' && line[*i] != '|' && line[*i] != '<' && line[*i] != '>' && line[*i] != '\'' && line[*i] != '"')
     {
         char cpy[2] = {line[*i], '\0'};
+        char *old_res = result;
         result = ft_strjoin(result, cpy);
+        free(old_res);
         (*i)++;
 
     }
@@ -133,8 +120,9 @@ t_token *handle_special_token(char *line, int *i, t_env *env)
         return NULL;
     }
     token->next = NULL;
+    token->prev = NULL;
     if(line[*i] == '|')
-        handle_pipe(token, i);
+        handle_pipe(token,i);
     else if(line[*i] == '<')
         handle_redirect_in(token, line, i);
     else if(line[*i] == '>')
@@ -177,6 +165,9 @@ void seperated_token(char *line, t_token **head, t_env *env)
             return;
         }
         DEBUG_PRINT(RED"Created token: type= %d, value = '%s' \n", token->type, token->value);
+
+        token->prev = current;
+
         if(!*head)
             *head = token;
         else
