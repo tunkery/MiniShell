@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/02 14:53:02 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/13 17:49:49 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,5 @@ void	run_builtin(char **args, t_env *env)
 	else if (builtin_check(args) == 6)
 		run_cd(args, env);
 	else if (builtin_check(args) == 7)
-		run_exit();
+		run_exit(args, env);
 }

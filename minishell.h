@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/02 14:45:54 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/13 18:55:07 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <sys/ioctl.h>            // ioctl
 # include <sys/termios.h>          // tcsetattr, tcgetattr
 # include <sys/unistd.h> 
+# include <limits.h>
 
 #define RESET        "\001\033[0m\002"   // Reset to default
 #define CYAN         "\001\033[1;36m\002"
@@ -113,7 +114,7 @@ int		key_check(char *args);
 int		builtin_check(char **tokens);
 void	run_builtin(char **args, t_env *env);
 void	run_export(char **args, t_env *env);
-void	run_exit(void);
+void	run_exit(char **args, t_env *env);
 void	run_echo(char **args, t_env *env);
 void	run_pwd(char **args, t_env *env);
 void	run_unset(char **args, t_env *env);
