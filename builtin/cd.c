@@ -91,6 +91,7 @@ void	run_cd(char **args, t_env *env)
 	check = 0;
 	path = getenv("HOME");
 	old_pwd = get_old_pwd(env);
+
 	if (!old_pwd)
 		check = 1;
 	update_old_pwd(env, check);
@@ -102,6 +103,9 @@ void	run_cd(char **args, t_env *env)
 		{
 			printf("minishell: cd: OLDPWD not set\n");
 			env->exit_code = 1;
+			if(old_pwd)
+				free(old_pwd);
+			return;
 		}
 		else
 		{
@@ -115,6 +119,7 @@ void	run_cd(char **args, t_env *env)
 		env->exit_code = chdir(args[1]);
 	if (env->exit_code == -1)
 	{
+		printf("minishell: cd: %s: No such file or directory\n", args[1]);
 		env->envp = remove_env(env->envp, "OLDPWD");
 		if (old_pwd != NULL)
 			env->envp = update_env(env->envp, old_pwd);
@@ -130,5 +135,5 @@ void	run_cd(char **args, t_env *env)
 	}
 	if (old_pwd)
 		free(old_pwd);
-	printf("%s\n", args[1]);
+	// printf("%s\n", args[1]);
 }
