@@ -211,6 +211,8 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env);
 int ft_strcmp(const char *s1, const char *s2);
 // Validate syntax for redirect
 int validate_redirect_syntax(t_token *tokens);
+int validate_pipe_syntax(t_token *tokens);
+int validate_syntax(t_token *tokens);
 
 
 #endif

@@ -194,7 +194,7 @@ void	cell_launch(t_token *tokens, t_env *env)
 {
     DEBUG_PRINT(BLUE "Starting Cell_lounch\n" RESET);
 
-	if(!validate_redirect_syntax(tokens))
+	if(!validate_syntax(tokens))
 	{
 		env->exit_code = 258;
 		DEBUG_PRINT(BLUE "Syntax error detected in redirection\n" RESET);
