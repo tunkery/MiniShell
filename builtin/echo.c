@@ -39,16 +39,16 @@ static int is_n_flag(char *str)
 /*
  * Handle the special case of $? (exit status)
  */
-static int handle_exit_status(char **args, t_env *env)
-{
-    if (args[1] && args[1][0] == '$' && args[1][1] == '?' && !args[1][2])
-    {
-        printf("%d\n", env->exit_code);
-        env->exit_code = 0;
-        return (1);
-    }
-    return (0);
-}
+// static int handle_exit_status(char **args, t_env *env)
+// {
+//     if (args[1] && args[1][0] == '$' && args[1][1] == '?' && !args[1][2])
+//     {
+//         printf("%d\n", env->exit_code);
+//         env->exit_code = 0;
+//         return (1);
+//     }
+//     return (0);
+// }
 
 void run_echo(char **args, t_env *env)
 {
@@ -58,9 +58,13 @@ void run_echo(char **args, t_env *env)
     DEBUG_PRINT(BLUE"Running echo\n"RESET);
     
     // Check for $? (exit status)
-    if (handle_exit_status(args, env))
+    if (args[1] && args[1][0] == '$' && args[1][1] == '?' && !args[1][2])
+    {
+        printf("%d\n", env->exit_code);
+        env->exit_code = 0;
         return;
-    
+    }
+            
     // If no arguments, just print newline
     if (!args[1])
     {

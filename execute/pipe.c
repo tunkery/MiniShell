@@ -14,12 +14,14 @@
 
 int **create_pipes(int seg_count)
 {
-    int **pipes = malloc(sizeof(int *) * (seg_count - 1));
     int i = 0;
     int j = 0;
+    int **pipes = malloc(sizeof(int *) * (seg_count - 1));
     if (!pipes)
         return NULL;
 
+    if(seg_count <= 1)
+        return NULL;
     
     while (i < seg_count - 1) 
     {
@@ -27,6 +29,8 @@ int **create_pipes(int seg_count)
         if (!pipes[i]) {
             j = 0;
             while (j < i) {
+                close(pipes[j][0]);
+                close(pipes[j][1]);
                 free(pipes[j]);
                 j++;
             }
@@ -100,12 +104,12 @@ void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_f
     if(i > 0)
     {
         *in_fd = pipes[i-1][0];
-        close(pipes[i-1][1]);// close write end of prev pipe
+        // close(pipes[i-1][1]);// close write end of prev pipe
     }
     if(i < seg_count - 1)
     {
         *out_fd = pipes[i][1];
-        close(pipes[i][0]);
+        // close(pipes[i][0]);
     }
 
     while(j < seg_count - 1)
@@ -116,8 +120,7 @@ void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_f
             close(pipes[j][1]);
         j++;
     }
-
-
+    DEBUG_PRINT(CYAN "Process %d: in_fd=%d, out_fd=%d\n" RESET, i, *in_fd, *out_fd);
 }
 
 int setup_io(int in_fd, int out_fd)
@@ -163,19 +166,29 @@ void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pip
     if(!args || !args[0])
     {
         if(args)
-            free(args);
+            clean_2d(args);//free(args); I'm changing instead of free!
         exit(EXIT_FAILURE);
     }
+
+    // int j = 0;
+    // DEBUG_PRINT(CYAN"Command to execute :"RESET);
+    // while(args[j])
+    // {
+    //     DEBUG_PRINT(CYAN"Command to execute : %s \n"RESET, args[j]);
+    //     j++;
+    // }
 
     // Execute the command
     if(builtin_check(args))
     {
         run_builtin(args,env);
+        clean_2d(args); // Be sure!
         exit(env->exit_code);
     }
     else
     {
         exec_command(args,env,STDOUT_FILENO);
+        clean_2d(args); // Be sure!
         exit(env->exit_code);
     }
 }
@@ -240,7 +253,7 @@ void execute_piped_command(t_token *tokens, t_env *env)
     
     // Create pipes
     int **pipes = create_pipes(seg_count);
-    if (!pipes) 
+    if (!pipes && seg_count > 1) 
     {
         free(segments);
         return;
@@ -250,7 +263,8 @@ void execute_piped_command(t_token *tokens, t_env *env)
     pid_t *pids = malloc(sizeof(pid_t)* seg_count);
     if(!pids)
     {
-        cleanup_pipes(pipes, seg_count);
+        if(pipes)
+            cleanup_pipes(pipes, seg_count);
         free(segments);
         return ;
     }
@@ -258,13 +272,15 @@ void execute_piped_command(t_token *tokens, t_env *env)
     // Fork processes for each segment
     if(!fork_cmd_process(segments,seg_count,env,pipes,pids))
     {
-        cleanup_pipes(pipes,seg_count);
+        if(pipes)
+            cleanup_pipes(pipes,seg_count);
         free(pids);
         free(segments);
         return ;
     }
 
-    cleanup_pipes(pipes,seg_count);
+    if(pipes)
+        cleanup_pipes(pipes,seg_count);
 
 
     wait_child_pipes(pids,seg_count, env);
