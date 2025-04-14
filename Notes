@@ -367,7 +367,7 @@
 
 13-) echo $? komutu cat << END (heredoc için düzgün çalışmıyor sebep sinyalle alakali!!)
     
-
+14-) tokenleri alirken ~ isaretini gorunce tokenizer onu getenv("HOME"); ile home variable'ina cevirip vermeli.
 
 ------------------------------------------------------------------------------------
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/13 19:36:17 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/14 17:13:55 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,15 @@ static void	update_old_pwd(t_env *env, int check)
 	j = 0;
 	if (check == 1)
 	{
-		getcwd(buf, BUFSIZ);
+		if (!getcwd(buf, BUFSIZ))
+		{
+			perror("cd: getcwd fauiled");
+			return ;
+		}
 		temp = ft_strjoin("OLDPWD=", buf);
 		env->envp = update_env(env->envp, temp);
 		env->export = update_env(env->export, temp);
+		free(temp);
 		return ;
 	}
 	while (env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
@@ -68,7 +73,10 @@ static void	update_pwd(t_env *env)
 
 	i = 0;
 	if (!getcwd(temp, BUFSIZ))
+	{
+		perror("cd: getcwd failed");
 		return ;
+	}
 	new_pwd = ft_strdup(temp);
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
@@ -90,18 +98,34 @@ void	run_cd(char **args, t_env *env)
 	temp = NULL;
 	check = 0;
 	path = getenv("HOME");
+	if (!path)
+	{
+		fprintf(stderr, "minishell: cd: HOME not set\n");
+		env->exit_code = 1;
+		return ;
+	}
 	old_pwd = get_old_pwd(env);
-
 	if (!old_pwd)
 		check = 1;
 	update_old_pwd(env, check);
 	if (!args[1] || (args[1] && args[1][0] == '~'))
+	{
+		path = getenv("HOME");
+		if (!path)
+		{
+			fprintf(stderr, "minishell: cd: HOME not set\n");
+			env->exit_code = 1;
+			if (old_pwd)
+				free(old_pwd);
+			return ;
+		}
 		env->exit_code = chdir(path);
+	}
 	else if (args[1][0] == '-')
 	{
 		if (!old_pwd || ft_strncmp(old_pwd, "OLDPWD=", 7) != 0)
 		{
-			printf("minishell: cd: OLDPWD not set\n");
+			fprintf(stderr, "minishell: cd: OLDPWD not set\n");
 			env->exit_code = 1;
 			if(old_pwd)
 				free(old_pwd);
@@ -111,7 +135,8 @@ void	run_cd(char **args, t_env *env)
 		{
 			temp = ft_substr(old_pwd, 7, ft_strlen(old_pwd) - 7);
 			env->exit_code = chdir(temp);
-			printf("%s\n", temp);
+			if (env->exit_code == 0)
+				printf("%s\n", temp);
 			free(temp);
 		}
 	}
@@ -119,7 +144,7 @@ void	run_cd(char **args, t_env *env)
 		env->exit_code = chdir(args[1]);
 	if (env->exit_code == -1)
 	{
-		printf("minishell: cd: %s: No such file or directory\n", args[1]);
+		fprintf(stderr, "minishell: cd: %s: No such file or directory\n", args[1]);
 		env->envp = remove_env(env->envp, "OLDPWD");
 		if (old_pwd != NULL)
 			env->envp = update_env(env->envp, old_pwd);

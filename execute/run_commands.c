@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/11 14:02:53 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/14 16:37:45 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,19 +83,19 @@ static int	permission_check(char *str, t_env *env)
 
 	if (stat(str, &info) != 0)
 	{
-		printf("minishell: %s: No such file or directory\n", str);
+		fprintf(stderr, "minishell: %s: No such file or directory\n", str);
 		env->exit_code = 127;
 		return (1);
 	}
 	else if (S_ISDIR(info.st_mode))
 	{
-		printf("minishell: %s: is a directory\n", str);
+		fprintf(stderr, "minishell: %s: is a directory\n", str);
 		env->exit_code = 126;
 		return (1);
 	}
 	else if (access(str, X_OK) != 0)
 	{
-		printf("minishell: %s: Permission denied\n", str);
+		fprintf(stderr, "minishell: %s: Permission denied\n", str);
 		env->exit_code = 126;
 		return (1);
 	}
@@ -114,9 +114,16 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 		pid = fork();
 		if (pid == 0)
 		{
-			execve(str, args, env->envp);
-			printf("minishell: %s: Permission denied\n", str);
-			exit(127);
+			if (out_fd != STDOUT_FILENO)
+			{
+				dup2(out_fd, STDOUT_FILENO);
+				close(out_fd);
+			}
+			if (execve(str, args, env->envp) == -1)
+			{
+				perror("execve Failed");
+				exit(127);
+			}
 		}
 		else if (pid < 0)
 			perror("fork Failed");
@@ -125,7 +132,7 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 	}
 	else if (check == 0)
 	{
-		printf("minishell: %s: command not found.\n", str);
+		fprintf(stderr, "minishell: %s: command not found.\n", str);
 		env->exit_code = 127;
 	}
 }
@@ -174,7 +181,7 @@ void	exec_command(char **args, t_env *env, int out_fd)
 	{
 		if (!exec_path)
 		{
-			printf("minishell: %s: command not found.\n", args[0]);
+			fprintf(stderr, "minishell: %s: command not found.\n", args[0]);
 			env->exit_code = 127;
 		}
 		else

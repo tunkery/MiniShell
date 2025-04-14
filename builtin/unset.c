@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/13 17:47:00 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/14 18:06:26 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,39 @@ static int	get_path(char *str, t_env *env)
 	j = 0;
 	key = ft_substr(str, 0, key_size(str));
 	size = ft_strlen(key);
-	while (env->envp[j] && ft_strncmp(env->envp[j], key, size) != 0)
+	while (env->envp && env->envp[j])
+	{
+		if (ft_strncmp(env->envp[j], key, size) == 0)
+		{
+			free(key);
+			return (0);
+		}
 		j++;
-	if (!env->envp[j])
-		return (-1);
-	return (0);
+	}
+	free(key);
+	return (-1);
 }
 
 void	run_unset(char **args, t_env *env)
 {
 	int	i;
 
+	if (!args[1])
+	{
+		env->exit_code = 0;
+		return ;
+	}
+	if (args[1][0] == '-')
+	{
+		perror("unset");
+		env->exit_code = 2;
+		return ;
+	}
+	if (ft_strchr(args[1], ';') != 0)
+	{
+		env->exit_code = 127;
+		return ;
+	}
 	if (get_path(args[1], env) == 0)
 	{
 		env->exit_code = 1;
