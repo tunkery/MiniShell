@@ -12,64 +12,6 @@
 
 #include "../minishell.h"
 
-int **create_pipes(int seg_count)
-{
-    int i = 0;
-    int j = 0;
-    int **pipes = malloc(sizeof(int *) * (seg_count - 1));
-    if (!pipes)
-        return NULL;
-
-    if(seg_count <= 1)
-        return NULL;
-    
-    while (i < seg_count - 1) 
-    {
-        pipes[i] = malloc(sizeof(int) * 2);
-        if (!pipes[i]) {
-            j = 0;
-            while (j < i) {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-                free(pipes[j]);
-                j++;
-            }
-            free(pipes);
-            return NULL;
-        }
-        
-        if (pipe(pipes[i]) == -1) {
-            perror("pipe failed");
-            j = 0;
-            while (j < i)
-            {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-                free(pipes[j]);
-                j++;
-            }
-            free(pipes[i]);
-            free(pipes);
-            return NULL;
-            
-        }
-        i++;
-    }
-    return pipes;
-}
-
-void cleanup_pipes(int **pipes, int seg_count)
-{
-    int i = 0;
-    while(i < seg_count - 1)
-    {
-        close(pipes[i][0]);
-        close(pipes[i][1]);
-        free(pipes[i]);
-        i++;
-    }
-    free(pipes);
-}
 
 void find_seg_redirect(int *in_fd, int *out_fd, t_token *start, t_token *end, t_env *env)
 {
@@ -123,29 +65,6 @@ void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_f
     DEBUG_PRINT(CYAN "Process %d: in_fd=%d, out_fd=%d\n" RESET, i, *in_fd, *out_fd);
 }
 
-int setup_io(int in_fd, int out_fd)
-{
-    if(in_fd != STDIN_FILENO)
-    {
-        if(dup2(in_fd,STDIN_FILENO) == -1)
-        {
-            perror("dup2 for stdin failed");
-            return 0;
-        }
-        close(in_fd);
-    }
-
-    if(out_fd != STDOUT_FILENO)
-    {
-        if(dup2(out_fd,STDOUT_FILENO) == -1)
-        {
-            perror("dup2 for stdout failed");
-            return 0;
-        }
-        close(out_fd);
-    }
-    return 1;
-}
 
 void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pipes, int i, int seg_count)
 {
@@ -169,15 +88,6 @@ void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pip
             clean_2d(args);//free(args); I'm changing instead of free!
         exit(EXIT_FAILURE);
     }
-
-    // int j = 0;
-    // DEBUG_PRINT(CYAN"Command to execute :"RESET);
-    // while(args[j])
-    // {
-    //     DEBUG_PRINT(CYAN"Command to execute : %s \n"RESET, args[j]);
-    //     j++;
-    // }
-
     // Execute the command
     if(builtin_check(args))
     {
@@ -220,25 +130,7 @@ int fork_cmd_process(t_token **segments, int seg_count, t_env *env, int **pipes,
     return 1;
 }
 
-void wait_child_pipes(pid_t *pids, int seg_count, t_env *env)
-{
-    int i = 0;
-    int status;
-    while(i < seg_count)
-    {
-        waitpid(pids[i],&status,0);
 
-        // Store the exit code of the last process
-        if(i == seg_count - 1)
-        {
-            if(WIFEXITED(status))
-                env->exit_code = WEXITSTATUS(status);
-            else if(WIFSIGNALED(status))
-                env->exit_code = 128 + WTERMSIG(status);
-        }
-        i++;
-    }
-}
 
 // Main function to execute piped commands
 void execute_piped_command(t_token *tokens, t_env *env)

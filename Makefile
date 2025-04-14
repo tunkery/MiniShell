@@ -16,7 +16,8 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		builtin/pwd.c builtin/echo.c builtin/export.c builtin/unset.c builtin/cd.c builtin/exit.c \
 		execute/exe_main.c execute/heredoc.c execute/exe_with_token.c execute/run_commands.c \
 		execute/heredoc_utils.c envp/envp_utils2.c tokens/handle_tokens.c \
-		execute/pipe.c execute/pipe_utils.c parse_func/parsing.c tokens/validate_syntax.c
+		execute/pipe.c execute/pipe_utils.c parse_func/parsing.c tokens/validate_syntax.c \
+		parse_func/parse_utils.c
 
 
 

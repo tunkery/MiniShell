@@ -142,36 +142,39 @@ char **create_args_from_tokens(t_token *start, t_token *end);
 t_token **find_pipe_seg(t_token *tokens, int *seg_count);
 void	cell_launch(t_token *tokens, t_env *env);
 void exec_command(char **args, t_env *env, int out_fd);
-// char **tokens_to_args(t_token *tokens, t_token *end);
+
 // execute with token functions
 void openfile_redirected(t_token **current, int *out_fd, char **args, int append);
 void    process_child_heredoc(t_token **current, char **heredoc_input, char **args, t_env *env);
 void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
 
 
-
 // execute with pipe functions
 void execute_piped_command(t_token *tokens, t_env *env);
-int **create_pipes(int seg_count);
-void cleanup_pipes(int **pipes, int seg_count);
 void find_seg_redirect(int *in_fd, int *out_fd, t_token *start, t_token *end, t_env *env);
 void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_fd);
-int setup_io(int in_fd, int out_fd);
 void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pipes, int i, int seg_count);
 int fork_cmd_process(t_token **segments, int seg_count, t_env *env, int **pipes, pid_t *pids);
-void wait_child_pipes(pid_t *pids, int seg_count, t_env *env);
-
-// Parsing
-void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env);
-
-char **create_args_from_tokens(t_token *start, t_token *end);
-t_token **find_pipe_seg(t_token *tokens, int *seg_count);
-
 
 // Pipe_utils functions
 int has_pipes(t_token *tokens);
+int **create_pipes(int seg_count);
+void wait_child_pipes(pid_t *pids, int seg_count, t_env *env);
+void cleanup_pipes(int **pipes, int seg_count);
+int setup_io(int in_fd, int out_fd);
 
+// Parsing
+void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env);
+void handle_heredoc_redirec(t_token **curr, int *in_fd,t_env *env);
+void handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd);
+char **create_args_from_tokens(t_token *start, t_token *end);
 
+// Parsing utils
+int count_pipe_seg(t_token * tokens);
+t_token **seg_alloc(t_token *tokens, int seg_count);
+t_token **find_pipe_seg(t_token *tokens, int *seg_count);
+int count_args_seg(t_token *start,t_token *end);
+char **args_from_token_alloc(t_token *start, t_token *end, int count);
 
 // Heredoc functions
 int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env);
@@ -181,9 +184,7 @@ char *handler_heredoc(char *delimiter, t_env *env);
 char	*ft_strjoin_heredoc(char const *s1, char const *s2);
 
 // Deallocation functions
-
 void	clean_2d(char **str);
-
 
 // Signal functions
 void    signal_mode_read(void);
@@ -192,16 +193,15 @@ void    signal_mode_command(void);
 void    sigint_handler_command(int signo);
 void    turn_off_echo(void);
 
-
-
 // Tokenizer
 t_token    *tokenizer(char *line, t_env *env);
 void    seperated_token(char *line, t_token **head, t_env *env);
 char    *extract_word(char *line, int *i);
-void    free_token_matrix(t_token *head);
+void    free_token_matrix(t_token *token);
 char *process_quoted(char *line, int *i, char quote_type, t_env *env);
 char *expand_env(char *line, int *i, t_env *env);
 char **tokens_to_args(t_token *tokens);
+
 // seperated tokenizer
 void    handle_pipe(t_token *token, int *i);
 void    handle_redirect_in(t_token *token, char *line, int *i);

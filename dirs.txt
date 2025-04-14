@@ -1,6 +1,0 @@
-deallocation.c
-deallocation.o
-description_codes.c
-dirs.txt
-[0m [DEBUG] [1;32mexit status: 0
-[0m
