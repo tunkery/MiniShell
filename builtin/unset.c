@@ -6,11 +6,25 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/14 18:06:26 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/14 18:17:32 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static int	valid_name(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
+		return (-1);
+		i++;
+	}
+	return (0);
+}
 
 static int	get_path(char *str, t_env *env)
 {
@@ -45,8 +59,13 @@ void	run_unset(char **args, t_env *env)
 	}
 	if (args[1][0] == '-')
 	{
-		perror("unset");
+	// 	perror("unset");
 		env->exit_code = 2;
+		return ;
+	}
+	if (valid_name(args[1]) != 0)
+	{
+		env->exit_code = 1;
 		return ;
 	}
 	if (ft_strchr(args[1], ';') != 0)

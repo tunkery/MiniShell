@@ -6,16 +6,32 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/14 17:41:08 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/14 18:14:52 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int	valid_name(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
+		return (-1);
+		i++;
+	}
+	return (0);
+}
+
 static int	name_check(char *args)
 {
 	// printf("%s\n", args);
 	if (!args)
+		return (-1);
+	if (valid_name(args) != 0)
 		return (-1);
 	if (ft_strchr(args, '-') != 0)
 		return (-2);
