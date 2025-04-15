@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:07:05 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/10 15:36:28 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:07:41 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,31 +46,23 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 	char	*temp;
 	int		i;
 
-	DEBUG_PRINT(CYAN "Starting expanded_heredoc_line with input: '%s'\n" RESET,
-		line);
 	result = ft_strdup("");
 	i = 0;
 	while (line[i])
 	{
 		if (line[i] == '$' && line[i + 1] == '(')
 		{
-			DEBUG_PRINT(CYAN "Found command substitution at index %d\n" RESET,
-				i);
 			temp = expand_command_substitution(line, &i, env);
 			if (temp)
 			{
-				DEBUG_PRINT(CYAN "Expanded command substitution: '%s'\n" RESET,
-					temp);
 				result = ft_strjoin_free(result, temp);
 			}
 		}
 		else
 		{
-			DEBUG_PRINT(CYAN "Expanding environment variable or copying character at index :%d\n" RESET, i);
 			i = expanded_heredoc_env(line, &i, &result, env);
 		}
 	}
-	DEBUG_PRINT(CYAN "Final expanded line: '%s'\n" RESET, result);
 	return (result);
 }
 
@@ -84,20 +76,15 @@ char	*handler_heredoc(char *delimiter, t_env *env)
 
 	result = ft_strdup("");
 	// char *expand_line;
-	DEBUG_PRINT(CYAN "Starting heredoc handler for delimiter: '%s'\n" RESET,
-		delimiter);
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
 		{
-			DEBUG_PRINT(CYAN "Heredoc delimiter reached\n" RESET);
 			break ;
 		}
 		if (ft_strcmp(line, delimiter) == 0)
 		{
-			DEBUG_PRINT(CYAN "Heredoc delimiter : '%s' reached! \n" RESET,
-				delimiter);
 			free(line);
 			break ;
 		}

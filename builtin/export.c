@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 16:52:50 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:03:15 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,5 +210,4 @@ void	run_export(char **args, t_env *env)
 		j++;
 	}
 	env->exit_code = check;
-	// DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 }

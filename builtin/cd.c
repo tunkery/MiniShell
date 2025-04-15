@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/14 17:13:55 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:02:29 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,14 +149,11 @@ void	run_cd(char **args, t_env *env)
 		if (old_pwd != NULL)
 			env->envp = update_env(env->envp, old_pwd);
 		env->exit_code = 1;
-		DEBUG_PRINT(CYAN"old_pwd : %s\n"RESET, old_pwd);
-		DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	}
 	else
 	{
 		update_pwd(env);
 		env->exit_code = 0;
-		DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	}
 	if (old_pwd)
 		free(old_pwd);

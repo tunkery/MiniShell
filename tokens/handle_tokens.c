@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_tokens.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:35:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/02 12:35:29 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:08:27 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
             token->value = expand_env(line, i, env);
             if(!token->value)
             {
-                DEBUG_PRINT(RED"Failed to process env variable\n"RESET);
                 token->value = ft_strdup("");
                 // free(token);
                 // return ;

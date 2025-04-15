@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 15:05:46 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:38:13 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@ static int	valid_name(char *str)
 {
 	int	i;
 
+	// if (!str[0] || ft_isalnum(str[0]) != 0)
+	// 	return (-1);
 	i = 0;
 	while (str[i])
 	{
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
-		return (-1);
+			return (-1);
 		i++;
 	}
 	return (0);
@@ -34,18 +36,20 @@ static int	get_path(char *str, t_env *env)
 
 	j = 0;
 	key = ft_substr(str, 0, key_size(str));
+	// if (!key)
+	// 	return (0);
 	size = ft_strlen(key);
 	while (env->envp && env->envp[j])
 	{
 		if (ft_strncmp(env->envp[j], key, size) == 0)
 		{
 			free(key);
-			return (0);
+			return (1);
 		}
 		j++;
 	}
 	free(key);
-	return (-1);
+	return (0);
 }
 
 static int	hey(char *str, char c)
@@ -65,13 +69,11 @@ static int	hey(char *str, char c)
 static char	*extract_c(char *str, char c)
 {
 	int	j;
-	char	*temp;
 
 	j = hey(str, c);
 	if (j == -1)
 		return (NULL);
-	temp = ft_substr(str, j, ft_strlen(str) - j);
-	return (temp);
+	return (ft_substr(str, j, ft_strlen(str) - j));
 }
 
 void	run_unset(char **args, t_env *env)
@@ -79,8 +81,6 @@ void	run_unset(char **args, t_env *env)
 	int	i;
 	char	*temp;
 
-	// printf("hii\n");
-	// printf("%s\n", args[1]);
 	if (!args[1])
 	{
 		env->exit_code = 0;
@@ -88,28 +88,29 @@ void	run_unset(char **args, t_env *env)
 	}
 	if (args[1][0] == '-')
 	{
-	// 	perror("unset");
 		env->exit_code = 2;
 		return ;
 	}
-	if (ft_strchr(args[1], ';') != 0)
+	else if (ft_strchr(args[1], ';') != 0)
 	{
 		temp = extract_c(args[1], ';');
 		fprintf(stderr, "Command '%s' not found\n", temp);
+		free(temp);
 		env->exit_code = 127;
 		return ;
 	}
-	if (valid_name(args[1]) != 0)
+	else if (valid_name(args[1]) != 0)
 	{
+		env->exit_code = 1;
+		return ;
+	}
+	if (args[1][0] == '=')
+	{
+		printf("%s\n", args[1]);
 		env->exit_code = 1;
 		return ;
 	}
 	if (get_path(args[1], env) == 0)
-	{
-		env->exit_code = 1;
-		return ;
-	}
-	if (args[1] && args[1][0] == '=')
 	{
 		env->exit_code = 1;
 		return ;
@@ -122,5 +123,4 @@ void	run_unset(char **args, t_env *env)
 		i++;
 	}
 	env->exit_code = 0;
-	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 }

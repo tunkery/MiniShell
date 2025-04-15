@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   deallocation.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:33:02 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/10 15:35:51 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:09:41 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,10 @@ void free_token_matrix(t_token *token)
 {
     t_token *temp;
 
-    // DEBUG_PRINT(RED"Freeing token matrix\n"RESET);
     while(token)
     {
         temp = token;
         token = token->next;
-        // DEBUG_PRINT(RED"Freeing token: type=%d, value= '%s'\n"RESET, temp->type, temp->value);
         free(temp->value); // free the vaue of token
         free(temp); // free the struct of token
     }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/10 15:36:58 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:05:25 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,17 @@ void	execute_with_redirection(char **args, t_env *env, int out_fd,
 			if (dup2(out_fd, STDOUT_FILENO) == -1)
 				perror("dup2 failed!");
 			close(out_fd);
-			DEBUG_PRINT(GRN "Output redirected to file\n" RESET);
 		}
 		run_builtin(args, env);
 		if (out_fd != STDOUT_FILENO)
 		{
 			if (dup2(save_stdout, STDOUT_FILENO) == -1)
 				perror("dup2 failed!");
-			DEBUG_PRINT(GRN "STDOUT restored\n" RESET);
 		}
 	}
 	else
 	{
 		exec_command(args, env, out_fd);
-		DEBUG_PRINT(GRN "Command executed\n" RESET);
 	}
 }
 
@@ -138,19 +135,15 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
         args = tokens_to_args(tmp);
         if (!args)
         {
-            DEBUG_PRINT(RED "Failed to convert tokens to args\n" RESET);
             while (tmp && tmp->type != TOKEN_SEMIC)
                 tmp = tmp->next;
             if (tmp)
                 tmp = tmp->next;
             continue;
         }
-        
-        DEBUG_PRINT(BLUE "Args created\n" RESET);
         i = 0;
         while (args[i])
         {
-            DEBUG_PRINT(BLUE "Args[%d]: %s\n" RESET, i, args[i]);
             i++;
         }
         
@@ -158,10 +151,6 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
         if(args && args[0])
         {
             execute_with_redirection(args, env, out_fd, save_stdout);
-        }
-        else
-        {
-            DEBUG_PRINT(RED"Skip execution due to redirection failed!"RESET);
         }
         
         // clean_2d(args);
@@ -176,12 +165,10 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
         
         while (tmp && tmp->type != TOKEN_SEMIC)
         {
-            DEBUG_PRINT(RED"Advancing tmp: %p, type: %d\n"RESET, tmp, tmp->type);
             tmp = tmp->next;
         }
         if (tmp)
         {
-            DEBUG_PRINT(RED"Skipping semicol"RESET);
             tmp = tmp->next;
         }
     }
@@ -192,25 +179,20 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
 
 void	cell_launch(t_token *tokens, t_env *env)
 {
-    DEBUG_PRINT(BLUE "Starting Cell_lounch\n" RESET);
 
 	if(!validate_syntax(tokens))
 	{
 		env->exit_code = 258;
-		DEBUG_PRINT(BLUE "Syntax error detected in redirection\n" RESET);
 		return ;
 	}
 
     if(has_pipes(tokens))
     {
-        DEBUG_PRINT(BLUE "Pipe detected, using execute_piped_commands\n" RESET);
         execute_piped_command(tokens, env);
     }
     else
     {
-        DEBUG_PRINT(BLUE "No pipes detected, using normal execution\n" RESET);
         exec_without_pipes(tokens, env);
     }
 
-    DEBUG_PRINT(BLUE "Ending Cell_lounch\n" RESET);
 }

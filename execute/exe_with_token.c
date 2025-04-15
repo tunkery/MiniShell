@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_with_token.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:24:26 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/10 15:36:54 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/15 17:07:05 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,11 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 		if(*in_fd < 0)
 		{
 			perror(CYAN"Open failed!"RESET);
-			DEBUG_PRINT(RED"This function didn't counted!"RESET);
 			clean_2d(args);
 			*args = NULL;
 			env->exit_code = 1;
 			return;
 		}
-		DEBUG_PRINT(RED"Redirected input is: %s\n"RESET, (*current)->value);
 		*current = (*current)->next;
 	}
 	if(*in_fd  != STDIN_FILENO)
@@ -41,7 +39,6 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 			return ;
 		}
 		close(*in_fd);
-		DEBUG_PRINT("Hello I'm here\n");
 	}
 }
 
@@ -107,8 +104,6 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 			clean_2d(args);
 			return ;
 		}
-		DEBUG_PRINT(GRN "HEredoc process for delimiter '%s'\n" RESET,
-			(*current)->value);
 		*current = (*current)->next;
 	}
 }
@@ -132,7 +127,5 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 			clean_2d(args);
 			return ;
 		}
-		DEBUG_PRINT(BLUE "Redirecting output to '%s'\n" RESET,
-			(*current)->value);
 	}
 }

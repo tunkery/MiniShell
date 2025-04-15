@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:56:22 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/14 16:18:54 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:03:02 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void run_echo(char **args, t_env *env)
     int check;
     int i;
 
-    DEBUG_PRINT(BLUE"Running echo\n"RESET);
     
     // Check for $? (exit status)
     if (args[1] && args[1][0] == '$' && args[1][1] == '?' && !args[1][2])
@@ -70,7 +69,6 @@ void run_echo(char **args, t_env *env)
     {
         printf("\n");
         env->exit_code = 0;
-        DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
         return;
     }
     
@@ -99,8 +97,6 @@ void run_echo(char **args, t_env *env)
         printf("\n");
     
     env->exit_code = 0;
-    DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
-    DEBUG_PRINT(GRN"Echo completed\n"RESET);
 }
 
 	// int	check;

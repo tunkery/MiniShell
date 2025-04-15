@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 16:02:31 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/13 16:02:32 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:07:58 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_f
             close(pipes[j][1]);
         j++;
     }
-    DEBUG_PRINT(CYAN "Process %d: in_fd=%d, out_fd=%d\n" RESET, i, *in_fd, *out_fd);
 }
 
 
@@ -139,7 +138,6 @@ void execute_piped_command(t_token *tokens, t_env *env)
     t_token **segments = find_pipe_seg(tokens, &seg_count);
     
     if (!segments || seg_count <= 0) {
-        DEBUG_PRINT(RED "Failed to identify pipe segments\n" RESET);
         return;
     }
     
