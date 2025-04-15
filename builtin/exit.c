@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:02:44 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/13 18:55:08 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/15 14:49:58 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,20 @@ static int	aq_exiti(const char *str, long long *out)
 		check = check * 10 + digit;
 		i++;
 	}
-	if (sign == -1)
+	if (sign < 0)
 	{
 		if (check > 9223372036854775808ULL)
 			return (2);
 		else if (check == 9223372036854775808ULL)
 			*out = LLONG_MIN;
 		else
-			*out = (long long)check;
+			*out = (long long)check * sign;
+	}
+	else
+	{
+		if (check > 9223372036854775807ULL)
+			return (2);
+		*out = (long long)check;
 	}
 	return (0);
 }
@@ -61,16 +67,25 @@ void	run_exit(char **args, t_env *env)
 	unsigned char status;
 	(void)env;
 	
+	if (!args[1])
+		exit(0);
 	i = 0;
 	while (args[i])
 		i++;
-	if (i == 1)
+	if (ft_isalpha(args[1][0]) != 0)
+		exit(2);
+	else if (i == 1)
 		exit(0);
+	else if (i > 2)
+		exit(1);
 	else if (i == 2)
 	{
 		err = aq_exiti(args[1], &value);
 		if (err != 0)
-			exit(255);
+		{
+			fprintf(stderr, "exit: %s: numeric argument required\n", args[1]);
+			exit(2);
+		}
 		else
 		{
 			status = (unsigned char) value;
