@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/14 18:14:52 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/15 16:52:50 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,33 @@
 static int	valid_name(char *str)
 {
 	int	i;
+	char *temp;
 
 	i = 0;
-	while (str[i])
+	if (ft_strchr(str, '=') != 0)
 	{
-		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
-		return (-1);
-		i++;
+		while (str[i] != '=')
+			i++;
+		temp = ft_substr(str, 0, i);
+		i = 0;
+		while (temp[i])
+		{
+			if (ft_isalnum(temp[i]) == 0 && temp[i] != '_')
+			{
+				free(temp);
+				return (-1);
+			}
+			i++;
+		}
+	}
+	else
+	{
+		while (str[i])
+		{
+			if (ft_isalnum(str[i]) == 0 && str[i] != '_')
+				return (-1);
+			i++;
+		}
 	}
 	return (0);
 }
@@ -31,25 +51,25 @@ static int	name_check(char *args)
 	// printf("%s\n", args);
 	if (!args)
 		return (-1);
-	if (valid_name(args) != 0)
-		return (-1);
-	if (ft_strchr(args, '-') != 0)
+	else if (ft_strchr(args, '-') != 0)
 		return (-2);
-	if (ft_strchr(args, ' ') != 0)
+	else if (ft_strchr(args, ' ') != 0)
 		return (-1);
-	if (ft_strchr(args, 9) != 0)
+	else if (ft_strchr(args, 9) != 0)
 		return (-1);
-	if (ft_strchr(args, 10) != 0)
+	else if (ft_strchr(args, 10) != 0)
 		return (-1);
-	if (ft_strchr(args, 11) != 0)
+	else if (ft_strchr(args, 11) != 0)
 		return (-1);
-	if (ft_strchr(args, 12) != 0)
+	else if (ft_strchr(args, 12) != 0)
 		return (-1);
-	if (ft_strchr(args, 13) != 0)
+	else if (ft_strchr(args, 13) != 0)
 		return (-1);
-	if (ft_isdigit(args[0]) != 0)
+	else if (ft_isdigit(args[0]) != 0)
 		return (-1);
-	if (args[0] == '=')
+	else if (args[0] == '=')
+		return (-1);
+	else if (valid_name(args) != 0)
 		return (-1);
 	return (0);
 }
@@ -144,6 +164,7 @@ void	run_export(char **args, t_env *env)
 	i = 0;
 	j = 1;
 	check = 0;
+	name_c = 0;
 	if (!args[1])
 	{
 		while (env->export[i])
@@ -168,7 +189,7 @@ void	run_export(char **args, t_env *env)
 		}
 		else
 		{
-			if (ft_strchr(args[j], '=') != NULL)
+			if (ft_strchr(args[j], '=') != 0)
 			{
 				if (duplicate_check(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
 				{

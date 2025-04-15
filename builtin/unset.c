@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/14 18:17:32 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/15 15:05:46 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,39 @@ static int	get_path(char *str, t_env *env)
 	return (-1);
 }
 
-void	run_unset(char **args, t_env *env)
+static int	hey(char *str, char c)
 {
 	int	i;
 
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (i + 1);
+		i++;
+	}
+	return (-1);
+}
+
+static char	*extract_c(char *str, char c)
+{
+	int	j;
+	char	*temp;
+
+	j = hey(str, c);
+	if (j == -1)
+		return (NULL);
+	temp = ft_substr(str, j, ft_strlen(str) - j);
+	return (temp);
+}
+
+void	run_unset(char **args, t_env *env)
+{
+	int	i;
+	char	*temp;
+
+	// printf("hii\n");
+	// printf("%s\n", args[1]);
 	if (!args[1])
 	{
 		env->exit_code = 0;
@@ -63,14 +92,16 @@ void	run_unset(char **args, t_env *env)
 		env->exit_code = 2;
 		return ;
 	}
+	if (ft_strchr(args[1], ';') != 0)
+	{
+		temp = extract_c(args[1], ';');
+		fprintf(stderr, "Command '%s' not found\n", temp);
+		env->exit_code = 127;
+		return ;
+	}
 	if (valid_name(args[1]) != 0)
 	{
 		env->exit_code = 1;
-		return ;
-	}
-	if (ft_strchr(args[1], ';') != 0)
-	{
-		env->exit_code = 127;
 		return ;
 	}
 	if (get_path(args[1], env) == 0)

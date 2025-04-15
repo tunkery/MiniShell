@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/14 16:37:45 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/15 16:51:46 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,13 +181,13 @@ void	exec_command(char **args, t_env *env, int out_fd)
 	{
 		if (!exec_path)
 		{
-			fprintf(stderr, "minishell: %s: command not found.\n", args[0]);
 			env->exit_code = 127;
+			fprintf(stderr, "minishell: %s: command not found.\n", args[0]);
 		}
 		else
 			run_without_path(args, env, out_fd, exec_path);
 	}
-	DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
+	// DEBUG_PRINT(GRN "exit status: %d\n" RESET, env->exit_code);
 	if (exec_path)
 		free(exec_path);
 }
