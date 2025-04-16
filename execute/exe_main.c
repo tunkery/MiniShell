@@ -180,9 +180,8 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
 void	cell_launch(t_token *tokens, t_env *env)
 {
 
-	if(!validate_syntax(tokens))
+	if(!validate_syntax(tokens, env))
 	{
-		env->exit_code = 258;
 		return ;
 	}
 
