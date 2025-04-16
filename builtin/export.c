@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 11:24:02 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 11:52:31 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,7 +347,7 @@ void	run_export(char **args, t_env *env)
 		}
 		else if (name_c == -2)
 		{
-			fprintf(stderr, "minishell: export: %s: invalid option", args[j]);
+			fprintf(stderr, "minishell: export: %s: invalid option\n", args[j]);
 			env->exit_code = 2;
 			check = 2;
 		}
