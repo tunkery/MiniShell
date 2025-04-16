@@ -387,6 +387,9 @@
         args[7] = hellomi
         args[8] = X
 
+16-) terminale $ yazildiginda argumanlara bunu $ olarak vermiyor baska bir seye ceviriyor mesela
+     echo "$ " yazildiginda $ vermesi lazim ama bizimki bosluk veriyor.
+
 
 ------------------------------------------------------------------------------------
 
