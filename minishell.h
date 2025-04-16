@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/13 18:55:07 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/16 13:35:39 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,15 @@ typedef	struct s_token
 
 int		key_check(char *args);
 int		builtin_check(char **tokens);
+int		append_check(char *str);
+int		append_key_size(char *str);
+char	*append_organiser(char *str);
+void	append_exp(char *str, t_env *env);
+void	append_env(char *str, t_env *env);
+int		duplicate_check_env(char *str, t_env *env);
+int		duplicate_check_ex(char *args, t_env *env);
+void	duplicate_fix_env(char *str, t_env *env);
+void	duplicate_fix_ex(char *str, t_env *env);
 void	run_builtin(char **args, t_env *env);
 void	run_export(char **args, t_env *env);
 void	run_exit(char **args, t_env *env);

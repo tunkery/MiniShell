@@ -6,31 +6,11 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 11:52:31 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 13:34:44 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static int	append_check(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '+')
-		{
-			i++;
-			if (str[i] && str[i] == '=')
-				return (1);
-			else
-				return (0);
-		}
-		i++;
-	}
-	return (0);
-}
 
 static int	valid_name(char *str)
 {
@@ -95,229 +75,6 @@ static int	name_check(char *args)
 	return (0);
 }
 
-static int	duplicate_check_env(char *str, t_env *env)
-{
-	int		i;
-	size_t		size;
-
-	size = key_size(str);
-	i = 0;
-	while (env->envp && env->envp[i])
-	{
-		if (ft_strncmp(env->envp[i], str, size) == 0)
-		{
-			if (size != ft_strlen(env->envp[i]))
-				i++;
-			else
-				return (0);
-		}
-		i++;
-	}
-	if (!env->envp)
-		return (1);
-	if (!env->envp[i])
-		return (1);
-	return (0);
-}
-
-static int	duplicate_check(char *args, t_env *env)
-{
-	int		i;
-	size_t		size;
-
-	size = key_size(args);
-	i = 0;
-	while (env->export && env->export[i])
-	{
-		if (ft_strncmp(env->export[i], args, size) == 0)
-		{
-			if (size != ft_strlen(env->export[i]))
-				i++;
-			else
-				return (0);
-		}
-		i++;
-	}
-	if (!env->export)
-		return (1);
-	if (!env->export[i])
-		return (1);
-	return (0);
-}
-
-static void	duplicate_fix_env(char *str, t_env *env)
-{
-	int	i;
-	int	size;
-
-	i = 0;
-	size = key_size(str);
-	while (env->envp[i])
-	{
-		if (ft_strncmp(env->envp[i], str, size) == 0)
-		{
-			if(env->envp[i])
-				free(env->envp[i]);
-			env->envp[i] = ft_strdup(str);
-			break ;
-		}
-		i++;
-	}
-	env->exit_code = 0;
-}
-
-static void	duplicate_fix(char *str, t_env *env)
-{
-	int	i;
-	int	size;
-
-	i = 0;
-	size = key_size(str);
-	while (env->export && env->export[i])
-	{
-		if (ft_strncmp(env->export[i], str, size) == 0)
-		{
-			if (env->export[i])
-				free(env->export[i]);
-			env->export[i] = ft_strdup(str);
-			break ;
-		}
-		i++;
-	}
-	if (duplicate_check_env(str, env) == 0)
-		duplicate_fix_env(str, env);
-	else
-		env->envp = update_env(env->envp, str);
-	env->exit_code = 0;
-}
-
-static char	*append_organiser(char *str)
-{
-	int	i;
-	char	*temp;
-	char	*temp1;
-	char	*result;
-
-	i = 0;
-	while (str[i] && str[i] != '+')
-		i++;
-	temp = ft_substr(str, 0, i);
-	i += 1;
-	temp1 = ft_substr(str, i, ft_strlen(str) - i);
-	result = ft_strjoin(temp, temp1);
-	free(temp);
-	free(temp1);
-	return (result);
-}
-
-static int	append_key_size(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '+')
-			return (i - 1);
-		i++;
-	}
-	return (i);
-}
-
-static void	append_exp(char *str, t_env *env)
-{
-	int	i;
-	int	size;
-	char	*temp;
-	char	*value;
-	char	*key;
-
-	i = 0;
-	size = 0;
-	while (str[size] && str[size] != '=')
-		size++;
-	value = ft_substr(str, size, ft_strlen(str) - size);
-	size = 0;
-	while (str[size] && str[size] != '+')
-		size++;
-	key = ft_substr(str, 0, size);
-	while (env->export && env->export[i])
-	{
-		if (ft_strncmp(env->export[i], key, size) == 0)
-		{
-			if (size == append_key_size(str))
-				break ;
-		}
-		i++;
-	}
-	if (env->export && env->export[i])
-	{
-		temp = ft_strjoin(env->export[i], value);
-		free(env->export[i]);
-		env->export[i] = ft_strdup(temp);
-		free(temp);
-		free(value);
-		free(key);
-	}
-	else
-	{
-		temp = append_organiser(str);
-		if (value)
-			free(value);
-		if (key)
-			free(key);
-		env->export = update_env(env->export, temp);
-		free(temp);
-	}
-}
-
-static void	append_env(char *str, t_env *env)
-{
-	int	i;
-	int	size;
-	char	*temp;
-	char	*value;
-	char	*key;
-
-	i = 0;
-	size = 0;
-	while (str[size] && str[size] != '=')
-		size++;
-	value = ft_substr(str, size, ft_strlen(str) - size);
-	size = 0;
-	while (str[size] && str[size] != '+')
-		size++;
-	key = ft_substr(str, 0, size);
-	while (env->envp && env->envp[i])
-	{
-		if (ft_strncmp(env->envp[i], key, size) == 0)
-		{
-			if (size == append_key_size(str))
-				break ;
-		}
-		i++;
-	}
-	if (env->envp && env->envp[i])
-	{
-		temp = ft_strjoin(env->envp[i], value);
-		free(env->envp[i]);
-		env->envp[i] = ft_strdup(temp);
-		free(temp);
-		free(value);
-		free(key);
-	}
-	else
-	{
-		temp = append_organiser(str);
-		if (value)
-			free(value);
-		if (key)
-			free(key);
-		env->envp = update_env(env->envp, temp);
-		free(temp);
-	}
-}
-
 void	run_export(char **args, t_env *env)
 {
 	int	i;
@@ -362,26 +119,26 @@ void	run_export(char **args, t_env *env)
 			{
 				if (append_check(args[j]) != 0)
 				{
-					if (duplicate_check(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
+					if (duplicate_check_ex(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
 					{
-						duplicate_fix(args[j], env);
+						duplicate_fix_ex(args[j], env);
 						duplicate_fix_env(args[j], env);
 					}
-					else if (duplicate_check(args[j], env) == 0)
-						duplicate_fix(args[j], env);
+					else if (duplicate_check_ex(args[j], env) == 0)
+						duplicate_fix_ex(args[j], env);
 					else
 					{
 						env->envp = update_env(env->envp, args[j]);
 						env->export = update_env(env->export, args[j]);
 					}
 				}
-				if (duplicate_check(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
+				if (duplicate_check_ex(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
 				{
-					duplicate_fix(args[j], env);
+					duplicate_fix_ex(args[j], env);
 					duplicate_fix_env(args[j], env);
 				}
-				else if (duplicate_check(args[j], env) == 0)
-					duplicate_fix(args[j], env);
+				else if (duplicate_check_ex(args[j], env) == 0)
+					duplicate_fix_ex(args[j], env);
 				else
 				{
 					env->envp = update_env(env->envp, args[j]);
