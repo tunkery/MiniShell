@@ -62,6 +62,7 @@ typedef struct s_env
 	char	*old_pwd;
 	char	**path;
 	char	*path1;
+	int		syntax_error;
 }	t_env;
 
 typedef struct s_pipe_command

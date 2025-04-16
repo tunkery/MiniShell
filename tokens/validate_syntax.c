@@ -12,12 +12,13 @@
 
 #include "../minishell.h"
 
-void    print_syntax_message(char *str, t_env *env)
+
+void print_syntax_message(char *str, t_env *env)
 {
     write(2, "minishell: syntax error near unexpected token `", 47);
     write(2, str, ft_strlen(str));
     write(2, " \n", 2);
-    env->exit_code = 2;
+    env->exit_code = 258;
 }
 
 int validate_redirect_syntax(t_token *tokens, t_env *env)
@@ -31,12 +32,13 @@ int validate_redirect_syntax(t_token *tokens, t_env *env)
         {
             if(!tmp->next)
             {
+                
                 print_syntax_message("newline'", env);
                 return 0;
             }
             if(tmp->next->type != TOKEN_WORD)
             {
-                print_syntax_message("newline'", env);
+                print_syntax_message(tmp->next->value, env);
                 return 0;
             }
         }
@@ -53,7 +55,7 @@ int validate_pipe_syntax(t_token *tokens, t_env *env)
     if(tmp && tmp->type == TOKEN_PIPE)
     {
         print_syntax_message("|'", env);
-        return -1;
+        return 0;
     }
     /*
         -ls || wc
@@ -64,17 +66,17 @@ int validate_pipe_syntax(t_token *tokens, t_env *env)
         {
             if(!tmp->next)
             {
-                print_syntax_message("newline'", env);
+                print_syntax_message("|'", env);
                 return 0;
             }
             if(tmp->next->type == TOKEN_PIPE)
             {
-                print_syntax_message("newline'", env);
+                print_syntax_message("|'", env);
                 return 0;
             }
             if(tmp->prev && tmp->prev->type == TOKEN_PIPE)
             {
-                print_syntax_message("newline'", env);
+                print_syntax_message("|'", env);
                 return 0;
             }
         }
@@ -85,9 +87,17 @@ int validate_pipe_syntax(t_token *tokens, t_env *env)
 
 int validate_syntax(t_token *tokens, t_env *env)
 {
+    if(!tokens)
+        return 1;
     if(!validate_redirect_syntax(tokens, env))
+    {
+
         return 0;
-    if(!validate_pipe_syntax(tokens, env))
+    }
+    if(!validate_pipe_syntax(tokens,env))
+    {
+
         return 0;
+    }
     return 1;
 }

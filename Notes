@@ -390,6 +390,43 @@
 16-) terminale $ yazildiginda argumanlara bunu $ olarak vermiyor baska bir seye ceviriyor mesela
      echo "$ " yazildiginda $ vermesi lazim ama bizimki bosluk veriyor.
 
+17-)$
+USER=hpehliva
+MallocNanoZone=0
+PATH=/Users/hpehliva/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/hpehliva/.brew/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin:/Users/hpehliva/.local/bin
+LOGNAME=hpehliva
+SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.wkx5w5Xf7O/Listeners
+HOME=/Users/hpehliva
+SHELL=/bin/zsh
+__CF_USER_TEXT_ENCODING=0x193F4:0x0:0x2
+TMPDIR=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/
+XPC_SERVICE_NAME=0
+XPC_FLAGS=0x0
+ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+SHLVL=2
+PWD=/Users/hpehliva/MiniShell
+OLDPWD=/Users/hpehliva/MiniShell/tokens
+ZSH=/Users/hpehliva/.oh-my-zsh
+PAGER=less
+LESS=-R
+LSCOLORS=Gxfxcxdxbxegedabagacad
+LS_COLORS=di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43
+TERM_PROGRAM=vscode
+TERM_PROGRAM_VERSION=1.97.2
+LANG=en_US.UTF-8
+COLORTERM=truecolor
+GIT_ASKPASS=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass.sh
+VSCODE_GIT_ASKPASS_NODE=/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Plugin).app/Contents/MacOS/Code Helper (Plugin)
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+VSCODE_GIT_ASKPASS_MAIN=/Applications/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/askpass-main.js
+VSCODE_GIT_IPC_HANDLE=/var/folders/zz/zyxvpxvq6csfxvn_n000clyh0034zm/T/vscode-git-80acbe6350.sock
+VSCODE_INJECTION=1
+ZDOTDIR=/Users/hpehliva
+USER_ZDOTDIR=/Users/hpehliva
+TERM=xterm-256color
+VSCODE_PROFILE_INITIALIZED=1
+_=/Users/hpehliva/MiniShell/./minishell
+
 
 ------------------------------------------------------------------------------------
 

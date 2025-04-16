@@ -12,6 +12,7 @@
 
 #include "../minishell.h"
 
+
 void    handle_pipe(t_token *token, int *i)
 {
     token->type = TOKEN_PIPE;
@@ -76,12 +77,20 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
     {
         if(line[*i] == '$')
         {
-            token->value = expand_env(line, i, env);
-            if(!token->value)
+            if(line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
             {
-                token->value = ft_strdup("");
-                // free(token);
-                // return ;
+                token->value = expand_env(line, i, env);
+                if(!token->value)
+                {
+                    token->value = ft_strdup("");
+                    // free(token);
+                    // return ;
+                }
+            }
+            else
+            {
+                token->value = ft_strdup("$");
+                (*i)++;
             }
         }
         else

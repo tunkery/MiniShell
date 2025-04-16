@@ -34,7 +34,7 @@ void handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
             *out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (*out_fd < 0) {
                 perror("open failed");
-                exit(EXIT_FAILURE);
+                exit(1);
             }
         }
     } else if ((*curr)->type == TOKEN_REDIRECT_APPEND) {
@@ -45,7 +45,7 @@ void handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
             *out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (*out_fd < 0) {
                 perror("open failed");
-                exit(EXIT_FAILURE);
+                exit(1);
             }
         }
     } else if ((*curr)->type == TOKEN_REDIRECT_IN) {
@@ -56,7 +56,7 @@ void handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
             *in_fd = open((*curr)->value, O_RDONLY);
             if (*in_fd < 0) {
                 perror("open failed");
-                exit(EXIT_FAILURE);
+                exit(1);
             }
         }
     }

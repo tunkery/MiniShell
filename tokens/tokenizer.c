@@ -12,6 +12,11 @@
 
 #include "../minishell.h"
 
+// char handle_tilde(char *line, int *i, t_env *env)
+// {
+        /*"BATUU I'll do it here ! DON'T TOUCH" */
+// }
+
 static char	*get_path(char *str, t_env *env)
 {
 	int		j;
@@ -87,14 +92,25 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
     {
         if(quote_type == '"' && line[*i] == '$')
         {
-            temp = expand_env(line, i, env);
-            if(temp)
+            if(line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
             {
+                temp = expand_env(line, i, env);
+                if(temp)
+                {
+                    char *old_res = result;
+                    result = ft_strjoin(result, temp);
+                    free(old_res);
+                    free(temp);
+                } // check it all free as lldb.
+            }
+            else
+            {
+                char cpy[2] = {'$', '\0'};
                 char *old_res = result;
-                result = ft_strjoin(result, temp);
+                result = ft_strjoin(result, cpy);
                 free(old_res);
-                free(temp);
-            } // check it all free as lldb.
+                (*i)++;
+            }
         }
         else
         {
