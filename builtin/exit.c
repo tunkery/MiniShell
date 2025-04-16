@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:02:44 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 14:49:58 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 10:33:09 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,17 @@ void	run_exit(char **args, t_env *env)
 	while (args[i])
 		i++;
 	if (ft_isalpha(args[1][0]) != 0)
+	{
+		perror("exit: entered a value other than integers");
 		exit(2);
+	}
 	else if (i == 1)
 		exit(0);
 	else if (i > 2)
+	{
+		perror("exit: too many arguments");
 		exit(1);
+	}
 	else if (i == 2)
 	{
 		err = aq_exiti(args[1], &value);

@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 10:05:51 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:51:44 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	initiate_env(t_env *env, char **envp)
 	copy_env(envp, &(env->export));
 	shell_level(&(env->envp), 0);
 	shell_level(&(env->export), 0);
+	env->exit_code = 0;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
 	env->curr_pwd = ft_strdup(env->envp[i]);

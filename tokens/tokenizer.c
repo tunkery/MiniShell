@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 14:29:20 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/16 08:59:44 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:39:37 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,33 @@
 static char	*get_path(char *str, t_env *env)
 {
 	int		j;
-	int		size;
+    int     i;
 	char	*temp;
 	char	*temp2;
 	char	*final;
+    char    *key;
 
 	j = 0;
-	size = ft_strlen(str);
-	while (env->envp[j] && ft_strncmp(env->envp[j], str, size) != 0)
-		j++;
-	if (!env->envp[j])
-		return (NULL);
-	temp = ft_substr(env->envp[j], size + 1, ft_strlen(env->envp[j]) - size);
-	temp2 = ft_substr(str, size + 1, ft_strlen(str) - size - 1);
-	final = ft_strjoin(temp, temp2);
+    while (str[j] && str[j] != '=')
+        j++;
+    if (str[j] && str[j] != '=')
+        return (NULL);
+    key = ft_substr(str, 0, j);
+    if (!key)
+        return (NULL);
+    i = 0;
+    while (env->envp[i])
+    {
+        if (ft_strncmp(env->envp[i], key, j) == 0 && env->envp[i][j] == '=')
+            break ;
+        i++;
+    }
+    free(key);
+    if (!env->envp[i])
+        return (NULL);
+    temp = ft_substr(env->envp[i], j + 1, ft_strlen(env->envp[i]) - j + 1);
+    temp2 = ft_substr(str, j + 1, ft_strlen(str) - j + 1);
+    final = ft_strjoin(temp, temp2);
 	free(temp);
 	free(temp2);
 	return (final);
@@ -57,7 +70,6 @@ char *expand_env(char *line, int *i, t_env *env)
         (*i)++;
     }
     var_name[j] = '\0';
-    // Fallback to getenv
     value = get_path(var_name, env);
     if(value)
         return (value);
