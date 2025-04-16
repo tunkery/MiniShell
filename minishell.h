@@ -211,9 +211,10 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env);
 // Tokenizer utils
 int ft_strcmp(const char *s1, const char *s2);
 // Validate syntax for redirect
-int validate_redirect_syntax(t_token *tokens);
-int validate_pipe_syntax(t_token *tokens);
-int validate_syntax(t_token *tokens);
+void    print_syntax_message(char *str, t_env *env);
+int validate_redirect_syntax(t_token *tokens, t_env *env);
+int validate_pipe_syntax(t_token *tokens, t_env *env);
+int validate_syntax(t_token *tokens, t_env *env);
 
 
 #endif

@@ -12,7 +12,15 @@
 
 #include "../minishell.h"
 
-int validate_redirect_syntax(t_token *tokens)
+void    print_syntax_message(char *str, t_env *env)
+{
+    write(2, "minishell: syntax error near unexpected token `", 47);
+    write(2, str, ft_strlen(str));
+    write(2, " \n", 2);
+    env->exit_code = 2;
+}
+
+int validate_redirect_syntax(t_token *tokens, t_env *env)
 {
     t_token *tmp = tokens;
 
@@ -23,12 +31,12 @@ int validate_redirect_syntax(t_token *tokens)
         {
             if(!tmp->next)
             {
-                printf("minishell: syntax error near unexpected token `newline'\n");
+                print_syntax_message("newline'", env);
                 return 0;
             }
             if(tmp->next->type != TOKEN_WORD)
             {
-                printf("minishell: syntax error near unexpected token `%s'\n", tmp->next->value);
+                print_syntax_message("newline'", env);
                 return 0;
             }
         }
@@ -37,15 +45,15 @@ int validate_redirect_syntax(t_token *tokens)
     return 1;
 }
 
-int validate_pipe_syntax(t_token *tokens)
+int validate_pipe_syntax(t_token *tokens, t_env *env)
 {
     t_token *tmp = tokens;
 
     // For only one pipe!
     if(tmp && tmp->type == TOKEN_PIPE)
     {
-        printf("minishell: syntax error near unexpected token `|'\n");
-        return 0;
+        print_syntax_message("|'", env);
+        return -1;
     }
     /*
         -ls || wc
@@ -56,17 +64,17 @@ int validate_pipe_syntax(t_token *tokens)
         {
             if(!tmp->next)
             {
-                printf("minishell: syntax error near unexpected token `|'\n");
+                print_syntax_message("newline'", env);
                 return 0;
             }
             if(tmp->next->type == TOKEN_PIPE)
             {
-                printf("minishell: syntax error near unexpected token `|'\n");
+                print_syntax_message("newline'", env);
                 return 0;
             }
             if(tmp->prev && tmp->prev->type == TOKEN_PIPE)
             {
-                printf("minishell: syntax error near unexpected token `|'\n");
+                print_syntax_message("newline'", env);
                 return 0;
             }
         }
@@ -75,11 +83,11 @@ int validate_pipe_syntax(t_token *tokens)
     return 1;
 }
 
-int validate_syntax(t_token *tokens)
+int validate_syntax(t_token *tokens, t_env *env)
 {
-    if(!validate_redirect_syntax(tokens))
+    if(!validate_redirect_syntax(tokens, env))
         return 0;
-    if(!validate_pipe_syntax(tokens))
+    if(!validate_pipe_syntax(tokens, env))
         return 0;
     return 1;
 }
