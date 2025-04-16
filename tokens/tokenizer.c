@@ -6,12 +6,33 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 14:29:20 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/15 17:46:41 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 08:50:04 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static char	*get_path(char *str, t_env *env)
+{
+	int		j;
+	int		size;
+	char	*temp;
+	char	*temp2;
+	char	*final;
+
+	j = 0;
+	size = ft_strlen(str);
+	while (env->envp[j] && ft_strncmp(env->envp[j], str, size) != 0)
+		j++;
+	if (!env->envp[j])
+		return (NULL);
+	temp = ft_substr(env->envp[j], size + 1, ft_strlen(env->envp[j]) - size);
+	temp2 = ft_substr(str, size + 1, ft_strlen(str) - size - 1);
+	final = ft_strjoin(temp, temp2);
+	free(temp);
+	free(temp2);
+	return (final);
+}
 
 char *expand_env(char *line, int *i, t_env *env)
 {
@@ -37,9 +58,9 @@ char *expand_env(char *line, int *i, t_env *env)
     }
     var_name[j] = '\0';
     // Fallback to getenv
-    value = getenv(var_name);
+    value = get_path(var_name, env);
     if(value)
-        return (ft_strdup(value));
+        return (value);
     return ft_strdup("");
 }
 
