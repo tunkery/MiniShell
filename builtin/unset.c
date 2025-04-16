@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 17:38:13 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 10:35:08 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void	run_unset(char **args, t_env *env)
 	}
 	if (args[1][0] == '-')
 	{
+		fprintf(stderr, "minishell: unset: -%c: invalid option\n", args[1][1]);
 		env->exit_code = 2;
 		return ;
 	}
