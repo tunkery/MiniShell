@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 17:03:15 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 09:55:09 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	valid_name(char *str)
 	i = 0;
 	if (ft_strchr(str, '=') != 0)
 	{
-		while (str[i] != '=')
+		while (str[i] && str[i] != '=')
 			i++;
 		temp = ft_substr(str, 0, i);
 		i = 0;
@@ -77,16 +77,23 @@ static int	name_check(char *args)
 static int	duplicate_check_env(char *str, t_env *env)
 {
 	int		i;
-	int		size;
+	size_t		size;
 
 	size = key_size(str);
 	i = 0;
 	while (env->envp && env->envp[i])
 	{
 		if (ft_strncmp(env->envp[i], str, size) == 0)
-			return (0);
+		{
+			if (size != ft_strlen(env->envp[i]))
+				i++;
+			else
+				return (0);
+		}
 		i++;
 	}
+	if (!env->envp)
+		return (1);
 	if (!env->envp[i])
 		return (1);
 	return (0);
@@ -95,16 +102,23 @@ static int	duplicate_check_env(char *str, t_env *env)
 static int	duplicate_check(char *args, t_env *env)
 {
 	int		i;
-	int		size;
+	size_t		size;
 
 	size = key_size(args);
 	i = 0;
 	while (env->export && env->export[i])
 	{
 		if (ft_strncmp(env->export[i], args, size) == 0)
-			return (0);
+		{
+			if (size != ft_strlen(env->export[i]))
+				i++;
+			else
+				return (0);
+		}
 		i++;
 	}
+	if (!env->export)
+		return (1);
 	if (!env->export[i])
 		return (1);
 	return (0);
@@ -121,7 +135,8 @@ static void	duplicate_fix_env(char *str, t_env *env)
 	{
 		if (ft_strncmp(env->envp[i], str, size) == 0)
 		{
-			free(env->envp[i]);
+			if(env->envp[i])
+				free(env->envp[i]);
 			env->envp[i] = ft_strdup(str);
 			break ;
 		}
@@ -141,7 +156,8 @@ static void	duplicate_fix(char *str, t_env *env)
 	{
 		if (ft_strncmp(env->export[i], str, size) == 0)
 		{
-			free(env->export[i]);
+			if (env->export[i])
+				free(env->export[i]);
 			env->export[i] = ft_strdup(str);
 			break ;
 		}

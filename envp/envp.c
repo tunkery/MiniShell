@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 17:04:35 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 10:05:51 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,24 @@ char	**update_env(char **envp, char *key)
 {
 	int		size;
 	char	**new_env;
+	int		i;
 	
-	size = env_size(envp) + 1;
+	if (!envp || !key)
+		return (NULL);
+	i = 0;
+	size = env_size(envp);
 	new_env = NULL;
-	copy_env(envp, &new_env);
-	new_env[size - 1] = ft_strdup(key);
-	new_env[size] = NULL;
+	new_env = malloc(sizeof(char *) * (size + 2));
+	if (!new_env)
+		return (NULL);
+	while (envp[i])
+	{
+		new_env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	// copy_env(envp, &new_env);
+	new_env[size] = ft_strdup(key);
+	new_env[size + 1] = NULL;
 	return (new_env);
 }
 

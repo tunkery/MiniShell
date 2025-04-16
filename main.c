@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/03/25 12:36:27 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/16 10:03:12 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,13 @@ int main(int ac, char **av, char **envp)
     t_env   *env = NULL;
     t_token *tokens;
 	(void)av;
+    (void)ac;
 
-	if (ac != 1)
-	{
-		printf("Don't give any arguments!\n");
-		return (0);
-	}
+	// if (ac != 1)
+	// {
+	// 	printf("Don't give any arguments!\n");
+	// 	// return (0);
+	// }
     env = malloc(sizeof(t_env));
     if (!env)
         return (0);

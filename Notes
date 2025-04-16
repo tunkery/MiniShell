@@ -369,6 +369,25 @@
     
 14-) tokenleri alirken ~ isaretini gorunce tokenizer onu getenv("HOME"); ile home variable'ina cevirip vermeli.
 
+15-) export a="asd" b="de" o= c="hellomi" X gibi bir sey yazildiginda bunu soyle almamiz lazim:
+        args[0] = export
+        args[1] = a=asd
+        args[2] = b=de
+        args[3] = o=
+        args[4] = c=hellomi
+        args[5] = X
+    ama suan boyle aliyoruz
+        args[0] = export
+        args[1] = a=
+        args[2] = asd
+        args[3] = b=
+        args[4] = de
+        args[5] = o=
+        args[6] = c=
+        args[7] = hellomi
+        args[8] = X
+
+
 ------------------------------------------------------------------------------------
 
 #Pipe 

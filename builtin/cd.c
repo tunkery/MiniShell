@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 17:02:29 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/16 09:04:50 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ void	run_cd(char **args, t_env *env)
 		env->exit_code = chdir(args[1]);
 	if (env->exit_code == -1)
 	{
+		printf("hii\n");
 		fprintf(stderr, "minishell: cd: %s: No such file or directory\n", args[1]);
 		env->envp = remove_env(env->envp, "OLDPWD");
 		if (old_pwd != NULL)
