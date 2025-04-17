@@ -12,10 +12,28 @@
 
 #include "../minishell.h"
 
-// char handle_tilde(char *line, int *i, t_env *env)
-// {
-        /*"BATUU I'll do it here ! DON'T TOUCH" */
-// }
+char  *handle_tilde(char *line, int *i, t_env *env)
+{
+    int j = 0;
+    char *result = NULL;
+    char *home_path = NULL;
+
+    ((*i)++); // skip the tilde
+    while(env->envp[j] && ft_strncmp(env->envp[j], "HOME=", 5) != 0)
+        j++;
+    if(env->envp[j])
+        home_path = ft_substr(env->envp[j], 5, ft_strlen(env->envp[j]) - 5);
+    else
+        env->envp[j] = "~";
+    
+    if(line[*i] == '/' || line[*i] == '\0' || line[*i] == ' ')
+        result = ft_strdup(home_path);
+    else
+        result = ft_strdup("~");
+    free(home_path);
+    return(result);
+
+}
 
 static char	*get_path(char *str, t_env *env)
 {

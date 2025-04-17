@@ -213,6 +213,7 @@ char *expand_env(char *line, int *i, t_env *env);
 char **tokens_to_args(t_token *tokens);
 
 // seperated tokenizer
+char  *handle_tilde(char *line, int *i, t_env *env);
 void    handle_pipe(t_token *token, int *i);
 void    handle_redirect_in(t_token *token, char *line, int *i);
 void    handle_redirect_out(t_token *token, char *line, int *i);

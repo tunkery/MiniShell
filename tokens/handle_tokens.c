@@ -93,6 +93,18 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
                 (*i)++;
             }
         }
+        else if(line[*i] == '~' &&(line[*i + 1] == '/' || line[*i + 1] == '\0' || line[*i+1] == ' '))
+        {
+            token->value = handle_tilde(line, i, env);
+            if(line[*i] == '/')
+            {
+                char *path_part = extract_word(line, i);
+                char *temp = token->value;
+                token->value = ft_strjoin(temp, path_part);
+                free(temp);
+                free(path_part);
+            }
+        }
         else
         {
             // token->type = TOKEN_WORD;
