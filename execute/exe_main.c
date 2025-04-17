@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/15 17:05:25 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/17 15:36:32 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
         }
         
         handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
-        if(args && args[0])
+        if(args && args[0] && args[0][0] != '\0')
         {
             execute_with_redirection(args, env, out_fd, save_stdout);
         }
