@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/16 13:34:43 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/17 13:13:08 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	duplicate_check_env(char *str, t_env *env)
 {
 	int		i;
-	size_t		size;
+	int		size;
 
 	size = key_size(str);
 	i = 0;
@@ -23,12 +23,15 @@ int	duplicate_check_env(char *str, t_env *env)
 	{
 		if (ft_strncmp(env->envp[i], str, size) == 0)
 		{
-			if (size != ft_strlen(env->envp[i]))
+			if (size != key_size(env->envp[i]))
 				i++;
 			else
 				return (0);
 		}
-		i++;
+		if (env->envp[i])
+			i++;
+		else
+			break ;
 	}
 	if (!env->envp)
 		return (1);
@@ -40,7 +43,7 @@ int	duplicate_check_env(char *str, t_env *env)
 int	duplicate_check_ex(char *args, t_env *env)
 {
 	int		i;
-	size_t		size;
+	int		size;
 
 	size = key_size(args);
 	i = 0;
@@ -48,12 +51,15 @@ int	duplicate_check_ex(char *args, t_env *env)
 	{
 		if (ft_strncmp(env->export[i], args, size) == 0)
 		{
-			if (size != ft_strlen(env->export[i]))
+			if (size != key_size(env->export[i]))
 				i++;
 			else
 				return (0);
 		}
-		i++;
+		if (env->export[i])
+			i++;
+		else
+			break ;
 	}
 	if (!env->export)
 		return (1);

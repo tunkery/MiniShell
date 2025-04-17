@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 13:34:44 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/17 13:13:32 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	run_export(char **args, t_env *env)
 		}
 		else if (name_c == -3)
 		{
+			printf("append here\n");
 			append_env(args[j], env);
 			append_exp(args[j], env);
 		}
@@ -117,30 +118,20 @@ void	run_export(char **args, t_env *env)
 		{
 			if (ft_strchr(args[j], '=') != 0)
 			{
-				if (append_check(args[j]) != 0)
-				{
-					if (duplicate_check_ex(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
-					{
-						duplicate_fix_ex(args[j], env);
-						duplicate_fix_env(args[j], env);
-					}
-					else if (duplicate_check_ex(args[j], env) == 0)
-						duplicate_fix_ex(args[j], env);
-					else
-					{
-						env->envp = update_env(env->envp, args[j]);
-						env->export = update_env(env->export, args[j]);
-					}
-				}
 				if (duplicate_check_ex(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
 				{
+					printf("fix both\n");
 					duplicate_fix_ex(args[j], env);
 					duplicate_fix_env(args[j], env);
 				}
 				else if (duplicate_check_ex(args[j], env) == 0)
+				{
+					printf("fix ex\n");
 					duplicate_fix_ex(args[j], env);
+				}
 				else
 				{
+					printf("fix both2\n");
 					env->envp = update_env(env->envp, args[j]);
 					env->export = update_env(env->export, args[j]);
 				}

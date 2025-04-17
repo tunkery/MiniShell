@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:25:02 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/16 13:28:53 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/17 13:09:39 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	append_exp(char *str, t_env *env)
 	size = 0;
 	while (str[size] && str[size] != '=')
 		size++;
-	value = ft_substr(str, size, ft_strlen(str) - size);
+	value = ft_substr(str, size + 1, ft_strlen(str) - size - 1);
 	size = 0;
 	while (str[size] && str[size] != '+')
 		size++;
@@ -86,7 +86,7 @@ void	append_exp(char *str, t_env *env)
 	{
 		if (ft_strncmp(env->export[i], key, size) == 0)
 		{
-			if (size == append_key_size(str))
+			if (size == append_key_size(str) + 1)
 				break ;
 		}
 		i++;
@@ -122,24 +122,32 @@ void	append_env(char *str, t_env *env)
 
 	i = 0;
 	size = 0;
+	printf("%s\n", str);
 	while (str[size] && str[size] != '=')
 		size++;
-	value = ft_substr(str, size, ft_strlen(str) - size);
+	value = ft_substr(str, size + 1, ft_strlen(str) - size - 1);
+	printf("%s\n", value);
 	size = 0;
 	while (str[size] && str[size] != '+')
 		size++;
+	printf("%d\n", size);
+	printf("%d\n", append_key_size(str));
 	key = ft_substr(str, 0, size);
+	printf("%s\n", key);
 	while (env->envp && env->envp[i])
 	{
 		if (ft_strncmp(env->envp[i], key, size) == 0)
 		{
-			if (size == append_key_size(str))
+			if (size == append_key_size(str) + 1)
 				break ;
 		}
 		i++;
 	}
+	if (env->envp[i])
+		printf("%s\n", env->envp[i]);
 	if (env->envp && env->envp[i])
 	{
+		printf("hii\n");
 		temp = ft_strjoin(env->envp[i], value);
 		free(env->envp[i]);
 		env->envp[i] = ft_strdup(temp);
@@ -149,6 +157,7 @@ void	append_env(char *str, t_env *env)
 	}
 	else
 	{
+		printf("hii2\n");
 		temp = append_organiser(str);
 		if (value)
 			free(value);
