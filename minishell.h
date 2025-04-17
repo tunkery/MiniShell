@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 13:35:39 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/17 13:23:44 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,8 @@ int		builtin_check(char **tokens);
 int		append_check(char *str);
 int		append_key_size(char *str);
 char	*append_organiser(char *str);
+void	append(char *str, t_env *env, char *value, int i);
+void	append1(char *str, t_env *env, char *value, int i);
 void	append_exp(char *str, t_env *env);
 void	append_env(char *str, t_env *env);
 int		duplicate_check_env(char *str, t_env *env);
