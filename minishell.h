@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/17 13:23:44 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/17 13:41:56 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ typedef	struct s_token
 
 int		key_check(char *args);
 int		builtin_check(char **tokens);
+void	checker(char *str, int name_c, int *check, t_env *env);
+void	export1(char *str, t_env *env);
 int		append_check(char *str);
 int		append_key_size(char *str);
 char	*append_organiser(char *str);

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/17 13:13:32 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/17 13:43:16 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void	run_export(char **args, t_env *env)
 	i = 0;
 	j = 1;
 	check = 0;
-	name_c = 0;
 	if (!args[1])
 	{
 		while (env->export[i])
@@ -96,49 +95,10 @@ void	run_export(char **args, t_env *env)
 	while (args[j])
 	{
 		name_c = name_check(args[j]);
-		if (name_c == -1)
-		{
-			fprintf(stderr, "minishell: export: '%s': not a valid identifier\n", args[j]);
-			env->exit_code = 1;
-			check = 1;
-		}
-		else if (name_c == -2)
-		{
-			fprintf(stderr, "minishell: export: %s: invalid option\n", args[j]);
-			env->exit_code = 2;
-			check = 2;
-		}
-		else if (name_c == -3)
-		{
-			printf("append here\n");
-			append_env(args[j], env);
-			append_exp(args[j], env);
-		}
+		if (name_c != 0)
+			checker(args[j], name_c, &check, env);
 		else
-		{
-			if (ft_strchr(args[j], '=') != 0)
-			{
-				if (duplicate_check_ex(args[j], env) == 0 && duplicate_check_env(args[j], env) == 0)
-				{
-					printf("fix both\n");
-					duplicate_fix_ex(args[j], env);
-					duplicate_fix_env(args[j], env);
-				}
-				else if (duplicate_check_ex(args[j], env) == 0)
-				{
-					printf("fix ex\n");
-					duplicate_fix_ex(args[j], env);
-				}
-				else
-				{
-					printf("fix both2\n");
-					env->envp = update_env(env->envp, args[j]);
-					env->export = update_env(env->export, args[j]);
-				}
-			}
-			else
-				env->export = update_env(env->export, args[j]);
-		}
+			export1(args[j], env);
 		j++;
 	}
 	env->exit_code = check;
