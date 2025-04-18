@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/17 13:57:06 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/18 15:19:32 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void	duplicate_fix_ex(char *str, t_env *env)
 {
 	int	i;
 	int	size;
+	char	*temp;
 
 	i = 0;
 	size = key_size(str);
@@ -102,7 +103,9 @@ void	duplicate_fix_ex(char *str, t_env *env)
 		{
 			if (env->export[i])
 				free(env->export[i]);
-			env->export[i] = ft_strdup(str);
+			temp = copy_ex_helper(str);
+			env->export[i] = ft_strdup(temp);
+			free(temp);
 			break ;
 		}
 		i++;
@@ -128,11 +131,11 @@ void	export1(char *str, t_env *env)
 		else
 		{
 			env->envp = update_env(env->envp, str);
-			env->export = update_env(env->export, str);
+			env->export = update_ex(env->export, str);
 		}
 	}
 	else
-		env->export = update_env(env->export, str);
+		env->export = update_ex(env->export, str);
 }
 
 void	checker(char *str, int name_c, int *check, t_env *env)

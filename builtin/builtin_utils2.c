@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:25:02 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/17 13:25:26 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/18 15:48:58 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,39 @@ void	append_exp(char *str, t_env *env)
 	append1(str, env, value, i);
 }
 
+static char	*append2(char *str, char *value)
+{
+	int		i;
+	char	*temp;
+	char	*temp2;
+	char	*temp3;
+
+	i = 0;
+	temp = ft_substr(str, 0, ft_strlen(str) - 1);
+	printf("%s\n", temp);
+	temp2 = ft_strjoin(temp, value);
+	printf("%s\n", temp2);
+	free(temp);
+	temp3 = malloc(sizeof(char) * ft_strlen(temp2) + 3);
+	while (temp2[i])
+	{
+		temp3[i] = temp2[i];
+		i++;
+	}
+	free(temp2);
+	temp3[i++] = '"';
+	temp3[i] = '\0';
+	printf("%s\n", temp3);
+	return (temp3);
+}
+
 void	append1(char *str, t_env *env, char *value, int i)
 {
 	char	*temp;
 
 	if (env->export[i])
 	{
-		temp = ft_strjoin(env->export[i], value);
+		temp = append2(env->export[i], value);
 		free(env->export[i]);
 		env->export[i] = ft_strdup(temp);
 		free(temp);
@@ -107,7 +133,7 @@ void	append1(char *str, t_env *env, char *value, int i)
 	else
 	{
 		temp = append_organiser(str);
-		env->export = update_env(env->export, temp);
+		env->export = update_ex(env->export, temp);
 		free(temp);
 	}
 }

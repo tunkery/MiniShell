@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/18 15:10:54 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/18 15:16:50 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,7 @@ char	*find_path(t_env *env);
 void	copy_env(char **str, char ***envp);
 void	copy_ex(char **str, char ***envp);
 char	*copy_ex_helper(char *str);
+char	**update_ex(char **envp, char *key);
 char	**update_env(char **envp, char *key);
 char	**remove_env(char **envp, char *key);
 
