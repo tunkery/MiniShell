@@ -43,53 +43,53 @@ char  *handle_tilde(char *line, int *i, t_env *env)
 
 static char	*get_path(char *str, t_env *env)
 {
-    // int i;
-    // int len;
-    // char *value;
+    int i;
+    int len;
+    char *value;
 
-    // len = ft_strlen(str);
-    // i = 0;
-    // while(env->envp[i])
-    // {
-    //     if(ft_strncmp(env->envp[i], str, len) == 0 && env->envp[i][len] == '=')
-    //     {
-    //         value = ft_substr(env->envp[i], len+1, ft_strlen(env->envp[i])-len - 1);
-    //         return value;
-    //     }
-    //     i++;
-    // }
-    // return NULL;
-	int		j;
-    int     i;
-	char	*temp;
-	char	*temp2;
-	char	*final;
-    char    *key;
-
-	j = 0;
-    while (str[j] && str[j] != '=')
-        j++;
-    if (str[j] && str[j] != '=')
-        return (NULL);
-    key = ft_substr(str, 0, j);
-    if (!key)
-        return (NULL);
+    len = ft_strlen(str);
     i = 0;
-    while (env->envp[i])
+    while(env->envp[i])
     {
-        if (ft_strncmp(env->envp[i], key, j) == 0 && env->envp[i][j] == '=')
-            break ;
+        if(ft_strncmp(env->envp[i], str, len) == 0 && env->envp[i][len] == '=')
+        {
+            value = ft_substr(env->envp[i], len+1, ft_strlen(env->envp[i])-len - 1);
+            return value;
+        }
         i++;
     }
-    free(key);
-    if (!env->envp[i])
-        return (NULL);
-    temp = ft_substr(env->envp[i], j + 1, ft_strlen(env->envp[i]) - j + 1);
-    temp2 = ft_substr(str, j + 1, ft_strlen(str) - j + 1);
-    final = ft_strjoin(temp, temp2);
-	free(temp);
-	free(temp2);
-	return (final);
+    return NULL;
+	// int		j;
+    // int     i;
+	// char	*temp;
+	// char	*temp2;
+	// char	*final;
+    // char    *key;
+
+	// j = 0;
+    // while (str[j] && str[j] != '=')
+    //     j++;
+    // if (str[j] && str[j] != '=')
+    //     return (NULL);
+    // key = ft_substr(str, 0, j);
+    // if (!key)
+    //     return (NULL);
+    // i = 0;
+    // while (env->envp[i])
+    // {
+    //     if (ft_strncmp(env->envp[i], key, j) == 0 && env->envp[i][j] == '=')
+    //         break ;
+    //     i++;
+    // }
+    // free(key);
+    // if (!env->envp[i])
+    //     return (NULL);
+    // temp = ft_substr(env->envp[i], j + 1, ft_strlen(env->envp[i]) - j + 1);
+    // temp2 = ft_substr(str, j + 1, ft_strlen(str) - j + 1);
+    // final = ft_strjoin(temp, temp2);
+	// free(temp);
+	// free(temp2);
+	// return (final);
 }
 
 char *expand_env(char *line, int *i, t_env *env)
@@ -130,10 +130,10 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
     (*i)++;
     while(line[*i] && line[*i] != quote_type)
     {
-        if(quote_type == '"' && line[*i] == '$')
+        if(quote_type == '"' && line[*i] == '$' && line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
         {
-            if(line[*i] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
-            {
+            // if(line[*i] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
+            // {
                 temp = expand_env(line, i, env);
                 if(temp)
                 {
@@ -142,15 +142,15 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
                     free(old_res);
                     free(temp);
                 } // check it all free as lldb.
-            }
-            else
-            {
-                char cpy[2] = {'$', '\0'};
-                char *old_res = result;
-                result = ft_strjoin(result, cpy);
-                free(old_res);
-                (*i)++;
-            }
+            // }
+            // else
+            // {
+            //     char cpy[2] = {'$', '\0'};
+            //     char *old_res = result;
+            //     result = ft_strjoin(result, cpy);
+            //     free(old_res);
+            //     (*i)++;
+            // }
         }
         else
         {

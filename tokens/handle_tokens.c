@@ -70,6 +70,13 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
 
     while(line[*i] && line[*i] != ' ' && line[*i] != '|' && line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
     {
+        // Add backslash rules!
+        // if(line[*i] == '\\')
+        // {
+
+        // }
+
+
         if(line[*i] == '"')
         {
             temp = process_quoted(line, i, '"', env);
@@ -104,8 +111,9 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
                 return;
             }
         }
-        else if (line[*i] == '$' && (line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?')))
+        else if (line[*i] == '$' && (line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?' || line[*i + 1] == '"')))
         {
+            // (*i)++;
             temp = expand_env(line, i, env);
             if(temp)
             {
