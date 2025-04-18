@@ -40,6 +40,12 @@ char	**tokens_to_args(t_token *tokens)
 	args = malloc((count_token_args(tokens) + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);
+	// while(args[i])
+	// {
+	// 	DEBUG_PRINT(RED"ARGS[%d]: %s\n"RESET, i, args[i]);
+	// 	i++;
+	// }
+	// i = 0;
 	tmp = tokens;
 	while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
 		&& tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_REDIRECT_OUT
@@ -144,6 +150,7 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
         i = 0;
         while (args[i])
         {
+			// DEBUG_PRINT(MGNT"ARGS[%d]: %s\n"RESET, i, args[i]);
             i++;
         }
         
@@ -152,6 +159,8 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
         {
             execute_with_redirection(args, env, out_fd, save_stdout);
         }
+
+		
         
         // clean_2d(args);
         args = NULL;

@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+
+
 char  *handle_tilde(char *line, int *i, t_env *env)
 {
     int j = 0;
@@ -37,6 +39,22 @@ char  *handle_tilde(char *line, int *i, t_env *env)
 
 static char	*get_path(char *str, t_env *env)
 {
+    // int i;
+    // int len;
+    // char *value;
+
+    // len = ft_strlen(str);
+    // i = 0;
+    // while(env->envp[i])
+    // {
+    //     if(ft_strncmp(env->envp[i], str, len) == 0 && env->envp[i][len] == '=')
+    //     {
+    //         value = ft_substr(env->envp[i], len+1, ft_strlen(env->envp[i])-len - 1);
+    //         return value;
+    //     }
+    //     i++;
+    // }
+    // return NULL;
 	int		j;
     int     i;
 	char	*temp;
@@ -89,8 +107,7 @@ char *expand_env(char *line, int *i, t_env *env)
 
     while(line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
     {
-        var_name[j++] = line[*i];
-        (*i)++;
+        var_name[j++] = line[(*i)++];
     }
     var_name[j] = '\0';
     value = get_path(var_name, env);
@@ -104,13 +121,14 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
     // int start = *i + 1;
     char *result = ft_strdup("");
     char *temp;
+    // char quo_char = line[*i];
 
     (*i)++;
     while(line[*i] && line[*i] != quote_type)
     {
         if(quote_type == '"' && line[*i] == '$')
         {
-            if(line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
+            if(line[*i] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
             {
                 temp = expand_env(line, i, env);
                 if(temp)
@@ -159,11 +177,11 @@ char    *extract_word( char *line, int *i)
 
     while(line[*i] && line[*i] != ' ' && line[*i] != '|' && line[*i] != '<' && line[*i] != '>' && line[*i] != '\'' && line[*i] != '"')
     {
-        char cpy[2] = {line[*i], '\0'};
-        char *old_res = result;
-        result = ft_strjoin(result, cpy);
-        free(old_res);
-        (*i)++;
+            char cpy[2] = {line[*i], '\0'};
+            char *old_res = result;
+            result = ft_strjoin(result, cpy);
+            free(old_res);
+            (*i)++;
 
     }
     return (result);
@@ -173,6 +191,7 @@ char    *extract_word( char *line, int *i)
 t_token *handle_special_token(char *line, int *i, t_env *env)
 {
     t_token *token;
+    // char *flg_quoted;
 
     token = malloc(sizeof(t_token));
     if(!token)
@@ -209,7 +228,7 @@ void seperated_token(char *line, t_token **head, t_env *env)
     while(line[i])
     {
         // split spaces
-        while(line[i] == ' ')
+        while(line[i] && line[i] == ' ')
             i++;
         if(line[i] == '\0')
             break;

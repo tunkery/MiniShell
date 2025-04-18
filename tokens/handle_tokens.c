@@ -60,6 +60,7 @@ void    handle_semic(t_token *token, int *i)
     (*i)++;
 }
 
+
 void    handle_word(t_token *token, char *line, int *i, t_env *env)
 {
     token->type = TOKEN_WORD;
@@ -109,6 +110,7 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
         {
             // token->type = TOKEN_WORD;
             token->value = extract_word(line, i);
+
         }
     }
 }
