@@ -226,6 +226,8 @@ void    handle_redirect_in(t_token *token, char *line, int *i);
 void    handle_redirect_out(t_token *token, char *line, int *i);
 void    handle_semic(t_token *token, int *i);
 void    handle_word(t_token *token, char *line, int *i, t_env *env);
+t_token *handle_variable_assign(char *line, int *i);
+int assign_with_quoted(char *line, int i);
 // Tokenizer utils
 int ft_strcmp(const char *s1, const char *s2);
 // Validate syntax for redirect

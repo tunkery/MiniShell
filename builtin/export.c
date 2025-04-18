@@ -33,6 +33,7 @@ static int	valid_name(char *str)
 			}
 			i++;
 		}
+		free(temp);
 	}
 	else
 	{

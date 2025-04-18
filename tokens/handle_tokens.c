@@ -60,50 +60,87 @@ void    handle_semic(t_token *token, int *i)
     (*i)++;
 }
 
+
 void    handle_word(t_token *token, char *line, int *i, t_env *env)
 {
+    char *result = ft_strdup("");
+    char *temp;
+
     token->type = TOKEN_WORD;
-    if(line[*i] == '"')
+
+    while(line[*i] && line[*i] != ' ' && line[*i] != '|' && line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
     {
-        // token->type = TOKEN_WORD;
-        token->value = process_quoted(line, i, '"', env);
-    }
-    else if(line[*i] == '\'') 
-    {
-        // token->type = TOKEN_WORD;
-        token->value = process_quoted(line, i, '\'', env);
-    }
-    else // without quote
-    {
-        if(line[*i] == '$')
+        if(line[*i] == '"')
         {
-            if(line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
+            temp = process_quoted(line, i, '"', env);
+            if(temp)
             {
-                token->value = expand_env(line, i, env);
-                if(!token->value)
-                {
-                    token->value = ft_strdup("");
-                    // free(token);
-                    // return ;
-                }
+                char *old_res = result;
+                result = ft_strjoin(result, temp);
+                free(old_res);
+                free(temp);
+            }
+            else
+            {
+                free(result);
+                token->value = NULL;
+                return;
+            }
+        }
+        else if(line[*i] =='\'')
+        {
+            temp = process_quoted(line, i, '\'', env);
+            if(temp)
+            {
+                char *old_res = result;
+                result = ft_strjoin(result, temp);
+                free(old_res);
+                free(temp);
+            }
+            else
+            {
+                free(result);
+                token->value = NULL;
+                return;
+            }
+        }
+        else if (line[*i] == '$' && (line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?')))
+        {
+            temp = expand_env(line, i, env);
+            if(temp)
+            {
+                char *old_res = result;
+                result = ft_strjoin(result, temp);
+                free(old_res);
+                free(temp);
+            }
+            else
+            {
+                char *old_res = result;
+                result = ft_strjoin(result, temp);
+                free(old_res);
             }
         }
         else if(line[*i] == '~' &&(line[*i + 1] == '/' || line[*i + 1] == '\0' || line[*i+1] == ' '))
         {
-            token->value = handle_tilde(line, i, env);
-            if(line[*i] == '/')
+            temp = handle_tilde(line, i, env);
+            if(temp)
             {
-                char *path_part = extract_word(line, i);
-                char *temp = token->value;
-                token->value = ft_strjoin(temp, path_part);
+                char *old_res = result;
+                result = ft_strjoin(result, temp);
+                free(old_res);
                 free(temp);
-                free(path_part);
             }
         }
         else
         {
-            // token->type = TOKEN_WORD;
-            token->value = extract_word(line, i);
+            char cpy[2] = {line[*i], '\0'};
+            char *old_res = result;
+            result = ft_strjoin(result, cpy);
+            free(old_res);
+            (*i)++;
         }
-    }
+
+   }
+   token->value = result;
 }
