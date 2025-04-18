@@ -427,6 +427,11 @@
 # VSCODE_PROFILE_INITIALIZED=1
 # _=/Users/hpehliva/MiniShell/./minishell
 
+18-) bash-3.2$ cd ..$PWD
+     bash: cd: ../Users/bolcay/Desktop: No such file or directory
+
+     minishell> cd ..$PWD
+     minishell: cd: ..$PWD: No such file or directory
 
 ------------------------------------------------------------------------------------
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 12:51:44 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/18 15:10:43 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,37 @@ char	**remove_env(char **envp, char *key)
 	return (new_env);
 }
 
+static void	shell_level_ex(char ***str, int i)
+{
+	char	*value;
+	char	*temp;
+	char	*temp2;
+	int		digit;
+
+	while ((*str)[i] && ft_strncmp((*str)[i], "SHLVL", 5) != 0)
+		i++;
+	if ((*str)[i][8])
+		value = ft_substr((*str)[i], 6, 3);
+	else if ((*str)[i][7])
+		value = ft_substr((*str)[i], 6, 2);
+	else
+		value = ft_substr((*str)[i], 6, 1);
+	digit = ft_atoi(value);
+	free((*str)[i]);
+	digit++;
+	if (value)
+		free(value);
+	value = ft_itoa(digit);
+	temp = ft_strjoin("SHLVL=", value);
+	temp2 = copy_ex_helper(temp);
+	free(temp);
+	if (value)
+		free(value);
+	(*str)[i] = ft_strdup(temp2);
+	if (temp2)
+		free(temp2);
+}
+
 static void	shell_level(char ***str, int i)
 {
 	char	*value;
@@ -100,9 +131,9 @@ void	initiate_env(t_env *env, char **envp)
 
 	i = 0;
 	copy_env(envp, &(env->envp));
-	copy_env(envp, &(env->export));
+	copy_ex(envp, &(env->export));
 	shell_level(&(env->envp), 0);
-	shell_level(&(env->export), 0);
+	shell_level_ex(&(env->export), 0);
 	env->exit_code = 0;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
