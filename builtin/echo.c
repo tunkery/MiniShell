@@ -57,12 +57,12 @@ void run_echo(char **args, t_env *env)
 
     
     // Check for $? (exit status)
-    if (args[1] && args[1][0] == '$' && args[1][1] == '?' && !args[1][2])
-    {
-        printf("%d\n", env->exit_code);
-        env->exit_code = 0;
-        return;
-    }
+    // if (args[1] && args[1][0] == '$' && args[1][1] == '?' && !args[1][2])
+    // {
+    //     printf("%d\n", env->exit_code);
+    //     env->exit_code = 0;
+    //     return;
+    // }
             
     // If no arguments, just print newline
     if (!args[1])
