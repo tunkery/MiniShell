@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_tokens.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:35:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/15 17:08:27 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/17 15:17:53 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,6 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
                     // free(token);
                     // return ;
                 }
-            }
-            else
-            {
-                token->value = ft_strdup("$");
-                (*i)++;
             }
         }
         else if(line[*i] == '~' &&(line[*i + 1] == '/' || line[*i + 1] == '\0' || line[*i+1] == ' '))

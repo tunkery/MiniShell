@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/17 13:41:34 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/17 13:57:06 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,13 @@ void	checker(char *str, int name_c, int *check, t_env *env)
 	{
 		fprintf(stderr, "minishell: export: '%s': not a valid identifier\n", str);
 		env->exit_code = 1;
-		*check = 1;
+		(*check) = 1;
 	}
 	else if (name_c == -2)
 	{
 		fprintf(stderr, "minishell: export: %s: invalid option\n", str);
 		env->exit_code = 2;
-		*check = 2;
+		(*check) = 2;
 	}
 	else if (name_c == -3)
 	{

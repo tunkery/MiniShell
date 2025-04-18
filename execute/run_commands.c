@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_commands.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 11:37:04 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/17 15:23:22 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 		if (execve(exe, args, env->envp) == -1)
 		{
 			perror("execvp Failed");
-			free(exe);
+			if (exe)
+				free(exe);
 			exit(127);
 		}
 	}
