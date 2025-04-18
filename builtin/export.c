@@ -93,12 +93,6 @@ void	run_export(char **args, t_env *env)
 		env->exit_code = 0;
 		return ;
 	}
-	// while(args[i])
-	// {
-	// 	DEBUG_PRINT(CYAN"ARGS[%d]: %s\n"RESET, i, args[i]);
-	// 	i++;
-	// }
-	i = 0;
 	while (args[j])
 	{
 		name_c = name_check(args[j]);
