@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/18 16:08:06 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/18 16:55:09 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,6 @@ void	export1(char *str, t_env *env)
 	{
 		if (duplicate_check_ex(str, env) == 0 && duplicate_check_env(str, env) == 0)
 		{
-			printf("hii\n");
 			duplicate_fix_ex(str, env);
 			duplicate_fix_env(str, env);
 		}
@@ -137,7 +136,6 @@ void	export1(char *str, t_env *env)
 			duplicate_fix_ex(str, env);
 		else
 		{
-			printf("hii2\n");
 			env->envp = update_env(env->envp, str);
 			env->export = update_ex(env->export, str);
 		}
