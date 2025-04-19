@@ -18,39 +18,39 @@
 #     Press Ctrl + \.
 #     Verify that cat is terminated with a "Quit" message.
     
-3-) Pipe komutu:
-    3.1-) Test 1
-            echo -n "No new line" | cat -e
-            [DEBUG] Starting token seperation for line: 'echo -n "No new line" | cat -e'
-            [DEBUG] Extracted word: 'echo' (start = 0, end = 4) 
-            [DEBUG] Created token: type= 0, value = 'echo' 
-            [DEBUG] Extracted word: '-n' (start = 5, end = 7) 
-            [DEBUG] Created token: type= 0, value = '-n' 
-            [DEBUG] Processed quoted string: 'No new line' (start = 9, end = 21)
-            [DEBUG] Created token: type= 0, value = 'No new line' 
-            [DEBUG] Created token: type= 1, value = '|' 
-            [DEBUG] Extracted word: 'cat' (start = 24, end = 27) 
-            [DEBUG] Created token: type= 0, value = 'cat' 
-            [DEBUG] Extracted word: '-e' (start = 28, end = 30) 
-            [DEBUG] Created token: type= 0, value = '-e' 
-            [DEBUG] Token seperation completed
-            [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
-            [DEBUG] Starting Cell_lounch
-            [DEBUG] Args created
-            [DEBUG] Args[0]: echo
-            [DEBUG] Args[1]: -n
-            [DEBUG] Args[2]: No new line
-            [DEBUG] Running echo
-            [DEBUG] Check is 1: Flag detected
-            No new line  [DEBUG] Echo completed // Dolar sembolu fln yok burayi pipe ekleyip gelistirmek lazim!!
-            [DEBUG] Ending Cell_lounch
-            [DEBUG] Freeing token matrix
-            [DEBUG] Freeing token: type=0, value= 'echo'
-            [DEBUG] Freeing token: type=0, value= '-n'
-            [DEBUG] Freeing token: type=0, value= 'No new line'
-            [DEBUG] Freeing token: type=1, value= '|'
-            [DEBUG] Freeing token: type=0, value= 'cat'
-            [DEBUG] Freeing token: type=0, value= '-e'
+# 3-) Pipe komutu:
+#     3.1-) Test 1
+#             echo -n "No new line" | cat -e
+#             [DEBUG] Starting token seperation for line: 'echo -n "No new line" | cat -e'
+#             [DEBUG] Extracted word: 'echo' (start = 0, end = 4) 
+#             [DEBUG] Created token: type= 0, value = 'echo' 
+#             [DEBUG] Extracted word: '-n' (start = 5, end = 7) 
+#             [DEBUG] Created token: type= 0, value = '-n' 
+#             [DEBUG] Processed quoted string: 'No new line' (start = 9, end = 21)
+#             [DEBUG] Created token: type= 0, value = 'No new line' 
+#             [DEBUG] Created token: type= 1, value = '|' 
+#             [DEBUG] Extracted word: 'cat' (start = 24, end = 27) 
+#             [DEBUG] Created token: type= 0, value = 'cat' 
+#             [DEBUG] Extracted word: '-e' (start = 28, end = 30) 
+#             [DEBUG] Created token: type= 0, value = '-e' 
+#             [DEBUG] Token seperation completed
+#             [DEBUG] Tokenizer finished, head token: type= 0, value = 'echo'
+#             [DEBUG] Starting Cell_lounch
+#             [DEBUG] Args created
+#             [DEBUG] Args[0]: echo
+#             [DEBUG] Args[1]: -n
+#             [DEBUG] Args[2]: No new line
+#             [DEBUG] Running echo
+#             [DEBUG] Check is 1: Flag detected
+#             No new line  [DEBUG] Echo completed // Dolar sembolu fln yok burayi pipe ekleyip gelistirmek lazim!!
+#             [DEBUG] Ending Cell_lounch
+#             [DEBUG] Freeing token matrix
+#             [DEBUG] Freeing token: type=0, value= 'echo'
+#             [DEBUG] Freeing token: type=0, value= '-n'
+#             [DEBUG] Freeing token: type=0, value= 'No new line'
+#             [DEBUG] Freeing token: type=1, value= '|'
+#             [DEBUG] Freeing token: type=0, value= 'cat'
+#             [DEBUG] Freeing token: type=0, value= '-e'
 
 # 4-)  echo $? sembolun eklenmesi gerekiyorr!! Bunun sonucunda cikti bize bir numara veriyor. 
 #     Konuyu arastirip kodu eklemeliyiz!
@@ -324,68 +324,68 @@
 #         [DEBUG] Ending Cell_lounch
 
 
-11-) echo "MErhabalar" << file.txt
-        Bu komutlari arastir.
+# 11-) echo "MErhabalar" << file.txt
+#         Bu komutlari arastir.
 
 
 
-12-) Bash:
-        1-D-25:MiniShell hpehliva$ '$PWD'
-        bash: $PWD: command not found
-        1-D-25:MiniShell hpehliva$ "$PWD"
-        bash: /Users/hpehliva/MiniShell: is a directory
-    Minishell:
-        minishell> '$PWD'
-        [DEBUG] Starting token seperation for line: ''$PWD''
-        [DEBUG] Processed quoted string: '$PWD' (start = 1, end = 6)
-        [DEBUG] Created token: type= 0, value = '$PWD' 
-        [DEBUG] Created token: type= 0, value = '$PWD' 
-        [DEBUG] Tokenizer finished, head token: type= 0, value = '$PWD'
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: $PWD
-        minishell: /Users/hpehliva/MiniShell: is a directory
-        [DEBUG] exit status: 126
-        [DEBUG] Command executed
-        [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
-        minishell> "$PWD"
-        [DEBUG] Starting token seperation for line: '"$PWD"'
-        [DEBUG] Hello I'm here [DEBUG] Expanding env var: 'PWD'
-        [DEBUG] Found value: '/Users/hpehliva/MiniShell'
-        [DEBUG] Processed quoted string: '/Users/hpehliva/MiniShell' (start = 1, end = 6)
-        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
-        [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
-        [DEBUG] Tokenizer finished, head token: type= 0, value = '/Users/hpehliva/MiniShell'
-        [DEBUG] Starting Cell_lounch
-        [DEBUG] Args created
-        [DEBUG] Args[0]: /Users/hpehliva/MiniShell
-        execvp Failed: Permission denied
-        [DEBUG] exit status: 127
-        [DEBUG] Command executed
-        [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
-        minishell> 
+# 12-) Bash:
+#         1-D-25:MiniShell hpehliva$ '$PWD'
+#         bash: $PWD: command not found
+#         1-D-25:MiniShell hpehliva$ "$PWD"
+#         bash: /Users/hpehliva/MiniShell: is a directory
+#     Minishell:
+#         minishell> '$PWD'
+#         [DEBUG] Starting token seperation for line: ''$PWD''
+#         [DEBUG] Processed quoted string: '$PWD' (start = 1, end = 6)
+#         [DEBUG] Created token: type= 0, value = '$PWD' 
+#         [DEBUG] Created token: type= 0, value = '$PWD' 
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = '$PWD'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: $PWD
+#         minishell: /Users/hpehliva/MiniShell: is a directory
+#         [DEBUG] exit status: 126
+#         [DEBUG] Command executed
+#         [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
+#         minishell> "$PWD"
+#         [DEBUG] Starting token seperation for line: '"$PWD"'
+#         [DEBUG] Hello I'm here [DEBUG] Expanding env var: 'PWD'
+#         [DEBUG] Found value: '/Users/hpehliva/MiniShell'
+#         [DEBUG] Processed quoted string: '/Users/hpehliva/MiniShell' (start = 1, end = 6)
+#         [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+#         [DEBUG] Created token: type= 0, value = '/Users/hpehliva/MiniShell' 
+#         [DEBUG] Tokenizer finished, head token: type= 0, value = '/Users/hpehliva/MiniShell'
+#         [DEBUG] Starting Cell_lounch
+#         [DEBUG] Args created
+#         [DEBUG] Args[0]: /Users/hpehliva/MiniShell
+#         execvp Failed: Permission denied
+#         [DEBUG] exit status: 127
+#         [DEBUG] Command executed
+#         [DEBUG] Skip execution due to redirection failed! [DEBUG] Ending Cell_lounch
+#         minishell> 
 
-# 13-) echo $? komutu cat << END (heredoc için düzgün çalışmıyor sebep sinyalle alakali!!)
+# # 13-) echo $? komutu cat << END (heredoc için düzgün çalışmıyor sebep sinyalle alakali!!)
     
-# 14-) tokenleri alirken ~ isaretini gorunce tokenizer onu getenv("HOME"); ile home variable'ina cevirip vermeli.
+# # 14-) tokenleri alirken ~ isaretini gorunce tokenizer onu getenv("HOME"); ile home variable'ina cevirip vermeli.
 
-15-) export a="asd" b="de" o= c="hellomi" X gibi bir sey yazildiginda bunu soyle almamiz lazim:
-        args[0] = export
-        args[1] = a=asd
-        args[2] = b=de
-        args[3] = o=
-        args[4] = c=hellomi
-        args[5] = X
-    ama suan boyle aliyoruz
-        args[0] = export
-        args[1] = a=
-        args[2] = asd
-        args[3] = b=
-        args[4] = de
-        args[5] = o=
-        args[6] = c=
-        args[7] = hellomi
-        args[8] = X
+# 15-) export a="asd" b="de" o= c="hellomi" X gibi bir sey yazildiginda bunu soyle almamiz lazim:
+#         args[0] = export
+#         args[1] = a=asd
+#         args[2] = b=de
+#         args[3] = o=
+#         args[4] = c=hellomi
+#         args[5] = X
+#     ama suan boyle aliyoruz
+#         args[0] = export
+#         args[1] = a=
+#         args[2] = asd
+#         args[3] = b=
+#         args[4] = de
+#         args[5] = o=
+#         args[6] = c=
+#         args[7] = hellomi
+#         args[8] = X
 
 # 16-) terminale $ yazildiginda argumanlara bunu $ olarak vermiyor baska bir seye ceviriyor mesela
 #      echo "$ " yazildiginda $ vermesi lazim ama bizimki bosluk veriyor.
@@ -427,11 +427,17 @@
 # VSCODE_PROFILE_INITIALIZED=1
 # _=/Users/hpehliva/MiniShell/./minishell
 
-18-) bash-3.2$ cd ..$PWD
-     bash: cd: ../Users/bolcay/Desktop: No such file or directory
+# 18-) bash-3.2$ cd ..$PWD
+#      bash: cd: ../Users/bolcay/Desktop: No such file or directory
 
-     minishell> cd ..$PWD
-     minishell: cd: ..$PWD: No such file or directory
+#      minishell> cd ..$PWD
+#      minishell: cd: ..$PWD: No such file or directory
+
+
+19-)
+
+    echo test1		test2
+    echo -n test1		test2
 
 ------------------------------------------------------------------------------------
 

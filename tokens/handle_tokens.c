@@ -68,7 +68,7 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
 
     token->type = TOKEN_WORD;
 
-    while(line[*i] && line[*i] != ' ' && line[*i] != '|' && line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
+    while(line[*i] && line[*i] != ' '  && line[*i] != '\t' && line[*i] != '|' && line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
     {
         //Add backslash rules!
         if(line[*i] == '\\')
