@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/19 15:32:04 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/19 16:14:14 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,20 +53,20 @@ static int	name_check(char *args)
 		return (-1);
 	else if (append_check(args) != 0)
 		return (-3);
-	else if (ft_strchr(args, '-') != 0)
-		return (-2);
-	else if (ft_strchr(args, ' ') != 0)
-		return (-1);
-	else if (ft_strchr(args, 9) != 0)
-		return (-1);
-	else if (ft_strchr(args, 10) != 0)
-		return (-1);
-	else if (ft_strchr(args, 11) != 0)
-		return (-1);
-	else if (ft_strchr(args, 12) != 0)
-		return (-1);
-	else if (ft_strchr(args, 13) != 0)
-		return (-1);
+	// else if (ft_strchr(args, '-') != 0)
+	// 	return (-2);
+	// else if (ft_strchr(args, ' ') != 0)
+	// 	return (-1);
+	// else if (ft_strchr(args, 9) != 0)
+	// 	return (-1);
+	// else if (ft_strchr(args, 10) != 0)
+	// 	return (-1);
+	// else if (ft_strchr(args, 11) != 0)
+	// 	return (-1);
+	// else if (ft_strchr(args, 12) != 0)
+	// 	return (-1);
+	// else if (ft_strchr(args, 13) != 0)
+	// 	return (-1);
 	else if (ft_isdigit(args[0]) != 0)
 		return (-1);
 	else if (args[0] == '=')
@@ -82,6 +82,7 @@ void	run_export(char **args, t_env *env)
 	int	j;
 	int	check;
 	int	name_c;
+	// char	*key;
 
 	i = 0;
 	j = 1;
@@ -95,6 +96,7 @@ void	run_export(char **args, t_env *env)
 	}
 	while (args[j])
 	{
+		// printf("%s\n", args[j]);
 		name_c = name_check(args[j]);
 		if (name_c != 0)
 			checker(args[j], name_c, &check, env);
