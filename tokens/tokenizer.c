@@ -228,7 +228,7 @@ void seperated_token(char *line, t_token **head, t_env *env)
     while(line[i])
     {
         // split spaces
-        while(line[i] && line[i] == ' ')
+        while(line[i] && (line[i] == ' ' || line[i] == '\t'))
             i++;
         if(line[i] == '\0')
             break;

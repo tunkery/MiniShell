@@ -15,6 +15,17 @@
 	This function will work only for flags!!
 */
 
+// static char is_tab(char *str)
+// {
+//     if(!str)
+//         return 0;
+//     while(*str == 9)
+//     {
+//         str++;
+//     }
+//     return *str;
+// }
+
 // artik duzgun calisiyooooo!!!
 /*
  * Check if the string is a valid -n flag
@@ -35,6 +46,43 @@ static int is_n_flag(char *str)
     
     return (i > 1); // At least one 'n' after the dash
 }
+
+
+
+/* Tab and space */
+
+// static char *space_and_tab(char *str)
+// {
+//     if(!str)
+//         return NULL;
+    
+//     char *result = malloc(ft_strlen(str) + 1);
+//     if(!result)
+//         return NULL;
+//     int i = 0;
+//     int j = 0;
+//     // int flag = 0;
+//     while(str[i])
+//     {
+//         if(str[i] == '\t')
+//         {
+//             result[j++] = ' ';
+//         }
+//         else
+//         {
+//             result[j++] = str[i];
+//         }
+//         i++;
+//     }
+
+//     // if(j > 0 && result[j] == ' ')
+//     //      j--;
+
+//     result[j] = '\0';
+
+//     return result;
+
+// }
 
 /*
  * Handle the special case of $? (exit status)
@@ -82,16 +130,34 @@ void run_echo(char **args, t_env *env)
     }
     
     // Print arguments with spaces between them
-    int first = 1;
-    while (args[i])
+    int flag = 1;
+    while(args[i])
     {
-        if (!first)
+        
+        if(!flag)
             printf(" ");
         printf("%s", args[i]);
-        first = 0;
+        flag = 0;
         i++;
     }
-    
+    // int first = 1;
+    // while (args[i])
+    // {
+        
+    //     char *result = space_and_tab(args[i]);
+    //     if(!result)
+    //     {
+    //         env->exit_code = 1;
+    //         return;
+    //     }
+    //     if (!first)
+    //     {
+    //         printf(" ");
+    //     printf("%s", result);
+    //     free(result);
+    //     first = 0;
+    //     i++;
+    // }
     // Add newline if -n flag wasn't provided
     if (check == 0)
         printf("\n");
