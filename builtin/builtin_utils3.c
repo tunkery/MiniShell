@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/18 16:55:09 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/19 15:40:25 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	duplicate_check_env(char *str, t_env *env)
 	i = 0;
 	while (env->envp && env->envp[i])
 	{
-		if (ft_strncmp(env->envp[i], str, size) == 0 && env->envp[i][size + 1] == '=')
+		if (ft_strncmp(env->envp[i], str, size) == 0 && env->envp[i][size + 1] == '=' && key_size(env->envp[i]) == size
+			&& env->envp[i][0] == str[0])
 		{
 			// if (size != key_size(env->envp[i]))
 			// 	i++;
@@ -38,16 +39,17 @@ int	duplicate_check_env(char *str, t_env *env)
 	return (0);
 }
 
-int	duplicate_check_ex(char *args, t_env *env)
+int	duplicate_check_ex(char *str, t_env *env)
 {
 	int		i;
 	int		size;
 
-	size = key_size(args);
+	size = key_size(str);
 	i = 0;
 	while (env->export && env->export[i])
 	{
-		if (ft_strncmp(env->export[i], args, size) == 0 && env->export[i][size + 1] == '=')
+		if (ft_strncmp(env->export[i], str, size) == 0 && env->export[i][size + 1] == '=' && key_size(env->export[i]) == size
+			&& env->export[i][0] == str[0])
 		{
 			// if (size != key_size(env->export[i]))
 			// 	i++;
@@ -133,7 +135,9 @@ void	export1(char *str, t_env *env)
 			duplicate_fix_env(str, env);
 		}
 		else if (duplicate_check_ex(str, env) == 0)
+		{
 			duplicate_fix_ex(str, env);
+		}
 		else
 		{
 			env->envp = update_env(env->envp, str);
@@ -141,7 +145,9 @@ void	export1(char *str, t_env *env)
 		}
 	}
 	else
+	{
 		env->export = update_ex(env->export, str);
+	}
 }
 
 void	checker(char *str, int name_c, int *check, t_env *env)
