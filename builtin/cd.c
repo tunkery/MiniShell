@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/17 15:29:39 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/19 15:01:26 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,17 @@ void	run_cd(char **args, t_env *env)
 	char	*old_pwd;
 	char	*temp;
 	int		check;
+	int		i;
 
+	i = 0;
+	while (args[i])
+		i++;
+	if (i > 2)
+	{
+		fprintf(stderr, "minishell: cd: too many arguments\n");
+		env->exit_code = 1;
+		return ;
+	}
 	temp = NULL;
 	check = 0;
 	path = getenv("HOME");
@@ -123,7 +133,11 @@ void	run_cd(char **args, t_env *env)
 	}
 	else if (args[1][0] == '-')
 	{
-		if (!old_pwd || ft_strncmp(old_pwd, "OLDPWD=", 7) != 0)
+		if (args[1][1] && args[1][1] == '-')
+		{
+			env->exit_code = chdir(path);
+		}
+		else if (!old_pwd || ft_strncmp(old_pwd, "OLDPWD=", 7) != 0)
 		{
 			fprintf(stderr, "minishell: cd: OLDPWD not set\n");
 			env->exit_code = 1;

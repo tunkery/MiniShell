@@ -439,6 +439,10 @@
     echo test1		test2
     echo -n test1		test2
 
+19-) "" bunu yazinca bizde direkt newline veriyor ve exit kodunu guncellemiyor cunku run commands fonksiyonuna gitmesi lazimken gitmiyor.
+     bashte bunu aliyoruz:
+        ~/School/MiniShell$ ""
+        bash: : command not found
 ------------------------------------------------------------------------------------
 
 #Pipe 
