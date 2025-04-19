@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/18 17:20:59 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/19 13:58:34 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	run_unset(char **args, t_env *env)
 	}
 	if (args[1][0] == 0)
 	{
-		fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
+		// fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
 		env->exit_code = 1;
 		return ;
 	}
@@ -108,13 +108,13 @@ void	run_unset(char **args, t_env *env)
 	}
 	else if (valid_name(args[1]) != 0)
 	{
-		fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
+		// fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
 		env->exit_code = 1;
 		return ;
 	}
 	if (args[1][0] == '=')
 	{
-		fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
+		// fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
 		env->exit_code = 1;
 		return ;
 	}
