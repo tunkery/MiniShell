@@ -162,6 +162,7 @@ void	initiate_env(t_env *env, char **envp)
 	shell_level(&(env->envp), 0);
 	shell_level_ex(&(env->export), 0);
 	env->exit_code = 0;
+	env->save_stdin = -1;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
 	env->curr_pwd = ft_strdup(env->envp[i]);

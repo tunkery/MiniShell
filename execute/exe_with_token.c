@@ -12,6 +12,7 @@
 
 #include "../minishell.h"
 
+
 void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 {
 	if(*current && (*current)->type == TOKEN_WORD)
@@ -19,10 +20,13 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 		*in_fd = open((*current)->value, O_RDONLY);
 		if(*in_fd < 0)
 		{
-			perror(CYAN"Open failed!"RESET);
-			clean_2d(args);
-			*args = NULL;
+			write(2, "minishell: ", 11);
+			write(2, (*current)->value,ft_strlen((*current)->value));
+			write(2,": No such file or directory\n", 29);
+			// perror(CYAN"Open failed!"RESET);
+			// clean_2d(args);
 			env->exit_code = 1;
+			*args = NULL;
 			return;
 		}
 		*current = (*current)->next;
@@ -33,9 +37,9 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 		{
 			close(*in_fd);
 			perror("dub2 failed for redirected!");
-			*args = NULL;
-			clean_2d(args);
+			// clean_2d(args);
 			env->exit_code = 1;
+			*args = NULL;
 			return ;
 		}
 		close(*in_fd);
@@ -112,6 +116,7 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 		int append)
 {
 	int	flag;
+	int new_fd;
 
 	flag = O_WRONLY | O_CREAT;
 	if (append)
@@ -120,12 +125,18 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 		flag |= O_TRUNC;
 	if (*current && (*current)->type == TOKEN_WORD)
 	{
-		*out_fd = open((*current)->value, flag, 0644); // Uzerine yazdiriyor.
-		if (*out_fd < 0)
+		new_fd= open((*current)->value, flag, 0644); // Uzerine yazdiriyor.
+		if (new_fd < 0)
 		{
-			perror("open failed!");
-			clean_2d(args);
+			write(2, "minishell: ", 11);
+			write(2, (*current)->value,ft_strlen((*current)->value));
+			write(2,": No such file or directory\n", 29);
+			*args = NULL;
 			return ;
 		}
+		if(*out_fd != STDOUT_FILENO)
+			close(*out_fd);
+		*out_fd = new_fd;
+		*current = (*current)->next;
 	}
 }

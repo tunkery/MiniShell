@@ -63,6 +63,7 @@ typedef struct s_env
 	char	**path;
 	char	*path1;
 	int		syntax_error;
+	int 	save_stdin;
 }	t_env;
 
 typedef struct s_pipe_command
@@ -105,6 +106,13 @@ typedef	struct s_token
 	struct s_token *next;
 	struct s_token *prev; // next token
 }	t_token;
+
+// typedef struct s_heredoc_status
+// {
+// 	int curr_stdin;
+// 	int curr_stdout;
+// 	int mark;
+// } t_heredoc_status;
 
 
 
@@ -151,7 +159,8 @@ char	**remove_env(char **envp, char *key);
 
 // Execute functions
 char	*find_exec(char *command, char *path_variable, int i, int j);
-void	handle_redirection(t_token **current, char **args, int *out_fd, char **heredoc_input, t_env *env);
+void	handle_redirection(t_token **current, char **args, int *out_fd,
+	char **heredoc_input, t_env *env);
 void	execute_with_redirection(char **args, t_env *env, int out_fd, int save_stdout);
 void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env);
 void	exec_without_pipes(t_token *tokens, t_env *env);

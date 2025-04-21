@@ -24,7 +24,7 @@ void print_syntax_message(char *str, t_env *env)
 int validate_redirect_syntax(t_token *tokens, t_env *env)
 {
     t_token *tmp = tokens;
-
+    env->exit_code = 0;
     while(tmp)
     {
         if(tmp->type == TOKEN_REDIRECT_IN || tmp->type == TOKEN_REDIRECT_OUT || 
@@ -50,7 +50,7 @@ int validate_redirect_syntax(t_token *tokens, t_env *env)
 int validate_pipe_syntax(t_token *tokens, t_env *env)
 {
     t_token *tmp = tokens;
-
+    env->exit_code = 0;
     // For only one pipe!
     if(tmp && tmp->type == TOKEN_PIPE)
     {
@@ -88,15 +88,16 @@ int validate_pipe_syntax(t_token *tokens, t_env *env)
 int validate_syntax(t_token *tokens, t_env *env)
 {
     if(!tokens)
-        return 1;
+    return 1;
     if(!validate_redirect_syntax(tokens, env))
     {
+        env->exit_code = 2;
 
         return 0;
     }
     if(!validate_pipe_syntax(tokens,env))
     {
-
+        env->exit_code = 2;
         return 0;
     }
     return 1;

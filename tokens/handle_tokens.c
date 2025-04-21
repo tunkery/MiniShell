@@ -27,6 +27,8 @@ void    handle_redirect_in(t_token *token, char *line, int *i)
         token->type = TOKEN_HEREDOC;
         token->value = ft_strdup("<<");
         *i += 2;
+        while(line[*i] && line[*i] == ' ')
+            (*i)++;
     }
     else
     {

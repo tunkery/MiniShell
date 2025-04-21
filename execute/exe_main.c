@@ -14,44 +14,72 @@
 
 static int count_token_args(t_token *tmp)
 {
-	int count;
+	t_token *tokens;
+	t_token *next = NULL;
+	int total;
 
-	count = 0;
-	while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
-		&& tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_REDIRECT_OUT
-		&& tmp->type != TOKEN_REDIRECT_IN && tmp->type != TOKEN_HEREDOC
-		&& tmp->type != TOKEN_PIPE)
+	tokens = tmp;
+	total = 0;
+	while (tokens && tokens->type != TOKEN_SEMIC && tokens->type != TOKEN_PIPE)
 	{
-		if (tmp->type == TOKEN_WORD)
-			count++;
-		tmp = tmp->next;
+		if(tokens == next)
+		{
+			next = NULL;
+			tokens = tokens->next;
+			continue;
+		}
+		if(tokens->type == TOKEN_REDIRECT_APPEND
+			|| tokens->type == TOKEN_HEREDOC ||
+			tokens->type == TOKEN_REDIRECT_OUT ||
+			 tokens->type == TOKEN_REDIRECT_IN || 
+			 tokens->type == TOKEN_HEREDOC)
+			 {
+				next = tokens->next;
+				tokens = tokens->next;
+				continue;
+			 }
+		if (tokens->type == TOKEN_WORD)
+		{
+			total++;
+		}
+		tokens = tokens->next;
 	}
-	return (count);
+	return (total);
 }
 
 char	**tokens_to_args(t_token *tokens)
 {
 	t_token	*tmp;
+	t_token *next = NULL;
 	char	**args;
 	int		i;
+	int total;
 
-	tmp = tokens;
-	i = 0;
-	args = malloc((count_token_args(tokens) + 1) * sizeof(char *));
+	total = count_token_args(tokens);
+
+	args = malloc((total + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);
-	// while(args[i])
-	// {
-	// 	DEBUG_PRINT(RED"ARGS[%d]: %s\n"RESET, i, args[i]);
-	// 	i++;
-	// }
-	// i = 0;
 	tmp = tokens;
-	while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_REDIRECT_APPEND
-		&& tmp->type != TOKEN_HEREDOC && tmp->type != TOKEN_REDIRECT_OUT
-		&& tmp->type != TOKEN_REDIRECT_IN && tmp->type != TOKEN_HEREDOC
-		&& tmp->type != TOKEN_PIPE)
+	i = 0;
+	while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_PIPE)
 	{
+		if(tmp == next)
+		{
+			next = NULL;
+			tmp = tmp->next;
+			continue;
+		}
+		if(tmp->type == TOKEN_REDIRECT_APPEND
+			|| tmp->type == TOKEN_HEREDOC ||
+			tmp->type == TOKEN_REDIRECT_OUT ||
+			 tmp->type == TOKEN_REDIRECT_IN || 
+			 tmp->type == TOKEN_HEREDOC)
+			 {
+				next = tmp->next;
+				tmp = tmp->next;
+				continue;
+			 }
 		if (tmp->type == TOKEN_WORD)
 			args[i++] = ft_strdup(tmp->value);
 		tmp = tmp->next;
@@ -94,23 +122,40 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 0);
+			if(!*args)
+			{
+				return ;
+			}
+			
 		}
 		else if (*current && (*current)->type == TOKEN_REDIRECT_IN) // <
 		{
 			*current = (*current)->next;
 			read_redirected_in(current, &in_fd, args, env);
 			if(!*args)
+			{
 				return ;
+			}
 		}
 		else if ((*current)->type == TOKEN_REDIRECT_APPEND) // >>
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 1);
+			if(!*args)
+			{
+				return ;
+			}
+			if(!*current)
+				break;
 		}
 		else if ((*current)->type == TOKEN_HEREDOC) // <<
 		{
 			*current = (*current)->next;
 			process_child_heredoc(current, heredoc_input, args, env);
+			if(!*args)
+			{
+				return ;
+			}
 		}
 		else
 			(*current) = (*current)->next;
@@ -127,7 +172,7 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
     int		save_stdout;
     int		save_stdin;
     char	*heredoc_input;
-    int		i;
+    // int		i;
 
     tmp = tokens;
     args = NULL;
@@ -147,13 +192,18 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
                 tmp = tmp->next;
             continue;
         }
-        i = 0;
-        while (args[i])
-        {
-			// DEBUG_PRINT(MGNT"ARGS[%d]: %s\n"RESET, i, args[i]);
-            i++;
-        }
+        // i = 0;
+        // while (args[i])
+        // {
+		// 	// DEBUG_PRINT(MGNT"ARGS[%d]: %s\n"RESET, i, args[i]);
+        //     i++;
+        // }
+		if (out_fd != STDOUT_FILENO)
+            close(out_fd);
+        out_fd = STDOUT_FILENO;
         
+		env->exit_code = 0;
+
         handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
         if(args && args[0] && args[0][0] != '\0')
         {
@@ -161,8 +211,6 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
         }
 
 		
-        
-        // clean_2d(args);
         args = NULL;
         
         if (out_fd != STDOUT_FILENO)
