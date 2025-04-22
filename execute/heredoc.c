@@ -66,10 +66,11 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 	return (result);
 }
 
+
 /*
 	24.03.2025 Heredoc duzgun calismiyordu. Cevre degiskenlerini genisletecek bir yardimci fonksiyon eklemek lazim.
 */
-char	*handler_heredoc(char *delimiter, t_env *env)
+char	*handler_heredoc(char *delimiter, t_env *env,int quote_mode)
 {
 	char	*line;
 	char	*result;
@@ -80,15 +81,24 @@ char	*handler_heredoc(char *delimiter, t_env *env)
 	{
 		line = readline("> ");
 		if (!line)
-		{
 			break ;
-		}
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break ;
 		}
-		result = process_heredoc_line(line, result, env);
+		if(quote_mode)
+		{
+			char *temp = result;
+			result = ft_strjoin(result,line);
+			free(temp);
+
+			temp = result;
+			result = ft_strjoin(result, "\n");
+			free(temp);
+		}
+		else
+			result = process_heredoc_line(line, result, env);
 		free(line);
 	}
 	return (result);

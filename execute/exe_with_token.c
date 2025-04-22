@@ -20,12 +20,10 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 		*in_fd = open((*current)->value, O_RDONLY);
 		if(*in_fd < 0)
 		{
+			env->exit_code = 1;
 			write(2, "minishell: ", 11);
 			write(2, (*current)->value,ft_strlen((*current)->value));
 			write(2,": No such file or directory\n", 29);
-			// perror(CYAN"Open failed!"RESET);
-			// clean_2d(args);
-			env->exit_code = 1;
 			*args = NULL;
 			return;
 		}
@@ -35,10 +33,9 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 	{
 		if(dup2(*in_fd, STDIN_FILENO) == -1)
 		{
+			env->exit_code = 1;
 			close(*in_fd);
 			perror("dub2 failed for redirected!");
-			// clean_2d(args);
-			env->exit_code = 1;
 			*args = NULL;
 			return ;
 		}
@@ -53,7 +50,32 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 	// close the signal
 	set_signal_heredoc();
 
-	*heredoc_input = handler_heredoc((*current)->value, env);
+	int quote_mode = 0;
+	if((*current)->prev && (*current)->prev->value && ft_strncmp((*current)->prev->value, "<<'",3) == 0)
+	{
+		quote_mode = 1;
+	}
+
+	char *orj = ft_strdup((*current)->value);
+		
+	size_t len = ft_strlen(orj);
+	if (len >= 2 && orj[0] == '\'' && orj[len -1] == '\'')
+	{
+		char *unquoted = ft_substr(orj,1,len - 2);
+		free(orj);
+		orj = unquoted;
+
+	}
+
+	char *content = handler_heredoc(orj, env,quote_mode);
+	// if(quote_mode)
+	// {
+	// 	*heredoc_input = ft_strdup(content);
+	// }
+	// else
+	// 	*heredoc_input = ft_strdup(content);
+	free(orj);
+	*heredoc_input = content;
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
 	close(pipe_fd[1]);
 	free(*heredoc_input);
@@ -70,8 +92,7 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 		close(pipe_fd[0]);
 		return ;
 	}
-	// close(pipe_fd[0]);
-	// wait(NULL); // Alt sureci bekle
+
 	int status;
 	waitpid(pid, &status, 0);
 	if(WIFSIGNALED(status)) // IF child was terminated by a signal!

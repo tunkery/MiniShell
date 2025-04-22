@@ -207,7 +207,7 @@ int preprocess_heredocs(t_token **seg, int seg_count, t_env *env);
 int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env);
 char *expanded_heredoc_line(char *line, t_env *env);
 char	*process_heredoc_line(char *line, char *result, t_env *env);
-char *handler_heredoc(char *delimiter, t_env *env);
+char *handler_heredoc(char *delimiter, t_env *env,int quote_mode);
 char	*ft_strjoin_heredoc(char const *s1, char const *s2);
 
 // Deallocation functions
