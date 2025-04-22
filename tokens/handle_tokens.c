@@ -37,10 +37,14 @@ void    handle_redirect_in(t_token *token, char *line, int *i, t_env *env)
         if(line[*i] == '\'')
         {
             token->value = ft_strdup("<<'");
+            gc_register(env->s_gc, token->value);
             // (*i)++;
         }
         else
+        {
             token->value = ft_strdup("<<");
+            gc_register(env->s_gc, token->value);
+        }
         
 
     }

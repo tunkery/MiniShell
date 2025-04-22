@@ -190,12 +190,13 @@ void	initiate_env(t_env *env, char **envp)
 	{
 		env->old_pwd = ft_strdup(env->envp[i]);
 		if (!env->envp)
-			return ;
-		// gc_register(env->gc, env->envp[i]);
+		 	return ;
+		gc_register(env->gc, env->old_pwd);
 	}
 	env->path = malloc(sizeof(char **) * 2);
 	if (!env->path)
-		return ;
+	 	return ;
+	gc_register(env->gc, env->path);
 	env->path1 = getenv("PATH");
 }
 

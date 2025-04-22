@@ -94,8 +94,10 @@ char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 
 		}
 		else
+		{
 			result = process_heredoc_line(line, result, env);
-		gc_register(env->s_gc, result);
+			gc_register(env->s_gc, result);
+		}
 	}
 	return (result);
 }
