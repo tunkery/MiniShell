@@ -118,7 +118,7 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 	int in_fd = STDIN_FILENO;
 	while (*current && (*current)->type != TOKEN_SEMIC && (*current)->type != TOKEN_PIPE)
 	{
-		if ((*current)->type == TOKEN_REDIRECT_OUT) // >
+		if ((*current)->type == TOKEN_REDIRECT_OUT)
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 0);
@@ -128,7 +128,7 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 			}
 			
 		}
-		else if (*current && (*current)->type == TOKEN_REDIRECT_IN) // <
+		else if (*current && (*current)->type == TOKEN_REDIRECT_IN)
 		{
 			*current = (*current)->next;
 			read_redirected_in(current, &in_fd, args, env);
@@ -137,7 +137,7 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 				return ;
 			}
 		}
-		else if ((*current)->type == TOKEN_REDIRECT_APPEND) // >>
+		else if ((*current)->type == TOKEN_REDIRECT_APPEND)
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 1);
@@ -148,7 +148,7 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 			if(!*current)
 				break;
 		}
-		else if ((*current)->type == TOKEN_HEREDOC) // <<
+		else if ((*current)->type == TOKEN_HEREDOC)
 		{
 			*current = (*current)->next;
 			process_child_heredoc(current, heredoc_input, args, env);
@@ -172,7 +172,6 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
     int		save_stdout;
     int		save_stdin;
     char	*heredoc_input;
-    // int		i;
 
     tmp = tokens;
     args = NULL;
@@ -192,12 +191,6 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
                 tmp = tmp->next;
             continue;
         }
-        // i = 0;
-        // while (args[i])
-        // {
-		// 	// DEBUG_PRINT(MGNT"ARGS[%d]: %s\n"RESET, i, args[i]);
-        //     i++;
-        // }
 		if (out_fd != STDOUT_FILENO)
             close(out_fd);
         out_fd = STDOUT_FILENO;

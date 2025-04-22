@@ -35,10 +35,9 @@ static char	*expand_command_substitution(char *line, int *index, t_env *env)
 	if (line[*index] == ')')
 		(*index)++;
 	i = 0;
-	temp = expand_env(expand_line, &i, env); // It was about j
+	temp = expand_env(expand_line, &i, env);
 	return (temp);
 }
-/* This functions helps for expanded heredoc */
 
 char	*expanded_heredoc_line(char *line, t_env *env)
 {
@@ -67,16 +66,12 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 }
 
 
-/*
-	24.03.2025 Heredoc duzgun calismiyordu. Cevre degiskenlerini genisletecek bir yardimci fonksiyon eklemek lazim.
-*/
-char	*handler_heredoc(char *delimiter, t_env *env,int quote_mode)
+char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 {
 	char	*line;
 	char	*result;
 
 	result = ft_strdup("");
-	// char *expand_line;
 	while (1)
 	{
 		line = readline("> ");

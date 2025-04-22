@@ -36,8 +36,8 @@ void free_token_matrix(t_token *token)
     {
         temp = token;
         token = token->next;
-        free(temp->value); // free the vaue of token
-        free(temp); // free the struct of token
+        free(temp->value);
+        free(temp); 
     }
       
 }

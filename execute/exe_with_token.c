@@ -68,12 +68,6 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 	}
 
 	char *content = handler_heredoc(orj, env,quote_mode);
-	// if(quote_mode)
-	// {
-	// 	*heredoc_input = ft_strdup(content);
-	// }
-	// else
-	// 	*heredoc_input = ft_strdup(content);
 	free(orj);
 	*heredoc_input = content;
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
@@ -95,7 +89,7 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 
 	int status;
 	waitpid(pid, &status, 0);
-	if(WIFSIGNALED(status)) // IF child was terminated by a signal!
+	if(WIFSIGNALED(status))
 	{
 		close(pipe_fd[0]);
 		clean_2d(args);
@@ -118,7 +112,7 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 			perror("pipe failed!");
 			clean_2d(args);
 			return ;
-		} // Surecler arasi boruyu olusturur > alt surec icin
+		}
 		pid = fork();
 		if (pid == 0)
 			child_process_heredoc(pipe_fd, current, heredoc_input, env);
@@ -147,7 +141,7 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 		flag |= O_TRUNC;
 	if (*current && (*current)->type == TOKEN_WORD)
 	{
-		new_fd= open((*current)->value, flag, 0644); // Uzerine yazdiriyor.
+		new_fd= open((*current)->value, flag, 0644);
 		if (new_fd < 0)
 		{
 			write(2, "minishell: ", 11);

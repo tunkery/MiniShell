@@ -101,7 +101,6 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
                 free(old_res);
                 continue;
             }
-            /*finished_tokens*/
             char cpy[2] = {line[*i], '\0'};
             char *old_res = result;
             result = ft_strjoin(result, cpy);

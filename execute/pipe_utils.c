@@ -78,7 +78,6 @@ void wait_child_pipes(pid_t *pids, int seg_count, t_env *env)
     {
         waitpid(pids[i],&status,0);
 
-        // Store the exit code of the last process
         if(i == seg_count - 1)
         {
             if(WIFEXITED(status))

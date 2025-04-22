@@ -46,12 +46,10 @@ void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_f
     if(i > 0)
     {
         *in_fd = pipes[i-1][0];
-        // close(pipes[i-1][1]);// close write end of prev pipe
     }
     if(i < seg_count - 1)
     {
         *out_fd = pipes[i][1];
-        // close(pipes[i][0]);
     }
 
     while(j < seg_count - 1)
@@ -73,31 +71,28 @@ void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pip
 
     setup_child_pipes(pipes,i,seg_count,&in_fd,&out_fd);
 
-    // Apply seg redirection
     find_seg_redirect(&in_fd,&out_fd,seg_start,seg_end,env);
 
     if(!setup_io(in_fd,out_fd))
         exit(EXIT_FAILURE);
     
-    // We can seperate this part!!
     args = create_args_from_tokens(seg_start,seg_end);
     if(!args || !args[0])
     {
         if(args)
-            clean_2d(args);//free(args); I'm changing instead of free!
+            clean_2d(args);
         exit(EXIT_FAILURE);
     }
-    // Execute the command
     if(builtin_check(args))
     {
         run_builtin(args,env);
-        clean_2d(args); // Be sure!
+        clean_2d(args);
         exit(env->exit_code);
     }
     else
     {
         exec_command(args,env,STDOUT_FILENO);
-        clean_2d(args); // Be sure!
+        clean_2d(args);
         exit(env->exit_code);
     }
 }
@@ -131,7 +126,6 @@ int fork_cmd_process(t_token **segments, int seg_count, t_env *env, int **pipes,
 
 
 
-// Main function to execute piped commands
 void execute_piped_command(t_token *tokens, t_env *env)
 {
     int seg_count = 0;
@@ -150,7 +144,7 @@ void execute_piped_command(t_token *tokens, t_env *env)
          return;
      }
 
-    // Create pipes
+
     int **pipes = create_pipes(seg_count);
     if (!pipes && seg_count > 1) 
     {
@@ -158,7 +152,7 @@ void execute_piped_command(t_token *tokens, t_env *env)
         return;
     }
     
-    // Create array for process IDs
+
     pid_t *pids = malloc(sizeof(pid_t)* seg_count);
     if(!pids)
     {
@@ -168,7 +162,6 @@ void execute_piped_command(t_token *tokens, t_env *env)
         return ;
     }
     
-    // Fork processes for each segment
     if(!fork_cmd_process(segments,seg_count,env,pipes,pids))
     {
         if(pipes)

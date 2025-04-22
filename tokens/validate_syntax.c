@@ -57,9 +57,6 @@ int validate_pipe_syntax(t_token *tokens, t_env *env)
         print_syntax_message("|'", env);
         return 0;
     }
-    /*
-        -ls || wc
-    */
     while(tmp)
     {
         if(tmp->type == TOKEN_PIPE)
