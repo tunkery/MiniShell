@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 14:29:20 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/18 16:10:38 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 18:21:30 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char  *handle_tilde(char *line, int *i, t_env *env)
     else
         result = ft_strdup("~");
     free(home_path);
+    gc_register(env->s_gc, result);
     return(result);
 
 }
@@ -50,42 +51,12 @@ static char	*get_path(char *str, t_env *env)
         if(ft_strncmp(env->envp[i], str, len) == 0 && env->envp[i][len] == '=')
         {
             value = ft_substr(env->envp[i], len+1, ft_strlen(env->envp[i])-len - 1);
+            gc_register(env->s_gc, value);
             return value;
         }
         i++;
     }
     return NULL;
-	// int		j;
-    // int     i;
-	// char	*temp;
-	// char	*temp2;
-	// char	*final;
-    // char    *key;
-
-	// j = 0;
-    // while (str[j] && str[j] != '=')
-    //     j++;
-    // if (str[j] && str[j] != '=')
-    //     return (NULL);
-    // key = ft_substr(str, 0, j);
-    // if (!key)
-    //     return (NULL);
-    // i = 0;
-    // while (env->envp[i])
-    // {
-    //     if (ft_strncmp(env->envp[i], key, j) == 0 && env->envp[i][j] == '=')
-    //         break ;
-    //     i++;
-    // }
-    // free(key);
-    // if (!env->envp[i])
-    //     return (NULL);
-    // temp = ft_substr(env->envp[i], j + 1, ft_strlen(env->envp[i]) - j + 1);
-    // temp2 = ft_substr(str, j + 1, ft_strlen(str) - j + 1);
-    // final = ft_strjoin(temp, temp2);
-	// free(temp);
-	// free(temp2);
-	// return (final);
 }
 
 char *expand_env(char *line, int *i, t_env *env)
@@ -102,6 +73,7 @@ char *expand_env(char *line, int *i, t_env *env)
     {
         (*i)++;
         exit_status = ft_itoa(env->exit_code);
+        gc_register(env->s_gc, exit_status);
         return (exit_status);
     }
 
@@ -113,7 +85,12 @@ char *expand_env(char *line, int *i, t_env *env)
     value = get_path(var_name, env);
     if(value)
         return (value);
-    return ft_strdup("");
+    else
+    {
+        value = ft_strdup("");
+    }
+    gc_register(env->s_gc, value);
+    return (value);
 }
 
 char *process_quoted(char *line, int *i, char quote_type, t_env *env)
@@ -123,6 +100,7 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
     char *temp;
     // char quo_char = line[*i];
 
+    gc_register(env->s_gc, result);
     (*i)++;
     while(line[*i] && line[*i] != quote_type)
     {
@@ -133,10 +111,11 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
                 temp = expand_env(line, i, env);
                 if(temp)
                 {
-                    char *old_res = result;
+                    // char *old_res = result;
                     result = ft_strjoin(result, temp);
-                    free(old_res);
-                    free(temp);
+                    gc_register(env->s_gc, result);
+                    // free(old_res);
+                    // free(temp);
                 } // check it all free as lldb.
             // }
             // else
@@ -151,9 +130,10 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
         else
         {
             char cpy[2] = {line[*i], '\0'};
-            char *old_res = result;
+            // char *old_res = result;
             result = ft_strjoin(result, cpy);
-            free(old_res);
+            gc_register(env->s_gc, result);
+            // free(old_res);
             (*i)++;
         }
     }
@@ -161,7 +141,7 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
         (*i)++;
     else // single quote doesn't have expantation.
     {
-        free(result);
+        // free(result);
         return (NULL);
     }
     return (result);
@@ -169,18 +149,20 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
 
 
 
-char    *extract_word( char *line, int *i)
+char    *extract_word( char *line, int *i, t_env *env)
 {
     // int start = *i;
     char *result = ft_strdup("");
     // char *temp;
 
+    gc_register(env->s_gc, result);
     while(line[*i] && line[*i] != ' ' && line[*i] != '|' && line[*i] != '<' && line[*i] != '>' && line[*i] != '\'' && line[*i] != '"' && line[*i] != ';')
     {
             char cpy[2] = {line[*i], '\0'};
-            char *old_res = result;
+            // char *old_res = result;
             result = ft_strjoin(result, cpy);
-            free(old_res);
+            gc_register(env->s_gc, result);
+            // free(old_res);
             (*i)++;
 
     }
@@ -193,7 +175,7 @@ t_token *handle_special_token(char *line, int *i, t_env *env)
     t_token *token;
     // char *flg_quoted;
 
-    token = malloc(sizeof(t_token));
+    token = my_malloc(env->s_gc, sizeof(t_token));
     if(!token)
     {
         return NULL;
@@ -201,18 +183,18 @@ t_token *handle_special_token(char *line, int *i, t_env *env)
     token->next = NULL;
     token->prev = NULL;
     if(line[*i] == '|')
-        handle_pipe(token,i);
+        handle_pipe(token,i, env);
     else if(line[*i] == '<')
-        handle_redirect_in(token, line, i);
+        handle_redirect_in(token, line, i, env);
     else if(line[*i] == '>')
-        handle_redirect_out(token, line, i);
+        handle_redirect_out(token, line, i, env);
     else if(line[*i] == ';')
-        handle_semic(token, i);
+        handle_semic(token, i, env);
     else
-        handle_word(token, line, i,env);
+        handle_word(token, line, i, env);
     if(!token->value)
     {
-        free(token);
+        // free(token);
         return NULL;
     }
     token->next = NULL;
@@ -235,8 +217,8 @@ void seperated_token(char *line, t_token **head, t_env *env)
         token = handle_special_token(line, &i, env);
         if(!token)
         {
-            free_token_matrix(*head);
-            *head = NULL;
+            // free_token_matrix(*head);
+            // *head = NULL;
             return;
         }
 

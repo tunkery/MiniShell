@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 13:33:50 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/14 13:33:52 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:46:16 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int parent_process_heredoc_pipe(int *pipe_fd,pid_t pid,t_token *curr)
+static int parent_process_heredoc_pipe(int *pipe_fd,pid_t pid,t_token *curr, t_env *env)
 {
     close(pipe_fd[1]);
 
@@ -26,8 +26,9 @@ static int parent_process_heredoc_pipe(int *pipe_fd,pid_t pid,t_token *curr)
     char fd_str[16];
     snprintf(fd_str, sizeof(fd_str),"%d", pipe_fd[0]);
 
-    free(curr->value);
+    // free(curr->value);
     curr->value = ft_strdup(fd_str);
+    gc_register(env->s_gc, curr->value);
     curr->type = TOKEN_HEREDOC_PROCESSED;
     return 1;
 }
@@ -72,12 +73,12 @@ int preprocess_heredocs(t_token **seg, int seg_count, t_env *env)
                     heredoc_input = handler_heredoc(curr->next->value, env);
                     write(pipe_fd[1], heredoc_input,ft_strlen(heredoc_input));
                     close(pipe_fd[1]);
-                    free(heredoc_input);
+                    // free(heredoc_input);
                     exit(0);
                 }
                 else
                 {
-                    if(!parent_process_heredoc_pipe(pipe_fd,pid,curr))
+                    if(!parent_process_heredoc_pipe(pipe_fd,pid,curr, env))
                         return 0;
                     // close(pipe_fd[1]);
 
@@ -123,9 +124,9 @@ int count_pipe_seg(t_token * tokens)
 
 }
 
-t_token **seg_alloc(t_token *tokens, int seg_count)
+t_token **seg_alloc(t_token *tokens, int seg_count, t_env *env)
 {
-    t_token **segments = malloc(sizeof(t_token *) * (seg_count + 1));
+    t_token **segments = my_malloc(env->s_gc, sizeof(t_token *) * (seg_count + 1));
     if (!segments)
         return NULL;
     
@@ -146,11 +147,11 @@ t_token **seg_alloc(t_token *tokens, int seg_count)
     return segments;
 }
 
-t_token **find_pipe_seg(t_token *tokens, int *seg_count)
+t_token **find_pipe_seg(t_token *tokens, int *seg_count, t_env *env)
 {
     *seg_count = count_pipe_seg(tokens);
 
-    return seg_alloc(tokens,*seg_count);
+    return seg_alloc(tokens,*seg_count, env);
 }
 
 int count_args_seg(t_token *start,t_token *end)
@@ -182,9 +183,9 @@ int count_args_seg(t_token *start,t_token *end)
     return count;
 }
 
-char **args_from_token_alloc(t_token *start, t_token *end, int count)
+char **args_from_token_alloc(t_token *start, t_token *end, int count, t_env *env)
 {
-    char **args = malloc(sizeof(char *) * (count + 1));
+    char **args = my_malloc(env->s_gc, sizeof(char *) * (count + 1));
     if (!args) return NULL;
     
     // Fill the args array
@@ -206,7 +207,8 @@ char **args_from_token_alloc(t_token *start, t_token *end, int count)
                            tmp->prev->type == TOKEN_REDIRECT_OUT || 
                            tmp->prev->type == TOKEN_REDIRECT_APPEND || 
                            tmp->prev->type == TOKEN_HEREDOC))) {
-            args[i++] = ft_strdup(tmp->value);
+            args[i] = ft_strdup(tmp->value);
+            gc_register(env->s_gc, args[i++]);
         }
         tmp = tmp->next;
     }

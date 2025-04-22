@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:07:05 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/15 17:07:41 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 16:26:56 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*ft_strjoin_free(char *s1, char *s2)
 	char	*result;
 
 	result = ft_strjoin_heredoc(s1, s2);
-	free(s2);
+	// free(s2);
 	return (result);
 }
 
@@ -47,6 +47,7 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 	int		i;
 
 	result = ft_strdup("");
+	gc_register(env->s_gc, result);
 	i = 0;
 	while (line[i])
 	{
@@ -56,6 +57,7 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 			if (temp)
 			{
 				result = ft_strjoin_free(result, temp);
+				gc_register(env->s_gc, result);
 			}
 		}
 		else
@@ -75,6 +77,7 @@ char	*handler_heredoc(char *delimiter, t_env *env)
 	char	*result;
 
 	result = ft_strdup("");
+	gc_register(env->s_gc, result);
 	// char *expand_line;
 	while (1)
 	{
@@ -83,13 +86,15 @@ char	*handler_heredoc(char *delimiter, t_env *env)
 		{
 			break ;
 		}
+		gc_register(env->s_gc, line);
 		if (ft_strcmp(line, delimiter) == 0)
 		{
-			free(line);
+			// free(line);
 			break ;
 		}
 		result = process_heredoc_line(line, result, env);
-		free(line);
+		gc_register(env->s_gc, result);
+		// free(line);
 	}
 	return (result);
 }

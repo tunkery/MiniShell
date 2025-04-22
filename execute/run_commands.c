@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/19 17:10:06 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 19:39:36 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 		}
 		if (execve(exe, args, env->envp) == -1)
 		{
-			perror("execvp Failed");
-			if (exe)
-				free(exe);
+			// perror("execvp Failed");
+			// if (exe)
+			// 	free(exe);
 			exit(127);
 		}
 	}
@@ -174,7 +174,8 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		return ;
 	final = args[0];
 	path = find_path(env);
-	exec_path = find_exec(final, path, 0, 5);
+	exec_path = find_exec(final, path, 0, 5, env);
+	gc_register(env->s_gc, exec_path);
 	if (ft_strchr(final, '/')) // if, yani eger, biri path ile yazmissa komutu burasi kontrol edip calistiriyo
 		run_with_path(final, args, env, out_fd);
 	else
@@ -188,6 +189,6 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		else
 			run_without_path(args, env, out_fd, exec_path);
 	}
-	if (exec_path)
-		free(exec_path);
+	// if (exec_path)
+	// 	free(exec_path);
 }

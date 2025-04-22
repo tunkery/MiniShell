@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:24:26 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/15 17:07:05 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 16:29:47 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 	*heredoc_input = handler_heredoc((*current)->value, env);
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
 	close(pipe_fd[1]);
-	free(*heredoc_input);
+	// free(*heredoc_input);
 	exit(0);
 }
 
@@ -66,7 +66,7 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
 	{
 		perror("dub2 failed!\n");
-		clean_2d(args);
+		// clean_2d(args);
 		close(pipe_fd[0]);
 		return ;
 	}
@@ -77,7 +77,7 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 	if(WIFSIGNALED(status)) // IF child was terminated by a signal!
 	{
 		close(pipe_fd[0]);
-		clean_2d(args);
+		// clean_2d(args);
 		*args = NULL;
 		return;
 	}
@@ -95,7 +95,7 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		if (pipe(pipe_fd) == -1)
 		{
 			perror("pipe failed!");
-			clean_2d(args);
+			// clean_2d(args);
 			return ;
 		} // Surecler arasi boruyu olusturur > alt surec icin
 		pid = fork();
@@ -106,7 +106,7 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		else
 		{
 			perror("fork failed!");
-			clean_2d(args);
+			// clean_2d(args);
 			return ;
 		}
 		*current = (*current)->next;

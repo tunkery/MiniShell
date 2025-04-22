@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 16:02:56 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/13 16:02:58 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:41:37 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 
 // Helper function to create args array from tokens
-char **create_args_from_tokens(t_token *start, t_token *end)
+char **create_args_from_tokens(t_token *start, t_token *end, t_env *env)
 {
 
     if(!start)
         return NULL;
     int count = count_args_seg(start,end);
-    return args_from_token_alloc(start,end,count);
+    return args_from_token_alloc(start,end,count, env);
 }
 
 // I could compile with stardart handler with this but i have to check it more!! TODO!
@@ -90,7 +90,7 @@ void handle_heredoc_redirec(t_token **curr, int *in_fd,t_env *env)
             heredoc_input = handler_heredoc((*curr)->value, env);
             write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
             close(pipe_fd[1]);
-            free(heredoc_input);
+            // free(heredoc_input);
             
             *in_fd = pipe_fd[0];
         }

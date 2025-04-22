@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 16:02:31 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/16 11:35:35 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 19:02:54 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,24 +80,24 @@ void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pip
         exit(EXIT_FAILURE);
     
     // We can seperate this part!!
-    args = create_args_from_tokens(seg_start,seg_end);
+    args = create_args_from_tokens(seg_start,seg_end, env);
     if(!args || !args[0])
     {
-        if(args)
-            clean_2d(args);//free(args); I'm changing instead of free!
+        // if(args)
+        //     clean_2d(args);//free(args); I'm changing instead of free!
         exit(EXIT_FAILURE);
     }
     // Execute the command
     if(builtin_check(args))
     {
         run_builtin(args,env);
-        clean_2d(args); // Be sure!
+        // clean_2d(args); // Be sure!
         exit(env->exit_code);
     }
     else
     {
         exec_command(args,env,STDOUT_FILENO);
-        clean_2d(args); // Be sure!
+        // clean_2d(args); // Be sure!
         exit(env->exit_code);
     }
 }
@@ -135,7 +135,7 @@ int fork_cmd_process(t_token **segments, int seg_count, t_env *env, int **pipes,
 void execute_piped_command(t_token *tokens, t_env *env)
 {
     int seg_count = 0;
-    t_token **segments = find_pipe_seg(tokens, &seg_count);
+    t_token **segments = find_pipe_seg(tokens, &seg_count, env);
     
     if (!segments || seg_count <= 0) {
         return;
@@ -146,7 +146,7 @@ void execute_piped_command(t_token *tokens, t_env *env)
 
     if(!preprocess_heredocs(segments,seg_count,env))
     {
-         free(segments);
+        //  free(segments);
          return;
      }
 
@@ -154,17 +154,17 @@ void execute_piped_command(t_token *tokens, t_env *env)
     int **pipes = create_pipes(seg_count);
     if (!pipes && seg_count > 1) 
     {
-        free(segments);
+        // free(segments);
         return;
     }
     
     // Create array for process IDs
-    pid_t *pids = malloc(sizeof(pid_t)* seg_count);
+    pid_t *pids = my_malloc(env->s_gc, sizeof(pid_t)* seg_count);
     if(!pids)
     {
         if(pipes)
             cleanup_pipes(pipes, seg_count);
-        free(segments);
+        // free(segments);
         return ;
     }
     
@@ -173,8 +173,8 @@ void execute_piped_command(t_token *tokens, t_env *env)
     {
         if(pipes)
             cleanup_pipes(pipes,seg_count);
-        free(pids);
-        free(segments);
+        // free(pids);
+        // free(segments);
         return ;
     }
 
@@ -185,6 +185,6 @@ void execute_piped_command(t_token *tokens, t_env *env)
     wait_child_pipes(pids,seg_count, env);
 
     
-    free(pids);
-    free(segments);
+    // free(pids);
+    // free(segments);
 }

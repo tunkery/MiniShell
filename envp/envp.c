@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 14:18:55 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 19:58:47 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,14 @@ static void	shell_level_ex(char ***str, int i, t_env *env)
 	char	*temp;
 	char	*temp2;
 	int		digit;
+	size_t	slen;
 
 	while ((*str)[i] && ft_strncmp((*str)[i], "SHLVL", 5) != 0)
 		i++;
-	if ((*str)[i][8])
+	slen = ft_strlen((*str)[i]);
+	if (slen >= 9)
 		value = ft_substr((*str)[i], 6, 3);
-	else if ((*str)[i][7])
+	else if (slen >= 8)
 		value = ft_substr((*str)[i], 6, 2);
 	else
 		value = ft_substr((*str)[i], 6, 1);
@@ -139,12 +141,14 @@ static void	shell_level(char ***str, int i, t_env *env)
 	char	*value;
 	char	*temp;
 	int		digit;
+	size_t	slen;
 
 	while ((*str)[i] && ft_strncmp((*str)[i], "SHLVL", 5) != 0)
 		i++;
-	if ((*str)[i][8])
+	slen = ft_strlen((*str)[i]);
+	if (slen >= 9)
 		value = ft_substr((*str)[i], 6, 3);
-	else if ((*str)[i][7])
+	else if (slen >= 8)
 		value = ft_substr((*str)[i], 6, 2);
 	else
 		value = ft_substr((*str)[i], 6, 1);
@@ -197,21 +201,26 @@ void	initiate_env(t_env *env, char **envp)
 
 // helper function that's needed for the find_exec
 
-static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len)
+static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env *env)
 {
 	char	*new_s;
 	size_t	i;
 	size_t	s_len;
+	(void)env;
 
 	if (!s)
 		return (NULL);
 	i = 0;
 	s_len = ft_gnl_strlen(s);
 	if (start >= s_len)
-		return (ft_gnl_strdup(""));
+	{
+		new_s = ft_gnl_strdup("");
+		gc_register(env->s_gc, new_s);
+		return (new_s);
+	}
 	if (len > s_len - start)
 		len = s_len - start;
-	new_s = (char *)malloc(len + 1);
+	new_s = (char *)malloc(len + 2);
 	if (!new_s)
 		return (NULL);
 	while (i < len && s[start + i] != ':')
@@ -221,15 +230,11 @@ static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len)
 	}
 	new_s[i++] = '/';
 	new_s[i] = '\0';
+	gc_register(env->s_gc, new_s);
 	return (new_s);
 }
 
-// finds the path to the executable we want to run
-/*
-	Execution part start in here!!
-*/
-
-char	*find_exec(char *command, char *path, int i, int j)
+char	*find_exec(char *command, char *path, int i, int j, t_env *env)
 {
 	char *temp;
 
@@ -239,12 +244,15 @@ char	*find_exec(char *command, char *path, int i, int j)
 	{
 		while (path[i] && path[i] && path[i] != ':')
 			i++;
-		temp = ft_gnls_substr(path, j, i - 4);
+		temp = ft_gnls_substr(path, j, i - 4, env);
 		if(!temp)
 			return (NULL);
 		temp = ft_strjoin(temp, command);
 		if (access(temp, X_OK) == 0)
+		{
+			gc_register(env->s_gc, temp);
 			return (temp);
+		}
 		free(temp);
 		temp = NULL;
 		if(!path[i])

@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:46:37 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/22 13:54:13 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 20:03:03 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void    *my_malloc(t_gc *gc, int size)
     mem = malloc(size);
     if (!mem)
         return (NULL);
-    node = malloc(sizeof(t_gc_node));
+    node = malloc(sizeof *node);
     if (!node)
     {
         free(mem);
@@ -44,10 +44,19 @@ void    *my_malloc(t_gc *gc, int size)
 void    gc_register(t_gc *gc, void *ptr)
 {
     t_gc_node   *node;
+    t_gc_node   *check;
 
     if (!gc || !ptr)
         return ;
-    node = malloc(sizeof(node));
+    check = gc->head;
+    while (check)
+    {
+        if (check->ptr == ptr)
+            return ;
+        check = check->next;
+    }
+    
+    node = malloc(sizeof *node);
     if (!node)
         return ;
     node->ptr = ptr;
@@ -70,6 +79,22 @@ void    gc_unregister(t_gc *gc, void *ptr)
         }
         curr = &(*curr)->next;
     }
+}
+
+void    gc_clear(t_gc *gc)
+{
+    t_gc_node   *curr;
+    t_gc_node   *next;
+
+    curr = gc->head;
+    while (curr)
+    {
+        next = curr->next;
+        free(curr->ptr);
+        free(curr);
+        curr = next;
+    }
+    gc->head = NULL;
 }
 
 void    gc_free_all(t_gc *gc)

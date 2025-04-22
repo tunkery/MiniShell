@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 13:37:39 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 20:14:07 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int main(int ac, char **av, char **envp)
     t_env   *env = NULL;
     t_token *tokens;
     t_gc    *gc;
-    // t_gc    *s_gc;
+    t_gc    *s_gc;
 	(void)av;
     (void)ac;
 
@@ -118,10 +118,16 @@ int main(int ac, char **av, char **envp)
     initiate_env(env, envp);
     while(1)
     {
+        s_gc = gc_new();
+        if (!s_gc)
+            break ;
+        env->s_gc = s_gc;
         signal_mode_read();
         line = user_input();
         if(!line)
-            break; // We can add free(line) here. or each links free it. // TODO Exit_shell add here!
+            free(line);
+        else // We can add free(line) here. or each links free it. // TODO Exit_shell add here!
+            gc_register(env->s_gc, line);
         tokens = tokenizer(line, env);
         if(!tokens)
         {
@@ -131,8 +137,8 @@ int main(int ac, char **av, char **envp)
         // initiate_env(env, envp);
         signal_mode_command();
         cell_launch(tokens, env); // a function that runs the programs in the computer
-        free_token_matrix(tokens);
-        free(line);
+        // free_token_matrix(tokens);
+        gc_free_all(env->s_gc);
         // added_process(line, envp);
     }
     gc_free_all(gc);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/17 15:36:32 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 16:21:05 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int count_token_args(t_token *tmp)
 	return (total);
 }
 
-char	**tokens_to_args(t_token *tokens)
+char	**tokens_to_args(t_token *tokens, t_env *env)
 {
 	t_token	*tmp;
 	t_token *next = NULL;
@@ -57,7 +57,7 @@ char	**tokens_to_args(t_token *tokens)
 
 	total = count_token_args(tokens);
 
-	args = malloc((total + 1) * sizeof(char *));
+	args = my_malloc(env->s_gc, (total + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);
 	tmp = tokens;
@@ -81,7 +81,11 @@ char	**tokens_to_args(t_token *tokens)
 				continue;
 			 }
 		if (tmp->type == TOKEN_WORD)
-			args[i++] = ft_strdup(tmp->value);
+		{
+			args[i] = ft_strdup(tmp->value);
+			gc_register(env->s_gc, args[i]);
+			i++;
+		}
 		tmp = tmp->next;
 	}
 	args[i] = NULL;
@@ -183,7 +187,7 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
 
     while (tmp)
     {
-        args = tokens_to_args(tmp);
+        args = tokens_to_args(tmp, env);
         if (!args)
         {
             while (tmp && tmp->type != TOKEN_SEMIC)
@@ -215,7 +219,7 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
 
 		if(heredoc_input)
 		{
-			free(heredoc_input);
+			// free(heredoc_input);
 			heredoc_input = NULL;
 		}
         
