@@ -141,6 +141,15 @@ void execute_piped_command(t_token *tokens, t_env *env)
         return;
     }
     
+    set_signal_pipe();
+
+
+    if(!preprocess_heredocs(segments,seg_count,env))
+    {
+         free(segments);
+         return;
+     }
+
     // Create pipes
     int **pipes = create_pipes(seg_count);
     if (!pipes && seg_count > 1) 

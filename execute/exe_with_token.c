@@ -51,7 +51,7 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 {
 	close(pipe_fd[0]);
 	// close the signal
-	signal(SIGINT,SIG_DFL);
+	set_signal_heredoc();
 
 	*heredoc_input = handler_heredoc((*current)->value, env);
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
@@ -70,12 +70,13 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 		close(pipe_fd[0]);
 		return ;
 	}
-	close(pipe_fd[0]);
+	// close(pipe_fd[0]);
 	// wait(NULL); // Alt sureci bekle
 	int status;
 	waitpid(pid, &status, 0);
 	if(WIFSIGNALED(status)) // IF child was terminated by a signal!
 	{
+		close(pipe_fd[0]);
 		clean_2d(args);
 		*args = NULL;
 		return;

@@ -108,6 +108,7 @@ typedef enum e_token_type
 	TOKEN_REDIRECT_OUT, // >
 	TOKEN_REDIRECT_APPEND, // >>
 	TOKEN_HEREDOC, // <<
+	TOKEN_HEREDOC_PROCESSED,
 	TOKEN_SEMIC, // ;
 	TOKEN_END,
 }	t_token_type;
@@ -182,7 +183,6 @@ char	*find_exec(char *command, char *path_variable, int i, int j);
 void	handle_redirection(t_token **current, char **args, int *out_fd,
 	char **heredoc_input, t_env *env);
 void	execute_with_redirection(char **args, t_env *env, int out_fd, int save_stdout);
-void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env);
 void	exec_without_pipes(t_token *tokens, t_env *env);
 char **create_args_from_tokens(t_token *start, t_token *end);
 t_token **find_pipe_seg(t_token *tokens, int *seg_count);
@@ -221,6 +221,7 @@ t_token **seg_alloc(t_token *tokens, int seg_count);
 t_token **find_pipe_seg(t_token *tokens, int *seg_count);
 int count_args_seg(t_token *start,t_token *end);
 char **args_from_token_alloc(t_token *start, t_token *end, int count);
+int preprocess_heredocs(t_token **seg, int seg_count, t_env *env);
 
 // Heredoc functions
 int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env);
@@ -238,6 +239,8 @@ void    sigint_handler_read(int signo);
 void    signal_mode_command(void);
 void    sigint_handler_command(int signo);
 void    turn_off_echo(void);
+void set_signal_heredoc(void);
+void set_signal_pipe(void);
 
 // Tokenizer
 t_token    *tokenizer(char *line, t_env *env);

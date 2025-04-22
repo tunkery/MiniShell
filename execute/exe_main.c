@@ -212,10 +212,16 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
 
 		
         args = NULL;
+
+		if(heredoc_input)
+		{
+			free(heredoc_input);
+			heredoc_input = NULL;
+		}
         
+        out_fd = STDOUT_FILENO;
         if (out_fd != STDOUT_FILENO)
             close(out_fd);
-        out_fd = STDOUT_FILENO;
         
         if (dup2(save_stdin, STDIN_FILENO) == -1)
             perror("dup2 failed to restore STDIN");
