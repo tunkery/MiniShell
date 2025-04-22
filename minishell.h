@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/18 15:16:50 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 12:52:33 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,22 @@ typedef struct s_builtin
 	int		(*foo)(char **args);
 }	t_builtin;
 
+typedef struct s_gc_node
+{
+	void				*ptr;
+	struct s_gc_node	*next;
+}	t_gc_node;
+
+typedef struct s_gc
+{
+	t_gc_node	*head;
+}	t_gc;
+
+
 typedef struct s_env
 {
+	t_gc	*gc;
+	t_gc	*s_gc;
 	char	**envp;
 	char	**export;
 	int		exit_code;
@@ -115,7 +129,12 @@ typedef	struct s_token
 // } t_heredoc_status;
 
 
+// Garbage collector
 
+t_gc    *gc_new(void);
+void    *my_malloc(t_gc *gc, int size);
+void    gc_register(t_gc *gc, void *ptr);
+void    gc_free_all(t_gc *gc);
 
 // Builtin functions
 

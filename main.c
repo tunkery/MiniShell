@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/17 15:30:11 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 12:45:33 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int main(int ac, char **av, char **envp)
     char   *line;
     t_env   *env = NULL;
     t_token *tokens;
+    t_gc    *gc;
+    t_gc    *s_gc;
 	(void)av;
     (void)ac;
 
