@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:56:26 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/17 14:51:01 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 16:35:34 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*ft_strjoin_heredoc(char const *s1, char const *s2)
 		j++;
 	}
 	new_s[i + j] = '\0';
-	free((void*)s1);
+	// free((void*)s1);
 	return (new_s);
 }
 
@@ -53,12 +53,14 @@ int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env)
 		if (temp)
 		{
 			*result = ft_strjoin_heredoc(*result, temp);
-			free(temp);
+			gc_register(env->s_gc, *result);
+			// free(temp);
 		}
 	}
 	else
 	{
 		*result = ft_strjoin_heredoc(*result, cpy);
+		gc_register(env->s_gc, *result);
 		(*i)++;
 	}
 	return (*i);
@@ -80,13 +82,15 @@ char	*process_heredoc_line(char *line, char *result, t_env *env)
 			start = i;
 			expand_line = expanded_heredoc_line(&line[i], env);
 			result = ft_strjoin_heredoc(result, expand_line);
-			free(expand_line);
+			gc_register(env->s_gc, result);
+			// free(expand_line);
 			i = start + ft_strlen(&line[start]);
 		}
 		else
 		{
 			cpy[0] = line[i];
 			result = ft_strjoin_heredoc(result, cpy);
+			gc_register(env->s_gc, result);
 			i++;
 		}
 	}

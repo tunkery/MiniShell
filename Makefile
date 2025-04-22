@@ -6,7 +6,7 @@
 #    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/04/16 13:31:51 by batuhan          ###   ########.fr        #
+#    Updated: 2025/04/22 12:46:24 by batuhan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		execute/exe_main.c execute/heredoc.c execute/exe_with_token.c execute/run_commands.c \
 		execute/heredoc_utils.c envp/envp_utils2.c tokens/handle_tokens.c \
 		execute/pipe.c execute/pipe_utils.c parse_func/parsing.c tokens/validate_syntax.c \
-		parse_func/parse_utils.c builtin/builtin_utils2.c builtin/builtin_utils3.c
+		parse_func/parse_utils.c builtin/builtin_utils2.c builtin/builtin_utils3.c \
+		garbage_collector/garbage_collector.c 
 
 
 
