@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:25:02 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/22 14:56:07 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 20:48:03 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	append1(char *str, t_env *env, char *value, int i)
 {
 	char	*temp;
 
-	if (env->export[i])
+	if (env->export && env->export[i])
 	{
 		temp = append2(env->export[i], value);
 		free(env->export[i]);
@@ -141,7 +141,7 @@ void	append(char *str, t_env *env, char *value, int i)
 {
 	char	*temp;
 
-	if (env->envp[i])
+	if (env->envp && env->envp[i])
 	{
 		temp = ft_strjoin(env->envp[i], value);
 		// free(env->envp[i]);

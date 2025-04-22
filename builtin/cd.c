@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 14:48:24 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 20:48:48 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	*get_old_pwd(t_env *env)
 	char	*temp;
 	
 	j = 0;
-	while (env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
+	while (env->envp && env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
 		j++;
 	if (env->envp[j])
 		temp = ft_strdup(env->envp[j]);

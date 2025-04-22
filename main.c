@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 20:14:07 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 21:02:25 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,13 +125,16 @@ int main(int ac, char **av, char **envp)
         signal_mode_read();
         line = user_input();
         if(!line)
-            free(line);
-        else // We can add free(line) here. or each links free it. // TODO Exit_shell add here!
-            gc_register(env->s_gc, line);
+        {
+            gc_free_all(env->s_gc);
+            gc_free_all(env->gc);
+            return (0);
+        }
+        gc_register(env->s_gc, line);
         tokens = tokenizer(line, env);
         if(!tokens)
         {
-            free(line);
+            gc_free_all(env->s_gc);
             continue;
         }
         // initiate_env(env, envp);
@@ -141,6 +144,6 @@ int main(int ac, char **av, char **envp)
         gc_free_all(env->s_gc);
         // added_process(line, envp);
     }
-    gc_free_all(gc);
+    gc_free_all(env->gc);
 	return (0);
 }

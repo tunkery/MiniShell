@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 19:58:47 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 20:58:10 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	**remove_env(char **envp, char *key, t_env *env)
 	i = 0;
 	j = 0;
 	size = env_size(envp);
-	new_env = my_malloc(env->gc, sizeof(char *) * size);
+	new_env = my_malloc(env->gc, sizeof(char *) * (size + 1));
 	if (!new_env)
 		return (NULL);
 	while (envp[i])
@@ -193,10 +193,10 @@ void	initiate_env(t_env *env, char **envp)
 			return ;
 		// gc_register(env->gc, env->envp[i]);
 	}
-	env->path = malloc(sizeof(char **) * 2);
-	if (!env->path)
-		return ;
-	env->path1 = getenv("PATH");
+	// env->path = malloc(sizeof(char **) * 2);
+	// if (!env->path)
+	// 	return ;
+	// env->path1 = getenv("PATH");
 }
 
 // helper function that's needed for the find_exec
