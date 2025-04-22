@@ -69,21 +69,31 @@ void handle_heredoc_redirec(t_token **curr, int *in_fd,t_env *env)
     *curr = (*curr)->next;
     if(*curr && (*curr)->type == TOKEN_WORD)
     {
-        if (*in_fd != STDIN_FILENO)
-            close(*in_fd);
-        
-        int pipe_fd[2];
-        if (pipe(pipe_fd) == -1) {
-            perror("pipe failed");
-            exit(EXIT_FAILURE);
+        if((*curr)->prev && (*curr)->prev->type == TOKEN_WORD)
+        {
+            if (*in_fd != STDIN_FILENO)
+                close(*in_fd);
+
+            *in_fd = ft_atoi((*curr)->prev->value);
         }
+        else
+        {
+            if (*in_fd != STDIN_FILENO)
+                close(*in_fd);
         
-        heredoc_input = handler_heredoc((*curr)->value, env);
-        write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
-        close(pipe_fd[1]);
-        free(heredoc_input);
+            int pipe_fd[2];
+            if (pipe(pipe_fd) == -1) {
+                perror("pipe failed");
+                exit(EXIT_FAILURE);
+            }
         
-        *in_fd = pipe_fd[0];
+            heredoc_input = handler_heredoc((*curr)->value, env);
+            write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
+            close(pipe_fd[1]);
+            free(heredoc_input);
+            
+            *in_fd = pipe_fd[0];
+        }
     }
 }
 
@@ -96,14 +106,24 @@ void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t
     
     while (current && current != end && current->type != TOKEN_PIPE) 
     {
-        if(current->type == TOKEN_REDIRECT_OUT ||
+        if(current->type == TOKEN_HEREDOC_PROCESSED)
+        {
+            if(*in_fd != STDIN_FILENO)
+                close(*in_fd);
+            *in_fd = ft_atoi(current->value);
+            current = current->next->next;
+            continue;
+        }
+        else if(current->type == TOKEN_HEREDOC)
+            handle_heredoc_redirec(&current,in_fd,env);
+        else if (current->type == TOKEN_REDIRECT_OUT ||
             current->type == TOKEN_REDIRECT_APPEND ||
             current->type == TOKEN_REDIRECT_IN)
             handle_standard_redirec(&current,in_fd,out_fd);
-        else if(current->type == TOKEN_HEREDOC)
-            handle_heredoc_redirec(&current,in_fd,env);
-
-        if (current)
-            current = current->next;
+        else
+        {
+            if (current)
+                current = current->next;
+        }
     }
 }

@@ -12,6 +12,100 @@
 
 #include "../minishell.h"
 
+static int parent_process_heredoc_pipe(int *pipe_fd,pid_t pid,t_token *curr)
+{
+    close(pipe_fd[1]);
+
+    int status;
+    waitpid(pid,&status, 0);
+    if(WIFSIGNALED(status))
+    {
+        close(pipe_fd[0]);
+        return 0;
+    }
+    char fd_str[16];
+    snprintf(fd_str, sizeof(fd_str),"%d", pipe_fd[0]);
+
+    free(curr->value);
+    curr->value = ft_strdup(fd_str);
+    curr->type = TOKEN_HEREDOC_PROCESSED;
+    return 1;
+}
+
+int preprocess_heredocs(t_token **seg, int seg_count, t_env *env)
+{
+    int i = 0;
+    t_token *curr;
+    t_token *seg_end;
+    char *heredoc_input = NULL;
+    while(i < seg_count)
+    {
+        curr = seg[i];
+        if(i < seg_count -1)
+            seg_end = seg[i+1]->prev;
+        else
+            seg_end = NULL;
+        
+        while(curr && curr != seg_end && curr->type != TOKEN_PIPE)
+        {
+            if(curr->type == TOKEN_HEREDOC && curr->next && curr->next->type == TOKEN_WORD)
+            {
+                int pipe_fd[2];
+                if(pipe(pipe_fd) == -1)
+                {
+                    perror("pipe failed");
+                    return 0;
+                }
+
+                pid_t pid = fork();
+                if(pid == -1)
+                {
+                    perror("fork failed");
+                    close(pipe_fd[0]);
+                    close(pipe_fd[1]);
+                    return 0;
+                }
+                if (pid == 0)
+                {
+                    close(pipe_fd[0]);
+                    set_signal_heredoc();
+                    heredoc_input = handler_heredoc(curr->next->value, env);
+                    write(pipe_fd[1], heredoc_input,ft_strlen(heredoc_input));
+                    close(pipe_fd[1]);
+                    free(heredoc_input);
+                    exit(0);
+                }
+                else
+                {
+                    if(!parent_process_heredoc_pipe(pipe_fd,pid,curr))
+                        return 0;
+                    // close(pipe_fd[1]);
+
+                    // int status;
+                    // waitpid(pid,&status, 0);
+                    // if(WIFSIGNALED(status))
+                    // {
+                    //     close(pipe_fd[0]);
+                    //     return 0;
+                    // }
+                    // char fd_str[16];
+                    // snprintf(fd_str, sizeof(fd_str),"%d", pipe_fd[0]);
+
+                    // free(curr->value);
+                    // curr->value = ft_strdup(fd_str);
+                    // curr->type = TOKEN_HEREDOC_PROCESSED;
+
+                }
+            }
+            curr = curr->next;
+        }
+        i++;
+    }
+    return 1;
+}
+
+
+
 // Helper function to check if tokens contain pipe
 int count_pipe_seg(t_token * tokens)
 {
@@ -66,6 +160,16 @@ int count_args_seg(t_token *start,t_token *end)
     
      // Count the number of word tokens that aren't redirection targets
     while (tmp && tmp != end && tmp->type != TOKEN_PIPE) {
+        if(tmp->type == TOKEN_HEREDOC_PROCESSED ||(tmp->prev && tmp->prev->type == TOKEN_HEREDOC_PROCESSED))
+        {
+            tmp = tmp->next;
+            continue;
+        }
+        if(tmp->prev && (tmp->prev->type == TOKEN_HEREDOC))
+        {
+            tmp = tmp->next;
+            continue;
+        }
         if (tmp->type == TOKEN_WORD && 
             !(tmp->prev && (tmp->prev->type == TOKEN_REDIRECT_IN || 
                            tmp->prev->type == TOKEN_REDIRECT_OUT || 
@@ -87,6 +191,16 @@ char **args_from_token_alloc(t_token *start, t_token *end, int count)
     int i = 0;
     t_token *tmp = start;
     while (tmp && tmp != end && tmp->type != TOKEN_PIPE) {
+        if(tmp->type == TOKEN_HEREDOC_PROCESSED ||(tmp->prev && tmp->prev->type == TOKEN_HEREDOC_PROCESSED))
+        {
+            tmp = tmp->next;
+            continue;
+        }
+        if(tmp->prev && (tmp->prev->type == TOKEN_HEREDOC))
+        {
+            tmp = tmp->next;
+            continue;
+        }
         if (tmp->type == TOKEN_WORD && 
             !(tmp->prev && (tmp->prev->type == TOKEN_REDIRECT_IN || 
                            tmp->prev->type == TOKEN_REDIRECT_OUT || 
