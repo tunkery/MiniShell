@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:46:37 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/22 12:51:49 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 13:54:13 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,29 @@ void    gc_register(t_gc *gc, void *ptr)
 
     if (!gc || !ptr)
         return ;
-    node = maloc(sizeof(node));
+    node = malloc(sizeof(node));
     if (!node)
         return ;
     node->ptr = ptr;
     node->next = gc->head;
     gc->head = node;
+}
+
+void    gc_unregister(t_gc *gc, void *ptr)
+{
+    t_gc_node   **curr = &gc->head;
+
+    while (*curr)
+    {
+        if ((*curr)->ptr == ptr)
+        {
+            t_gc_node *rm = *curr;
+            *curr = rm->next;
+            free(rm);
+            return ;
+        }
+        curr = &(*curr)->next;
+    }
 }
 
 void    gc_free_all(t_gc *gc)
@@ -63,6 +80,7 @@ void    gc_free_all(t_gc *gc)
     curr = gc->head;
     while (curr)
     {
+        // fprintf(stderr, "[gc_free_all] freeing %p\n", curr->ptr);
         free(curr->ptr);
         temp = curr;
         curr = curr->next;

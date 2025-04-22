@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 12:52:33 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 14:12:26 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ t_gc    *gc_new(void);
 void    *my_malloc(t_gc *gc, int size);
 void    gc_register(t_gc *gc, void *ptr);
 void    gc_free_all(t_gc *gc);
+void    gc_unregister(t_gc *gc, void *ptr);
 
 // Builtin functions
 
@@ -169,12 +170,12 @@ int		key_size(char *str);
 int		value_size(char *str);
 int		env_size(char **envp);
 char	*find_path(t_env *env);
-void	copy_env(char **str, char ***envp);
-void	copy_ex(char **str, char ***envp);
+void	copy_env(char **str, char ***envp, t_env *env);
+void	copy_ex(char **str, char ***envp, t_env *env);
 char	*copy_ex_helper(char *str);
-char	**update_ex(char **envp, char *key);
-char	**update_env(char **envp, char *key);
-char	**remove_env(char **envp, char *key);
+char	**update_ex(char **envp, char *key, t_env *env);
+char	**update_env(char **envp, char *key, t_env *env);
+char	**remove_env(char **envp, char *key, t_env *env);
 
 // Execute functions
 char	*find_exec(char *command, char *path_variable, int i, int j);

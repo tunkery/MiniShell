@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/19 15:40:25 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 14:51:26 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,10 @@ void	duplicate_fix_env(char *str, t_env *env)
 				i++;
 			else
 			{
-				if(env->envp[i])
-					free(env->envp[i]);
+				// if(env->envp[i])
+				// 	free(env->envp[i]);
 				env->envp[i] = ft_strdup(str);
+				gc_register(env->gc, env->envp[i]);
 				break ;
 			}
 		}
@@ -108,10 +109,11 @@ void	duplicate_fix_ex(char *str, t_env *env)
 				i++;
 			else
 			{
-				if (env->export[i])
-					free(env->export[i]);
+				// if (env->export[i])
+				// 	free(env->export[i]);
 				temp = copy_ex_helper(str);
 				env->export[i] = ft_strdup(temp);
+				gc_register(env->gc, env->export[i]);
 				free(temp);
 				break ;
 			}
@@ -121,7 +123,7 @@ void	duplicate_fix_ex(char *str, t_env *env)
 	if (duplicate_check_env(str, env) == 0)
 		duplicate_fix_env(str, env);
 	else
-		env->envp = update_env(env->envp, str);
+		env->envp = update_env(env->envp, str, env);
 	env->exit_code = 0;
 }
 
@@ -140,13 +142,13 @@ void	export1(char *str, t_env *env)
 		}
 		else
 		{
-			env->envp = update_env(env->envp, str);
-			env->export = update_ex(env->export, str);
+			env->envp = update_env(env->envp, str, env);
+			env->export = update_ex(env->export, str, env);
 		}
 	}
 	else
 	{
-		env->export = update_ex(env->export, str);
+		env->export = update_ex(env->export, str, env);
 	}
 }
 

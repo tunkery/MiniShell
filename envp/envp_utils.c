@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:11:50 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/18 15:10:53 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:03:51 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	env_size(char **envp)
 	return (i);
 }
 
-void copy_env(char **str, char ***envp)
+void copy_env(char **str, char ***envp, t_env *env)
 {
 	int i;
 	int size;
@@ -59,12 +59,13 @@ void copy_env(char **str, char ***envp)
 		return ;
 	i = 0;
 	size = env_size(str);
-	*envp = malloc(sizeof(char *) * (size + 1));
+	*envp = my_malloc(env->gc, sizeof(char *) * (size + 1));
 	if (!*envp)
 		return ;
 	while (i < size)
 	{
 		(*envp)[i] = ft_strdup(str[i]);
+		gc_register(env->gc, (*envp)[i]);
 		i++;
 	}
 	(*envp)[i] = NULL;
@@ -110,16 +111,16 @@ char	*copy_ex_helper(char *str)
 	key = ft_substr(str, 0, size + 1);
 	value = ft_substr_ex(str, size, ft_strlen(str) - size);
 	result = ft_strjoin(key, value);
-	if (!result)
-		return (NULL);
 	if (key)
 		free(key);
 	if (value)
 		free(value);
+	if (!result)
+		return (NULL);
 	return (result);
 }
 
-void	copy_ex(char **str, char ***envp)
+void	copy_ex(char **str, char ***envp, t_env *env)
 {
 	int		i;
 	int		size;
@@ -129,13 +130,14 @@ void	copy_ex(char **str, char ***envp)
 		return ;
 	i = 0;
 	size = env_size(str);
-	*envp = malloc(sizeof(char *) * (size + 1));
+	*envp = my_malloc(env->gc, sizeof(char *) * (size + 1));
 	if (!*envp)
 		return ;
 	while (i < size)
 	{
 		temp = copy_ex_helper(str[i]);
 		(*envp)[i] = ft_strdup(temp);
+		gc_register(env->gc, (*envp)[i]);
 		if (temp)
 			free(temp);
 		i++;

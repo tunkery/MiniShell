@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/19 15:01:26 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 14:48:24 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ static void	update_old_pwd(t_env *env, int check)
 			return ;
 		}
 		temp = ft_strjoin("OLDPWD=", buf);
-		env->envp = update_env(env->envp, temp);
-		env->export = update_env(env->export, temp);
+		env->envp = update_env(env->envp, temp, env);
+		env->export = update_env(env->export, temp, env);
 		free(temp);
 		return ;
 	}
@@ -55,9 +55,10 @@ static void	update_old_pwd(t_env *env, int check)
 	{
 		if (ft_strncmp(env->envp[i], "PWD", 3) == 0)
 		{
-			free(env->envp[j]);
+			// free(env->envp[j]);
 			temp = ft_substr(env->envp[i], 4, ft_strlen(env->envp[i]) - 4);
 			env->envp[j] = ft_strjoin("OLDPWD=", temp);
+			gc_register(env->gc, env->envp[j]);
 			free(temp);
 			return ;
 		}
@@ -82,10 +83,13 @@ static void	update_pwd(t_env *env)
 		i++;
 	if (env->envp[i])
 	{
-		free(env->envp[i]);
+		// free(env->envp[i]);
 		env->envp[i] = ft_strjoin("PWD=", new_pwd);
+		gc_register(env->gc, env->envp[i]);
 		free(new_pwd);
+		return ;
 	}
+	free(new_pwd);
 }
 
 void	run_cd(char **args, t_env *env)
@@ -160,9 +164,9 @@ void	run_cd(char **args, t_env *env)
 	{
 		env->exit_code = 1;
 		fprintf(stderr, "minishell: cd: %s: No such file or directory\n", args[1]);
-		env->envp = remove_env(env->envp, "OLDPWD");
+		env->envp = remove_env(env->envp, "OLDPWD", env);
 		if (old_pwd != NULL)
-			env->envp = update_env(env->envp, old_pwd);
+			env->envp = update_env(env->envp, old_pwd, env);
 	}
 	else
 	{

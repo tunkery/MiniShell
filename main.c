@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 12:45:33 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/22 13:37:39 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int main(int ac, char **av, char **envp)
     t_env   *env = NULL;
     t_token *tokens;
     t_gc    *gc;
-    t_gc    *s_gc;
+    // t_gc    *s_gc;
 	(void)av;
     (void)ac;
 
@@ -108,9 +108,13 @@ int main(int ac, char **av, char **envp)
 	// 	printf("Don't give any arguments!\n");
 	// 	// return (0);
 	// }
-    env = malloc(sizeof(t_env));
+    gc = gc_new();
+    if (!gc)
+        return (1);
+    env = my_malloc(gc, sizeof(t_env));
     if (!env)
-        return (0);
+        return (1);
+    env->gc = gc;
     initiate_env(env, envp);
     while(1)
     {
@@ -131,6 +135,6 @@ int main(int ac, char **av, char **envp)
         free(line);
         // added_process(line, envp);
     }
-    free(env);
+    gc_free_all(gc);
 	return (0);
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/18 15:16:55 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:18:55 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**update_env(char **envp, char *key)
+char	**update_env(char **envp, char *key, t_env *env)
 {
 	int		size;
 	char	**new_env;
@@ -23,21 +23,23 @@ char	**update_env(char **envp, char *key)
 	i = 0;
 	size = env_size(envp);
 	new_env = NULL;
-	new_env = malloc(sizeof(char *) * (size + 2));
+	new_env = my_malloc(env->gc, sizeof(char *) * (size + 2));
 	if (!new_env)
 		return (NULL);
 	while (envp[i])
 	{
 		new_env[i] = ft_strdup(envp[i]);
+		gc_register(env->gc, new_env[i]);
 		i++;
 	}
 	// copy_env(envp, &new_env);
 	new_env[size] = ft_strdup(key);
+	gc_register(env->gc, new_env[size]);
 	new_env[size + 1] = NULL;
 	return (new_env);
 }
 
-char	**update_ex(char **envp, char *key)
+char	**update_ex(char **envp, char *key, t_env *env)
 {
 	int		size;
 	char	**new_env;
@@ -49,22 +51,24 @@ char	**update_ex(char **envp, char *key)
 	i = 0;
 	size = env_size(envp);
 	new_env = NULL;
-	new_env = malloc(sizeof(char *) * (size + 2));
+	new_env = my_malloc(env->gc, sizeof(char *) * (size + 2));
 	if (!new_env)
 		return (NULL);
 	while (envp[i])
 	{
 		new_env[i] = ft_strdup(envp[i]);
+		gc_register(env->gc, new_env[i]);
 		i++;
 	}
 	temp = copy_ex_helper(key);
 	new_env[size] = ft_strdup(temp);
+	gc_register(env->gc, new_env[size]);
 	free(temp);
 	new_env[size + 1] = NULL;
 	return (new_env);
 }
 
-char	**remove_env(char **envp, char *key)
+char	**remove_env(char **envp, char *key, t_env *env)
 {
 	int i;
 	int j;
@@ -74,17 +78,21 @@ char	**remove_env(char **envp, char *key)
 	i = 0;
 	j = 0;
 	size = env_size(envp);
-	new_env = malloc(sizeof(char *) * size);
+	new_env = my_malloc(env->gc, sizeof(char *) * size);
 	if (!new_env)
 		return (NULL);
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0
 			&& (envp[i][ft_strlen(key)] == '=' || envp[i][ft_strlen(key)] == '\0'))
-			free(envp[i++]);
+			{
+				gc_unregister(env->gc, envp[i]);
+				free(envp[i++]);
+			}
 		if (envp[i])
 		{
 			new_env[j] = ft_strdup(envp[i]);
+			gc_register(env->gc, new_env[j]);
 			i++;
 			j++;
 		}
@@ -93,7 +101,7 @@ char	**remove_env(char **envp, char *key)
 	return (new_env);
 }
 
-static void	shell_level_ex(char ***str, int i)
+static void	shell_level_ex(char ***str, int i, t_env *env)
 {
 	char	*value;
 	char	*temp;
@@ -109,7 +117,8 @@ static void	shell_level_ex(char ***str, int i)
 	else
 		value = ft_substr((*str)[i], 6, 1);
 	digit = ft_atoi(value);
-	free((*str)[i]);
+	// gc_unregister(env->gc, (*str)[i]);
+	// free((*str)[i]);
 	digit++;
 	if (value)
 		free(value);
@@ -120,11 +129,12 @@ static void	shell_level_ex(char ***str, int i)
 	if (value)
 		free(value);
 	(*str)[i] = ft_strdup(temp2);
+	gc_register(env->gc, (*str)[i]);
 	if (temp2)
 		free(temp2);
 }
 
-static void	shell_level(char ***str, int i)
+static void	shell_level(char ***str, int i, t_env *env)
 {
 	char	*value;
 	char	*temp;
@@ -139,7 +149,8 @@ static void	shell_level(char ***str, int i)
 	else
 		value = ft_substr((*str)[i], 6, 1);
 	digit = ft_atoi(value);
-	free((*str)[i]);
+	// gc_unregister(env->gc, (*str)[i]);
+	// free((*str)[i]);
 	digit++;
 	if (value)
 		free(value);
@@ -148,6 +159,7 @@ static void	shell_level(char ***str, int i)
 	if (value)
 		free(value);
 	(*str)[i] = ft_strdup(temp);
+	gc_register(env->gc, (*str)[i]);
 	if (temp)
 		free(temp);
 }
@@ -157,15 +169,16 @@ void	initiate_env(t_env *env, char **envp)
 	int	i;
 
 	i = 0;
-	copy_env(envp, &(env->envp));
-	copy_ex(envp, &(env->export));
-	shell_level(&(env->envp), 0);
-	shell_level_ex(&(env->export), 0);
+	copy_env(envp, &(env->envp), env);
+	copy_ex(envp, &(env->export), env);
+	shell_level(&(env->envp), 0, env);
+	shell_level_ex(&(env->export), 0, env);
 	env->exit_code = 0;
 	env->save_stdin = -1;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
 	env->curr_pwd = ft_strdup(env->envp[i]);
+	gc_register(env->gc, env->curr_pwd);
 	i = 0;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "OLDPWD", 6) != 0)
 		i++;
@@ -174,6 +187,7 @@ void	initiate_env(t_env *env, char **envp)
 		env->old_pwd = ft_strdup(env->envp[i]);
 		if (!env->envp)
 			return ;
+		// gc_register(env->gc, env->envp[i]);
 	}
 	env->path = malloc(sizeof(char **) * 2);
 	if (!env->path)
