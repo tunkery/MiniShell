@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:25:02 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/23 14:45:07 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:42:10 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,12 @@ int	append_key_size(char *str)
 	return (i);
 }
 
-void	append_exp(char *str, t_env *env)
+void	append_exp(char *str, t_env *env, int i)
 {
-	int		i;
 	int		size;
 	char	*value;
 	char	*key;
 
-	i = 0;
 	size = 0;
 	while (str[size] && str[size] != '=')
 		size++;

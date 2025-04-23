@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:53:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/15 17:03:25 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/23 16:55:27 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	run_pwd(char **args, t_env *env)
 {
-	char buf[BUFSIZ];
-	char *check;
-	
+	char	buf[BUFSIZ];
+	char	*check;
+
 	if (args[1] && args[1][0] && args[1][0] == '-')
 	{
 		fprintf(stderr, "minishell: pwd: %s: invalid option\n", args[1]);

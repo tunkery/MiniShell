@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/23 14:40:47 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:45:30 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	duplicate_check_env(char *str, t_env *env)
 	i = 0;
 	while (env->envp && env->envp[i])
 	{
-		if (ft_strncmp(env->envp[i], str, size) == 0 && env->envp[i][size + 1] == '=' && key_size(env->envp[i]) == size
+		if (ft_strncmp(env->envp[i], str, size) == 0
+			&& env->envp[i][size + 1] == '=' && key_size(env->envp[i]) == size
 			&& env->envp[i][0] == str[0])
 		{
 			return (0);
@@ -45,7 +46,9 @@ int	duplicate_check_ex(char *str, t_env *env)
 	i = 0;
 	while (env->export && env->export[i])
 	{
-		if (ft_strncmp(env->export[i], str, size) == 0 && env->export[i][size + 1] == '=' && key_size(env->export[i]) == size
+		if (ft_strncmp(env->export[i], str, size) == 0
+			&& env->export[i][size + 1] == '='
+			&& key_size(env->export[i]) == size
 			&& env->export[i][0] == str[0])
 		{
 			return (0);
@@ -85,14 +88,10 @@ void	duplicate_fix_env(char *str, t_env *env)
 	env->exit_code = 0;
 }
 
-void	duplicate_fix_ex(char *str, t_env *env)
+void	duplicate_fix_ex(char *str, t_env *env, int i, int size)
 {
-	int		i;
-	int		size;
 	char	*temp;
 
-	i = 0;
-	size = key_size(str);
 	while (env->export && env->export[i])
 	{
 		if (ft_strncmp(env->export[i], str, size) == 0)
@@ -124,12 +123,12 @@ void	export1(char *str, t_env *env)
 		if (duplicate_check_ex(str, env) == 0
 			&& duplicate_check_env(str, env) == 0)
 		{
-			duplicate_fix_ex(str, env);
+			duplicate_fix_ex(str, env, 0, 0);
 			duplicate_fix_env(str, env);
 		}
 		else if (duplicate_check_ex(str, env) == 0)
 		{
-			duplicate_fix_ex(str, env);
+			duplicate_fix_ex(str, env, 0, 0);
 		}
 		else
 		{

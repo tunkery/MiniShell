@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:40:10 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 14:42:44 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:43:27 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,17 @@ void	checker(char *str, int name_c, int *check, t_env *env)
 	}
 	else if (name_c == -3)
 	{
-		append_env(str, env);
-		append_exp(str, env);
+		append_env(str, env, 0);
+		append_exp(str, env, 0);
 	}
 }
 
-void	append_env(char *str, t_env *env)
+void	append_env(char *str, t_env *env, int i)
 {
-	int		i;
 	int		size;
 	char	*value;
 	char	*key;
 
-	i = 0;
 	size = 0;
 	while (str[size] && str[size] != '=')
 		size++;
