@@ -6,13 +6,13 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 15:43:35 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:05:40 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*get_old_pwd(t_env *env)
+char	*get_old_pwd(t_env *env)
 {
 	int		j;
 	char	*temp;
@@ -48,7 +48,7 @@ void	uop_helper(t_env *env, int j)
 	}
 }
 
-static void	update_old_pwd(t_env *env, int check)
+void	update_old_pwd(t_env *env, int check)
 {
 	char	*temp;
 	char	buf[BUFSIZ];
@@ -75,7 +75,7 @@ static void	update_old_pwd(t_env *env, int check)
 	uop_helper(env, j);
 }
 
-static void	update_pwd(t_env *env)
+void	update_pwd(t_env *env)
 {
 	char	*new_pwd;
 	char	temp[BUFSIZ];
@@ -100,108 +100,31 @@ static void	update_pwd(t_env *env)
 	free(new_pwd);
 }
 
-void	cd_helper(char *args, t_env *env, char *old_pwd)
-{
-	if (env->exit_code == -1)
-	{
-		env->exit_code = 1;
-		write(2, "minishell: cd: ", 15);
-		write(2, args[1], ft_strlen(args[1]));
-		write(2, ": No such file or directory\n", 28);
-		env->envp = remove_env(env->envp, "OLDPWD", env);
-		if (old_pwd != NULL)
-			env->envp = update_env(env->envp, old_pwd, env);
-	}
-	else
-	{
-		update_pwd(env);
-		env->exit_code = 0;
-	}
-}
-
 void	run_cd(char **args, t_env *env)
 {
 	char	*path;
 	char	*old_pwd;
-	char	*temp;
 	int		check;
-	int		i;
 
-	i = 0;
-	while (args[i])
-		i++;
-	if (i > 2)
-	{
-		write(2, "minishell: cd: too many arguments\n", 34);
-		env->exit_code = 1;
+	check = argument_check(args, env);
+	if (check != 0)
 		return ;
-	}
-	temp = NULL;
-	check = 0;
 	path = getenv("HOME");
 	if (!path)
-	{
-		write(2, "minishell: cd: HOME not set\n", 28);
-		env->exit_code = 1;
+		check = no_path_handle(env);
+	if (check == 1)
 		return ;
-	}
 	old_pwd = get_old_pwd(env);
 	if (!old_pwd)
 		check = 1;
 	update_old_pwd(env, check);
 	if (!args[1] || (args[1] && args[1][0] == '~'))
-	{
-		path = getenv("HOME");
-		if (!path)
-		{
-			write(2, "minishell: cd: HOME not set\n", 28);
-			env->exit_code = 1;
-			if (old_pwd)
-				free(old_pwd);
-			return ;
-		}
-		env->exit_code = chdir(path);
-	}
+		cd_tilde(path, env);
 	else if (args[1][0] == '-')
-	{
-		if (args[1][1] && args[1][1] == '-')
-		{
-			env->exit_code = chdir(path);
-		}
-		else if (!old_pwd || ft_strncmp(old_pwd, "OLDPWD=", 7) != 0)
-		{
-			write(2, "minishell: cd: OLDPWD not set \n", 31);
-			env->exit_code = 1;
-			if (old_pwd)
-				free(old_pwd);
-			return ;
-		}
-		else
-		{
-			temp = ft_substr(old_pwd, 7, ft_strlen(old_pwd) - 7);
-			env->exit_code = chdir(temp);
-			if (env->exit_code == 0)
-				printf("%s\n", temp);
-			free(temp);
-		}
-	}
+		cd_minus_sign(args[1], path, env, old_pwd);
 	else
 		env->exit_code = chdir(args[1]);
-	if (env->exit_code == -1)
-	{
-		env->exit_code = 1;
-		write(2, "minishell: cd: ", 15);
-		write(2, args[1], ft_strlen(args[1]));
-		write(2, ": No such file or directory\n", 28);
-		env->envp = remove_env(env->envp, "OLDPWD", env);
-		if (old_pwd != NULL)
-			env->envp = update_env(env->envp, old_pwd, env);
-	}
-	else
-	{
-		update_pwd(env);
-		env->exit_code = 0;
-	}
+	cd_helper(args[1], env, old_pwd);
 	if (old_pwd)
 		free(old_pwd);
 }

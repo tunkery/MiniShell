@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 15:12:41 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:04:54 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,15 @@ void	run_pwd(char **args, t_env *env);
 void	run_unset(char **args, t_env *env);
 void	run_env(char **args, t_env *env);
 void	run_cd(char **args, t_env *env);
+void	cd_helper(char *args, t_env *env, char *old_pwd);
+void	cd_tilde(char *path, t_env *env);
+void	cd_minus_sign(char *args, char *path, t_env *env, char *old_pwd);
+int		argument_check(char **args, t_env *env);
+int		no_path_handle(t_env *env);
+char	*get_old_pwd(t_env *env);
+void	uop_helper(t_env *env, int j);
+void	update_old_pwd(t_env *env, int check);
+void	update_pwd(t_env *env);
 int		valid_name_unset(char *str);
 int		hey(char *str, char c);
 char	*extract_c(char *str, char c);
