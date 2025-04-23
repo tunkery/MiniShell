@@ -23,8 +23,6 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 			write(2, "minishell: ", 11);
 			write(2, (*current)->value,ft_strlen((*current)->value));
 			write(2,": No such file or directory\n", 29);
-			// perror(CYAN"Open failed!"RESET);
-			// clean_2d(args);
 			env->exit_code = 1;
 			*args = NULL;
 			return;
@@ -37,7 +35,6 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 		{
 			close(*in_fd);
 			perror("dub2 failed for redirected!");
-			// clean_2d(args);
 			env->exit_code = 1;
 			*args = NULL;
 			return ;
@@ -50,13 +47,11 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 		char **heredoc_input, t_env *env)
 {
 	close(pipe_fd[0]);
-	// close the signal
 	set_signal_heredoc();
 
 	*heredoc_input = handler_heredoc((*current)->value, env);
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
 	close(pipe_fd[1]);
-	// free(*heredoc_input);
 	exit(0);
 }
 
@@ -66,18 +61,15 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
 	{
 		perror("dub2 failed!\n");
-		// clean_2d(args);
 		close(pipe_fd[0]);
 		return ;
 	}
-	// close(pipe_fd[0]);
-	// wait(NULL); // Alt sureci bekle
+
 	int status;
 	waitpid(pid, &status, 0);
-	if(WIFSIGNALED(status)) // IF child was terminated by a signal!
+	if(WIFSIGNALED(status))
 	{
 		close(pipe_fd[0]);
-		// clean_2d(args);
 		*args = NULL;
 		return;
 	}
@@ -95,9 +87,8 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		if (pipe(pipe_fd) == -1)
 		{
 			perror("pipe failed!");
-			// clean_2d(args);
 			return ;
-		} // Surecler arasi boruyu olusturur > alt surec icin
+		}
 		pid = fork();
 		if (pid == 0)
 			child_process_heredoc(pipe_fd, current, heredoc_input, env);
@@ -106,7 +97,6 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		else
 		{
 			perror("fork failed!");
-			// clean_2d(args);
 			return ;
 		}
 		*current = (*current)->next;
@@ -126,7 +116,7 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 		flag |= O_TRUNC;
 	if (*current && (*current)->type == TOKEN_WORD)
 	{
-		new_fd= open((*current)->value, flag, 0644); // Uzerine yazdiriyor.
+		new_fd= open((*current)->value, flag, 0644);
 		if (new_fd < 0)
 		{
 			write(2, "minishell: ", 11);

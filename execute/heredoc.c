@@ -17,7 +17,6 @@ static char	*ft_strjoin_free(char *s1, char *s2)
 	char	*result;
 
 	result = ft_strjoin_heredoc(s1, s2);
-	// free(s2);
 	return (result);
 }
 
@@ -35,10 +34,9 @@ static char	*expand_command_substitution(char *line, int *index, t_env *env)
 	if (line[*index] == ')')
 		(*index)++;
 	i = 0;
-	temp = expand_env(expand_line, &i, env); // It was about j
+	temp = expand_env(expand_line, &i, env);
 	return (temp);
 }
-/* This functions helps for expanded heredoc */
 
 char	*expanded_heredoc_line(char *line, t_env *env)
 {
@@ -68,9 +66,7 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 	return (result);
 }
 
-/*
-	24.03.2025 Heredoc duzgun calismiyordu. Cevre degiskenlerini genisletecek bir yardimci fonksiyon eklemek lazim.
-*/
+
 char	*handler_heredoc(char *delimiter, t_env *env)
 {
 	char	*line;
@@ -78,23 +74,16 @@ char	*handler_heredoc(char *delimiter, t_env *env)
 
 	result = ft_strdup("");
 	gc_register(env->s_gc, result);
-	// char *expand_line;
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
-		{
 			break ;
-		}
 		gc_register(env->s_gc, line);
 		if (ft_strcmp(line, delimiter) == 0)
-		{
-			// free(line);
 			break ;
-		}
 		result = process_heredoc_line(line, result, env);
 		gc_register(env->s_gc, result);
-		// free(line);
 	}
 	return (result);
 }

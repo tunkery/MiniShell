@@ -13,7 +13,6 @@
 #include "../minishell.h"
 
 
-// Helper function to create args array from tokens
 char **create_args_from_tokens(t_token *start, t_token *end, t_env *env)
 {
 
@@ -23,7 +22,6 @@ char **create_args_from_tokens(t_token *start, t_token *end, t_env *env)
     return args_from_token_alloc(start,end,count, env);
 }
 
-// I could compile with stardart handler with this but i have to check it more!! TODO!
 void handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
 {
     if ((*curr)->type == TOKEN_REDIRECT_OUT) {
@@ -90,19 +88,15 @@ void handle_heredoc_redirec(t_token **curr, int *in_fd,t_env *env)
             heredoc_input = handler_heredoc((*curr)->value, env);
             write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
             close(pipe_fd[1]);
-            // free(heredoc_input);
             
             *in_fd = pipe_fd[0];
         }
     }
 }
 
-
-// Function to apply redirections within a piped command
 void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env)
 {
     t_token *current = start;
-    // char *heredoc_input = NULL;
     
     while (current && current != end && current->type != TOKEN_PIPE) 
     {

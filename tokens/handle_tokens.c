@@ -79,13 +79,11 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
 
     while(line[*i] && line[*i] != ' '  && line[*i] != '\t' && line[*i] != '|' && line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
     {
-        //Add backslash rules!
         if(line[*i] == '\\')
         {
             (*i)++;
             if(!line[*i])
             {
-                // free(result);
                 token->value =NULL;
                 return;
             }
@@ -93,18 +91,13 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
             {
                 (*i)++;
                 char cpy[2] = {'\\', '\0'};
-                // char *old_res = result;
                 result = ft_strjoin(result, cpy);
                 gc_register(env->s_gc, result);
-                // free(old_res);
                 continue;
             }
-            /*finished_tokens*/
             char cpy[2] = {line[*i], '\0'};
-            // char *old_res = result;
             result = ft_strjoin(result, cpy);
             gc_register(env->s_gc, result);
-            // free(old_res);
             (*i)++;
             continue;
         }
@@ -113,15 +106,11 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
             temp = process_quoted(line, i, '"', env);
             if(temp)
             {
-                // char *old_res = result;
                 result = ft_strjoin(result, temp);
                 gc_register(env->s_gc, result);
-                // free(old_res);
-                // free(temp);
             }
             else
             {
-                // free(result);
                 token->value = NULL;
                 return;
             }
@@ -131,15 +120,11 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
             temp = process_quoted(line, i, '\'', env);
             if(temp)
             {
-                // char *old_res = result;
                 result = ft_strjoin(result, temp);
                 gc_register(env->s_gc, result);
-                // free(old_res);
-                // free(temp);
             }
             else
             {
-                // free(result);
                 token->value = NULL;
                 return;
             }
@@ -149,18 +134,13 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
             temp = expand_env(line, i, env);
             if(temp)
             {
-                // char *old_res = result;
                 result = ft_strjoin(result, temp);
                 gc_register(env->s_gc, result);
-                // free(old_res);
-                // free(temp);
             }
             else
             {
-                // char *old_res = result;
                 result = ft_strjoin(result, temp);
                 gc_register(env->s_gc, result);
-                // free(old_res);
             }
         }
         else if(line[*i] == '~' &&(line[*i + 1] == '/' || line[*i + 1] == '\0' || line[*i+1] == ' '))
@@ -168,20 +148,15 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
             temp = handle_tilde(line, i, env);
             if(temp)
             {
-                // char *old_res = result;
                 result = ft_strjoin(result, temp);
                 gc_register(env->s_gc, result);
-                // free(old_res);
-                // free(temp);
             }
         }
         else
         {
             char cpy[2] = {line[*i], '\0'};
-            // char *old_res = result;
             result = ft_strjoin(result, cpy);
             gc_register(env->s_gc, result);
-            // free(old_res);
             (*i)++;
         }
 
