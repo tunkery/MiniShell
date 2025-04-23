@@ -36,7 +36,6 @@ char	*ft_strjoin_heredoc(char const *s1, char const *s2)
 		j++;
 	}
 	new_s[i + j] = '\0';
-	// free((void*)s1);
 	return (new_s);
 }
 
@@ -54,7 +53,6 @@ int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env)
 		{
 			*result = ft_strjoin_heredoc(*result, temp);
 			gc_register(env->s_gc, *result);
-			// free(temp);
 		}
 	}
 	else
@@ -83,7 +81,6 @@ char	*process_heredoc_line(char *line, char *result, t_env *env)
 			expand_line = expanded_heredoc_line(&line[i], env);
 			result = ft_strjoin_heredoc(result, expand_line);
 			gc_register(env->s_gc, result);
-			// free(expand_line);
 			i = start + ft_strlen(&line[start]);
 		}
 		else

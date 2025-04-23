@@ -80,21 +80,6 @@ int preprocess_heredocs(t_token **seg, int seg_count, t_env *env)
                 {
                     if(!parent_process_heredoc_pipe(pipe_fd,pid,curr, env))
                         return 0;
-                    // close(pipe_fd[1]);
-
-                    // int status;
-                    // waitpid(pid,&status, 0);
-                    // if(WIFSIGNALED(status))
-                    // {
-                    //     close(pipe_fd[0]);
-                    //     return 0;
-                    // }
-                    // char fd_str[16];
-                    // snprintf(fd_str, sizeof(fd_str),"%d", pipe_fd[0]);
-
-                    // free(curr->value);
-                    // curr->value = ft_strdup(fd_str);
-                    // curr->type = TOKEN_HEREDOC_PROCESSED;
 
                 }
             }

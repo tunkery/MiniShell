@@ -196,12 +196,6 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
                 tmp = tmp->next;
             continue;
         }
-        // i = 0;
-        // while (args[i])
-        // {
-		// 	// DEBUG_PRINT(MGNT"ARGS[%d]: %s\n"RESET, i, args[i]);
-        //     i++;
-        // }
 		if (out_fd != STDOUT_FILENO)
             close(out_fd);
         out_fd = STDOUT_FILENO;

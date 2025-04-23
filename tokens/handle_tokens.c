@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:35:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/23 18:10:23 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 18:19:10 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,8 @@ void	handle_word(t_token *token, char *line, int *i, t_env *env)
 				continue ;
 			}
             char cpy[2] = {line[*i], '\0'};
-            // char *old_res = result;
             result = ft_strjoin(result, cpy);
             gc_register(env->s_gc, result);
-            // free(old_res);
             (*i)++;
             continue;
         }
@@ -106,15 +104,11 @@ void	handle_word(t_token *token, char *line, int *i, t_env *env)
             temp = process_quoted(line, i, '"', env);
             if(temp)
             {
-                // char *old_res = result;
                 result = ft_strjoin(result, temp);
                 gc_register(env->s_gc, result);
-                // free(old_res);
-                // free(temp);
             }
             else
             {
-                // free(result);
                 token->value = NULL;
                 return;
             }
