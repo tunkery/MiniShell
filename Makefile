@@ -6,7 +6,7 @@
 #    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/04/23 16:05:15 by bolcay           ###   ########.fr        #
+#    Updated: 2025/04/23 17:02:41 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		execute/pipe.c execute/pipe_utils.c parse_func/parsing.c tokens/validate_syntax.c \
 		parse_func/parse_utils.c builtin/builtin_utils2.c builtin/builtin_utils3.c \
 		garbage_collector/garbage_collector.c builtin/builtin_utils4.c builtin/builtin_utils5.c \
-		builtin/cd_helper.c 
+		builtin/cd_helper.c envp/envp_utils3.c
 
 
 

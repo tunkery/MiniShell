@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 16:44:26 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:57:15 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ int		unset_checker2(char *args, t_env *env);
 
 // Env functions
 
+char	*ft_substr_ex(char const *s, unsigned int start, size_t len);
 void	initiate_env(t_env *env, char **envp);
 int		key_size(char *str);
 int		value_size(char *str);

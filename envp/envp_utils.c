@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:11:50 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 20:10:38 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/23 16:57:02 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	key_size(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -28,8 +28,8 @@ int	key_size(char *str)
 
 int	value_size(char *str)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
@@ -42,7 +42,7 @@ int	value_size(char *str)
 
 int	env_size(char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (envp[i])
@@ -50,10 +50,10 @@ int	env_size(char **envp)
 	return (i);
 }
 
-void copy_env(char **str, char ***envp, t_env *env)
+void	copy_env(char **str, char ***envp, t_env *env)
 {
-	int i;
-	int size;
+	int	i;
+	int	size;
 
 	if (!str || !envp)
 		return ;
@@ -71,7 +71,7 @@ void copy_env(char **str, char ***envp, t_env *env)
 	(*envp)[i] = NULL;
 }
 
-static char	*ft_substr_ex(char const *s, unsigned int start, size_t len)
+char	*ft_substr_ex(char const *s, unsigned int start, size_t len)
 {
 	char	*new_s;
 	size_t	i;
@@ -98,49 +98,4 @@ static char	*ft_substr_ex(char const *s, unsigned int start, size_t len)
 	new_s[i++] = '"';
 	new_s[i] = '\0';
 	return (new_s);
-}
-
-char	*copy_ex_helper(char *str)
-{
-	int		size;
-	char	*key;
-	char	*value;
-	char	*result;
-
-	size = key_size(str) + 1;
-	key = ft_substr(str, 0, size + 1);
-	value = ft_substr_ex(str, size, ft_strlen(str) - size);
-	result = ft_strjoin(key, value);
-	if (key)
-		free(key);
-	if (value)
-		free(value);
-	if (!result)
-		return (NULL);
-	return (result);
-}
-
-void	copy_ex(char **str, char ***envp, t_env *env)
-{
-	int		i;
-	int		size;
-	char	*temp;
-	
-	if (!str || !envp)
-		return ;
-	i = 0;
-	size = env_size(str);
-	*envp = my_malloc(env->gc, sizeof(char *) * (size + 1));
-	if (!*envp)
-		return ;
-	while (i < size)
-	{
-		temp = copy_ex_helper(str[i]);
-		(*envp)[i] = ft_strdup(temp);
-		gc_register(env->gc, (*envp)[i]);
-		if (temp)
-			free(temp);
-		i++;
-	}
-	(*envp)[i] = NULL;
 }
