@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 14:29:20 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/23 17:59:17 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 18:03:25 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,64 +149,53 @@ char	*extract_word( char *line, int *i, t_env *env)
 
 t_token	*handle_special_token(char *line, int *i, t_env *env)
 {
-    t_token *token;
-    // char *flg_quoted;
+	t_token	*token;
 
-    token = my_malloc(env->s_gc, sizeof(t_token));
-    if(!token)
-    {
-        return NULL;
-    }
-    token->next = NULL;
-    token->prev = NULL;
-    if(line[*i] == '|')
-        handle_pipe(token,i, env);
-    else if(line[*i] == '<')
-        handle_redirect_in(token, line, i, env);
-    else if(line[*i] == '>')
-        handle_redirect_out(token, line, i, env);
-    else if(line[*i] == ';')
-        handle_semic(token, i, env);
-    else
-        handle_word(token, line, i, env);
-    if(!token->value)
-    {
-        // free(token);
-        return NULL;
-    }
-    token->next = NULL;
-    return token;    
+	token = my_malloc(env->s_gc, sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->next = NULL;
+	token->prev = NULL;
+	if (line[*i] == '|')
+		handle_pipe(token, i, env);
+	else if (line[*i] == '<')
+		handle_redirect_in(token, line, i, env);
+	else if (line[*i] == '>')
+		handle_redirect_out(token, line, i, env);
+	else if (line[*i] == ';')
+		handle_semic(token, i, env);
+	else
+		handle_word(token, line, i, env);
+	if (!token->value)
+		return (NULL);
+	token->next = NULL;
+	return (token);
 }
 
-void seperated_token(char *line, t_token **head, t_env *env)
+void	seperated_token(char *line, t_token **head, t_env *env)
 {
-    t_token *current = NULL;
-    t_token *token;
-    int i = 0;
+	t_token	*current;
+	t_token	*token;
+	int		i;
 
-    while(line[i])
-    {
-        // split spaces
-        while(line[i] && (line[i] == ' ' || line[i] == '\t'))
-            i++;
-        if(line[i] == '\0')
-            break;
-        token = handle_special_token(line, &i, env);
-        if(!token)
-        {
-            // free_token_matrix(*head);
-            // *head = NULL;
-            return;
-        }
-
-        token->prev = current;
-
-        if(!*head)
-            *head = token;
-        else
-            current->next = token;
-        current = token;
-    }
+	i = 0;
+	current = NULL;
+	while (line[i])
+	{
+		while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+			i++;
+		if (line[i] == '\0')
+			break ;
+		token = handle_special_token(line, &i, env);
+		if (!token)
+			return ;
+		token->prev = current;
+		if (!*head)
+			*head = token;
+		else
+			current->next = token;
+		current = token;
+	}
 }
 
 t_token	*tokenizer(char *line, t_env *env)
