@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 08:59:18 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/19 16:14:14 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/23 15:00:49 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	valid_name(char *str)
 {
-	int	i;
-	char *temp;
+	int		i;
+	char	*temp;
 
 	i = 0;
 	if (ft_strchr(str, '=') != 0)
@@ -53,20 +53,8 @@ static int	name_check(char *args)
 		return (-1);
 	else if (append_check(args) != 0)
 		return (-3);
-	// else if (ft_strchr(args, '-') != 0)
-	// 	return (-2);
-	// else if (ft_strchr(args, ' ') != 0)
-	// 	return (-1);
-	// else if (ft_strchr(args, 9) != 0)
-	// 	return (-1);
-	// else if (ft_strchr(args, 10) != 0)
-	// 	return (-1);
-	// else if (ft_strchr(args, 11) != 0)
-	// 	return (-1);
-	// else if (ft_strchr(args, 12) != 0)
-	// 	return (-1);
-	// else if (ft_strchr(args, 13) != 0)
-	// 	return (-1);
+	else if (args[0] == '-')
+		return (-2);
 	else if (ft_isdigit(args[0]) != 0)
 		return (-1);
 	else if (args[0] == '=')

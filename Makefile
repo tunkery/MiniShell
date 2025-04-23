@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
+#    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/04/22 12:46:24 by batuhan          ###   ########.fr        #
+#    Updated: 2025/04/23 15:10:23 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		execute/heredoc_utils.c envp/envp_utils2.c tokens/handle_tokens.c \
 		execute/pipe.c execute/pipe_utils.c parse_func/parsing.c tokens/validate_syntax.c \
 		parse_func/parse_utils.c builtin/builtin_utils2.c builtin/builtin_utils3.c \
-		garbage_collector/garbage_collector.c 
+		garbage_collector/garbage_collector.c builtin/builtin_utils4.c builtin/builtin_utils5.c
 
 
 

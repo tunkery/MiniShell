@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 14:57:06 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/23 15:12:13 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	valid_name(char *str)
+int	valid_name_unset(char *str)
 {
 	int	i;
 
-	// if (!str[0] || ft_isalnum(str[0]) != 0)
-	// 	return (-1);
 	i = 0;
 	while (str[i])
 	{
@@ -28,31 +26,7 @@ static int	valid_name(char *str)
 	return (0);
 }
 
-// static int	get_path(char *str, t_env *env)
-// {
-// 	int		j;
-// 	int		size;
-// 	char	*key;
-
-// 	j = 0;
-// 	key = ft_substr(str, 0, key_size(str));
-// 	// if (!key)
-// 	// 	return (0);
-// 	size = ft_strlen(key);
-// 	while (env->envp && env->envp[j])
-// 	{
-// 		if (ft_strncmp(env->envp[j], key, size) == 0)
-// 		{
-// 			free(key);
-// 			return (1);
-// 		}
-// 		j++;
-// 	}
-// 	free(key);
-// 	return (0);
-// }
-
-static int	hey(char *str, char c)
+int	hey(char *str, char c)
 {
 	int	i;
 
@@ -66,7 +40,7 @@ static int	hey(char *str, char c)
 	return (-1);
 }
 
-static char	*extract_c(char *str, char c)
+char	*extract_c(char *str, char c)
 {
 	int	j;
 
@@ -79,56 +53,20 @@ static char	*extract_c(char *str, char c)
 void	run_unset(char **args, t_env *env)
 {
 	int	i;
-	char	*temp;
+	int	check;
 
-	if (!args[1])
-	{
-		env->exit_code = 0;
-		return ;
-	}
-	if (args[1][0] == 0)
-	{
-		// fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
-		env->exit_code = 1;
-		return ;
-	}
-	if (args[1][0] == '-')
-	{
-		fprintf(stderr, "minishell: unset: -%c: invalid option\n", args[1][1]);
-		env->exit_code = 2;
-		return ;
-	}
-	else if (ft_strchr(args[1], ';') != 0)
-	{
-		temp = extract_c(args[1], ';');
-		fprintf(stderr, "Command '%s' not found\n", temp);
-		free(temp);
-		env->exit_code = 127;
-		return ;
-	}
-	else if (valid_name(args[1]) != 0)
-	{
-		// fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
-		env->exit_code = 1;
-		return ;
-	}
-	if (args[1][0] == '=')
-	{
-		// fprintf(stderr, "minishell: unset: '%s': not a valid identifier\n", args[1]);
-		env->exit_code = 1;
-		return ;
-	}
-	// if (get_path(args[1], env) == 0)
-	// {
-	// 	env->exit_code = 1;
-	// 	return ;
-	// }
+	check = unset_checker(args[1], env);
+	if (check != 0)
+		check = unset_checker2(args[1], env);
 	i = 1;
-	while (args[i])
+	if (check != 0)
 	{
-		env->envp = remove_env(env->envp, args[i], env);
-		env->export = remove_env(env->export, args[i], env);
-		i++;
+		while (args[i])
+		{
+			env->envp = remove_env(env->envp, args[i], env);
+			env->export = remove_env(env->export, args[i], env);
+			i++;
+		}
+		env->exit_code = 0;
 	}
-	env->exit_code = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:01:29 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 20:48:48 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/23 15:43:35 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,36 @@ static char	*get_old_pwd(t_env *env)
 {
 	int		j;
 	char	*temp;
-	
+
 	j = 0;
-	while (env->envp && env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
+	while (env->envp && env->envp[j]
+		&& ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
 		j++;
 	if (env->envp[j])
 		temp = ft_strdup(env->envp[j]);
 	else
 		temp = NULL;
 	return (temp);
+}
+
+void	uop_helper(t_env *env, int j)
+{
+	int		i;
+	char	*temp;
+
+	i = 0;
+	while (env->envp[i])
+	{
+		if (ft_strncmp(env->envp[i], "PWD", 3) == 0)
+		{
+			temp = ft_substr(env->envp[i], 4, ft_strlen(env->envp[i]) - 4);
+			env->envp[j] = ft_strjoin("OLDPWD=", temp);
+			gc_register(env->gc, env->envp[j]);
+			free(temp);
+			return ;
+		}
+		i++;
+	}
 }
 
 static void	update_old_pwd(t_env *env, int check)
@@ -51,19 +72,7 @@ static void	update_old_pwd(t_env *env, int check)
 	}
 	while (env->envp[j] && ft_strncmp(env->envp[j], "OLDPWD", 6) != 0)
 		j++;
-	while (env->envp[i])
-	{
-		if (ft_strncmp(env->envp[i], "PWD", 3) == 0)
-		{
-			// free(env->envp[j]);
-			temp = ft_substr(env->envp[i], 4, ft_strlen(env->envp[i]) - 4);
-			env->envp[j] = ft_strjoin("OLDPWD=", temp);
-			gc_register(env->gc, env->envp[j]);
-			free(temp);
-			return ;
-		}
-		i++;
-	}
+	uop_helper(env, j);
 }
 
 static void	update_pwd(t_env *env)
@@ -83,13 +92,31 @@ static void	update_pwd(t_env *env)
 		i++;
 	if (env->envp[i])
 	{
-		// free(env->envp[i]);
 		env->envp[i] = ft_strjoin("PWD=", new_pwd);
 		gc_register(env->gc, env->envp[i]);
 		free(new_pwd);
 		return ;
 	}
 	free(new_pwd);
+}
+
+void	cd_helper(char *args, t_env *env, char *old_pwd)
+{
+	if (env->exit_code == -1)
+	{
+		env->exit_code = 1;
+		write(2, "minishell: cd: ", 15);
+		write(2, args[1], ft_strlen(args[1]));
+		write(2, ": No such file or directory\n", 28);
+		env->envp = remove_env(env->envp, "OLDPWD", env);
+		if (old_pwd != NULL)
+			env->envp = update_env(env->envp, old_pwd, env);
+	}
+	else
+	{
+		update_pwd(env);
+		env->exit_code = 0;
+	}
 }
 
 void	run_cd(char **args, t_env *env)
@@ -105,7 +132,7 @@ void	run_cd(char **args, t_env *env)
 		i++;
 	if (i > 2)
 	{
-		fprintf(stderr, "minishell: cd: too many arguments\n");
+		write(2, "minishell: cd: too many arguments\n", 34);
 		env->exit_code = 1;
 		return ;
 	}
@@ -114,7 +141,7 @@ void	run_cd(char **args, t_env *env)
 	path = getenv("HOME");
 	if (!path)
 	{
-		fprintf(stderr, "minishell: cd: HOME not set\n");
+		write(2, "minishell: cd: HOME not set\n", 28);
 		env->exit_code = 1;
 		return ;
 	}
@@ -127,7 +154,7 @@ void	run_cd(char **args, t_env *env)
 		path = getenv("HOME");
 		if (!path)
 		{
-			fprintf(stderr, "minishell: cd: HOME not set\n");
+			write(2, "minishell: cd: HOME not set\n", 28);
 			env->exit_code = 1;
 			if (old_pwd)
 				free(old_pwd);
@@ -143,11 +170,11 @@ void	run_cd(char **args, t_env *env)
 		}
 		else if (!old_pwd || ft_strncmp(old_pwd, "OLDPWD=", 7) != 0)
 		{
-			fprintf(stderr, "minishell: cd: OLDPWD not set\n");
+			write(2, "minishell: cd: OLDPWD not set \n", 31);
 			env->exit_code = 1;
-			if(old_pwd)
+			if (old_pwd)
 				free(old_pwd);
-			return;
+			return ;
 		}
 		else
 		{
@@ -163,7 +190,9 @@ void	run_cd(char **args, t_env *env)
 	if (env->exit_code == -1)
 	{
 		env->exit_code = 1;
-		fprintf(stderr, "minishell: cd: %s: No such file or directory\n", args[1]);
+		write(2, "minishell: cd: ", 15);
+		write(2, args[1], ft_strlen(args[1]));
+		write(2, ": No such file or directory\n", 28);
 		env->envp = remove_env(env->envp, "OLDPWD", env);
 		if (old_pwd != NULL)
 			env->envp = update_env(env->envp, old_pwd, env);
@@ -175,5 +204,4 @@ void	run_cd(char **args, t_env *env)
 	}
 	if (old_pwd)
 		free(old_pwd);
-	// printf("%s\n", args[1]);
 }

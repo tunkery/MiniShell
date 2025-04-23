@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 19:44:38 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/23 15:12:41 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ int		append_key_size(char *str);
 char	*append_organiser(char *str);
 void	append(char *str, t_env *env, char *value, int i);
 void	append1(char *str, t_env *env, char *value, int i);
+char	*append2(char *str, char *value);
 void	append_exp(char *str, t_env *env);
 void	append_env(char *str, t_env *env);
 int		duplicate_check_env(char *str, t_env *env);
@@ -164,6 +165,11 @@ void	run_pwd(char **args, t_env *env);
 void	run_unset(char **args, t_env *env);
 void	run_env(char **args, t_env *env);
 void	run_cd(char **args, t_env *env);
+int		valid_name_unset(char *str);
+int		hey(char *str, char c);
+char	*extract_c(char *str, char c);
+int		unset_checker(char *args, t_env *env);
+int		unset_checker2(char *args, t_env *env);
 
 // Env functions
 
