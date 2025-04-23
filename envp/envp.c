@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 17:04:49 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/23 17:07:52 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,15 @@ static void	shell_level_ex(char ***str, int i, t_env *env)
 	else
 		value = ft_substr((*str)[i], 6, 1);
 	digit = ft_atoi(value);
-	if (value)
-		free(value);
+	free(value);
 	value = ft_itoa(++digit);
 	temp = ft_strjoin("SHLVL=", value);
 	temp2 = copy_ex_helper(temp);
 	free(temp);
-	if (value)
-		free(value);
+	free(value);
 	(*str)[i] = ft_strdup(temp2);
 	gc_register(env->gc, (*str)[i]);
-	if (temp2)
-		free(temp2);
+	free(temp2);
 }
 
 static void	shell_level(char ***str, int i, t_env *env)
@@ -96,6 +93,6 @@ void	initiate_env(t_env *env, char **envp)
 		env->old_pwd = ft_strdup(env->envp[i]);
 		if (!env->envp)
 			return ;
-		// gc_register(env->gc, env->envp[i]);
+		gc_register(env->gc, env->envp[i]);
 	}
 }
