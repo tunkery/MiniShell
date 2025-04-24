@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 16:02:56 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/24 16:00:03 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 21:26:05 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,54 +22,96 @@ char	**create_args_from_tokens(t_token *start, t_token *end, t_env *env)
 	return (args_from_token_alloc(start, end, count, env));
 }
 
-void	handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
+static void	redirect_output(t_token **curr, int *fd, int flags)
 {
-	if ((*curr)->type == TOKEN_REDIRECT_OUT)
+	*curr = (*curr)->next;
+	if (*curr && (*curr)->type == TOKEN_WORD)
 	{
-		*curr = (*curr)->next;
-		if (*curr && (*curr)->type == TOKEN_WORD)
+		if (*fd != STDOUT_FILENO)
+			close(*fd);
+		*fd = open ((*curr)->value, flags, 0644);
+		if ((*fd < 0))
 		{
-			if (*out_fd != STDOUT_FILENO)
-				close(*out_fd);
-			*out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (*out_fd < 0)
-			{
-				perror("open failed");
-				exit(1);
-			}
-		}
-	}
-	else if ((*curr)->type == TOKEN_REDIRECT_APPEND)
-	{
-		*curr = (*curr)->next;
-		if (*curr && (*curr)->type == TOKEN_WORD)
-		{
-			if (*out_fd != STDOUT_FILENO)
-				close(*out_fd);
-			*out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (*out_fd < 0)
-			{
-				perror("open failed");
-				exit(1);
-			}
-		}
-	}
-	else if ((*curr)->type == TOKEN_REDIRECT_IN)
-	{
-		*curr = (*curr)->next;
-		if (*curr && (*curr)->type == TOKEN_WORD)
-		{
-			if (*in_fd != STDIN_FILENO)
-				close(*in_fd);
-			*in_fd = open((*curr)->value, O_RDONLY);
-			if (*in_fd < 0)
-			{
-				perror("open failed");
-				exit(1);
-			}
+			perror("open failed");
+			exit(1);
 		}
 	}
 }
+
+static void	redirect_input(t_token **curr, int *fd)
+{
+	*curr = (*curr)->next;
+	if (*curr && (*curr)->type == TOKEN_WORD)
+	{
+		if (*fd != STDIN_FILENO)
+			close(*fd);
+		*fd = open((*curr)->value, O_RDONLY);
+		if (*fd < 0)
+		{
+			perror("open failed");
+			exit(1);
+		}
+	}
+}
+
+void	handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
+{
+	if ((*curr)->type == TOKEN_REDIRECT_OUT)
+		redirect_output(curr, out_fd, O_WRONLY | O_CREAT | O_APPEND);
+	else if ((*curr)->type == TOKEN_REDIRECT_APPEND)
+		redirect_output(curr, out_fd, O_WRONLY | O_CREAT | O_APPEND);
+	else if ((*curr)->type == TOKEN_REDIRECT_IN)
+		redirect_input(curr, in_fd);
+}
+
+// void	handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
+// {
+// 	if ((*curr)->type == TOKEN_REDIRECT_OUT)
+// 	{
+// 		*curr = (*curr)->next;
+// 		if (*curr && (*curr)->type == TOKEN_WORD)
+// 		{
+// 			if (*out_fd != STDOUT_FILENO)
+// 				close(*out_fd);
+// 			*out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+// 			if (*out_fd < 0)
+// 			{
+// 				perror("open failed");
+// 				exit(1);
+// 			}
+// 		}
+// 	}
+// 	else if ((*curr)->type == TOKEN_REDIRECT_APPEND)
+// 	{
+// 		*curr = (*curr)->next;
+// 		if (*curr && (*curr)->type == TOKEN_WORD)
+// 		{
+// 			if (*out_fd != STDOUT_FILENO)
+// 				close(*out_fd);
+// 			*out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+// 			if (*out_fd < 0)
+// 			{
+// 				perror("open failed");
+// 				exit(1);
+// 			}
+// 		}
+// 	}
+// 	else if ((*curr)->type == TOKEN_REDIRECT_IN)
+// 	{
+// 		*curr = (*curr)->next;
+// 		if (*curr && (*curr)->type == TOKEN_WORD)
+// 		{
+// 			if (*in_fd != STDIN_FILENO)
+// 				close(*in_fd);
+// 			*in_fd = open((*curr)->value, O_RDONLY);
+// 			if (*in_fd < 0)
+// 			{
+// 				perror("open failed");
+// 				exit(1);
+// 			}
+// 		}
+// 	}
+// }
 
 void	handle_heredoc_redirec(t_token **curr, int *in_fd, t_env *env)
 {
@@ -114,7 +156,6 @@ void	apply_redirections(t_token *start, t_token *end, int *in_fd,
 				close(*in_fd);
 			*in_fd = ft_atoi(current->value);
 			current = current->next->next;
-			continue ;
 		}
 		else if (current->type == TOKEN_HEREDOC)
 			handle_heredoc_redirec(&current, in_fd, env);
