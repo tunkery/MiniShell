@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 13:43:03 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 15:59:38 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,6 +277,16 @@ int 	assign_with_quoted(char *line, int i);
 // Tokenizer utils
 
 int		ft_strcmp(const char *s1, const char *s2);
+char	*join_and_register(char *result, char *temp, t_env *env);
+char	*handle_word_helper(char *result, int *i, t_env *env);
+int		handle_word_helper2(char **result, char *line, int *i, t_env *env);
+int		token_alloc_check(t_token *tmp);
+int		token_alloc_check1(t_token *tmp);
+void	pid_is_zero(int *pipe, char **heredoc_input, t_env *env, t_token *curr);
+int		pipe_helper(int *pip, char **heredoc_input, t_env *env, t_token *curr);
+int	parent_process_heredoc_pipe(int *pipe_fd, pid_t pid, t_token *curr,
+	t_env *env);
+void	heredoc_helper(char **heredoc, t_token **curr, int *pipe_fd, t_env *env);
 
 // Validate syntax for redirect
 
