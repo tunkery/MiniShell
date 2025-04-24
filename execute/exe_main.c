@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/24 18:01:17 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 20:20:29 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,21 +153,14 @@ void	exec_without_pipes(t_token *tokens, t_env *env, int out_fd)
 		args = tokens_to_args(tmp, env);
 		if (!args)
 		{
-			while (tmp && tmp->type != TOKEN_SEMIC)
-				tmp = tmp->next;
-			if (tmp)
-				tmp = tmp->next;
+			exe_helper(&tmp);
 			continue ;
 		}
 		handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
 		if (args && args[0] && args[0][0] != '\0')
 			execute_with_redirection(args, env, out_fd, save_stdout);
-		if (dup2(save_stdin, STDIN_FILENO) == -1)
-			perror("dup2 failed to restore STDIN");
-		while (tmp && tmp->type != TOKEN_SEMIC)
-			tmp = tmp->next;
-		if (tmp)
-			tmp = tmp->next;
+		exe_helper1(save_stdin);
+		exe_helper(&tmp);
 	}
 	close_both(save_stdout, save_stdin);
 }

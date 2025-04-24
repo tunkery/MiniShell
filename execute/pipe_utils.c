@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 16:02:43 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/24 16:28:24 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 20:13:54 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,39 +35,19 @@ int	**create_pipes(int seg_count)
 	i = 0;
 	j = 0;
 	pipes = malloc(sizeof(int *) * (seg_count - 1));
-	if (!pipes)
-		return (NULL);
-	if (seg_count <= 1)
+	if (!pipes || seg_count <= 1)
 		return (NULL);
 	while (i < seg_count - 1)
 	{
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i])
 		{
-			j = 0;
-			while (j < i)
-			{
-				close(pipes[j][0]);
-				close(pipes[j][1]);
-				free(pipes[j]);
-				j++;
-			}
-			free(pipes);
+			create_pipe_helper(&pipes, i);
 			return (NULL);
 		}
 		if (pipe(pipes[i]) == -1)
 		{
-			perror("pipe failed");
-			j = 0;
-			while (j < i)
-			{
-				close(pipes[j][0]);
-				close(pipes[j][1]);
-				free(pipes[j]);
-				j++;
-			}
-			free(pipes[i]);
-			free(pipes);
+			create_pipe_helper1(&pipes, i);
 			return (NULL);
 		}
 		i++;

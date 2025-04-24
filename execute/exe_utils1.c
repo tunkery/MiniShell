@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:08:37 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 18:19:31 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 20:19:38 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,52 @@ void	run_with_path_helper(char *str, char **args, t_env *env, int out_fd)
 		wait_for_child(pid, env);
 }
 
-// void	piped_command_helper(int seg_count, t_token **segments, t_env *env, int **pipes)
-// {
+void	create_pipe_helper(int ***pipes, int i)
+{
+	int	j;
 
-// }
+	j = 0;
+	while (j < i)
+	{
+		close(*pipes[j][0]);
+		close(*pipes[j][1]);
+		free(*pipes[j]);
+		j++;
+	}
+	free(*pipes);
+}
+
+void	create_pipe_helper1(int ***pipes, int i)
+{
+	int	j;
+
+	perror("pipe failed");
+	j = 0;
+	while (j < i)
+	{
+		close(*pipes[j][0]);
+		close(*pipes[j][1]);
+		free(*pipes[j]);
+		j++;
+	}
+	free(*pipes[i]);
+	free(*pipes);
+}
+
+void	exe_helper(t_token **temp)
+{
+	t_token	*tmp;
+
+	tmp = *temp;
+	while (tmp && tmp->type != TOKEN_SEMIC)
+		tmp = tmp->next;
+	if (tmp)
+		tmp = tmp->next;
+	*temp = tmp;
+}
+
+void	exe_helper1(int save_stdin)
+{
+	if (dup2(save_stdin, STDIN_FILENO) == -1)
+		perror("dup2 failed to restore STDIN");
+}

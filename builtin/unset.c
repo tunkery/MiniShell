@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:00:31 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 15:12:13 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 20:23:39 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ void	run_unset(char **args, t_env *env)
 	{
 		while (args[i])
 		{
-			env->envp = remove_env(env->envp, args[i], env);
-			env->export = remove_env(env->export, args[i], env);
+			env->envp = remove_env(env->envp, args[i], env, 0);
+			env->export = remove_env(env->export, args[i], env, 0);
 			i++;
 		}
 		env->exit_code = 0;

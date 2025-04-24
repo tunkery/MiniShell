@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:59:45 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 18:46:20 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 20:23:18 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,13 @@ char	**update_ex(char **envp, char *key, t_env *env)
 	return (new_env);
 }
 
-char	**remove_env(char **envp, char *key, t_env *env)
+char	**remove_env(char **envp, char *key, t_env *env, int j)
 {
 	int		i;
-	int		j;
-	int		size;
 	char	**new_env;
 
 	i = 0;
-	j = 0;
-	size = env_size(envp);
-	new_env = my_malloc(env->gc, sizeof(char *) * (size + 1));
+	new_env = my_malloc(env->gc, sizeof(char *) * (env_size(envp) + 1));
 	if (!new_env)
 		return (NULL);
 	while (envp[i])
@@ -91,10 +87,8 @@ char	**remove_env(char **envp, char *key, t_env *env)
 		}
 		if (envp[i])
 		{
-			new_env[j] = ft_strdup(envp[i]);
-			gc_register(env->gc, new_env[j]);
-			i++;
-			j++;
+			new_env[j] = ft_strdup(envp[i++]);
+			gc_register(env->gc, new_env[j++]);
 		}
 	}
 	new_env[j] = NULL;

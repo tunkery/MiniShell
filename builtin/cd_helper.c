@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:02:38 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 16:03:14 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 20:23:51 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	cd_helper(char *args, t_env *env, char *old_pwd)
 		write(2, "minishell: cd: ", 15);
 		write(2, args, ft_strlen(args));
 		write(2, ": No such file or directory\n", 28);
-		env->envp = remove_env(env->envp, "OLDPWD", env);
+		env->envp = remove_env(env->envp, "OLDPWD", env, 0);
 		if (old_pwd != NULL)
 			env->envp = update_env(env->envp, old_pwd, env);
 	}

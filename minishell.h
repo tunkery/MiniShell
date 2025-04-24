@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 18:38:29 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 20:59:15 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ void	copy_ex(char **str, char ***envp, t_env *env);
 char	*copy_ex_helper(char *str);
 char	**update_ex(char **envp, char *key, t_env *env);
 char	**update_env(char **envp, char *key, t_env *env);
-char	**remove_env(char **envp, char *key, t_env *env);
+char	**remove_env(char **envp, char *key, t_env *env, int i);
 
 // Execute functions
 char	*find_exec(char *command, char *path_variable, int i, t_env *env);
@@ -294,6 +294,13 @@ void	close_both(int save_stdout, int save_stdin);
 void	write_it(t_token **current);
 void	run_with_path_helper(char *str, char **args, t_env *env, int out_fd);
 void	wait_for_child(pid_t pid, t_env *env);
+void	create_pipe_helper(int ***pipes, int i);
+void	create_pipe_helper1(int ***pipes, int i);
+void	exe_helper(t_token **temp);
+void	exe_helper1(int save_stdin);
+int		exit_helper(const char *str, int i, unsigned long long *check);
+void	exit_helper1(int *sign, const char *str, int *i, unsigned long long *check);
+int		exit_helper2(char **args, int *i);
 // Validate syntax for redirect
 
 int		print_syntax_message(char *str, t_env *env);
