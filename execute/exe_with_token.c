@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:24:26 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/24 16:27:07 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:06:11 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args,
 		*in_fd = open((*current)->value, O_RDONLY);
 		if (*in_fd < 0)
 		{
-			write(2, "minishell: ", 11);
-			write(2, (*current)->value, ft_strlen((*current)->value));
-			write(2, ": No such file or directory\n", 29);
+			write_it(current);
 			env->exit_code = 1;
 			*args = NULL;
 			return ;

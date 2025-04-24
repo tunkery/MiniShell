@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:59:45 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 17:05:07 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:46:20 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,25 +101,23 @@ char	**remove_env(char **envp, char *key, t_env *env)
 	return (new_env);
 }
 
-static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env *env)
+static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len,
+	t_env *env)
 {
 	char	*new_s;
 	size_t	i;
-	size_t	s_len;
 
-	(void)env;
 	if (!s)
 		return (NULL);
 	i = 0;
-	s_len = ft_gnl_strlen(s);
-	if (start >= s_len)
+	if (start >= ft_gnl_strlen(s))
 	{
 		new_s = ft_gnl_strdup("");
 		gc_register(env->s_gc, new_s);
 		return (new_s);
 	}
-	if (len > s_len - start)
-		len = s_len - start;
+	if (len > ft_gnl_strlen(s) - start)
+		len = ft_gnl_strlen(s) - start;
 	new_s = (char *)malloc(len + 2);
 	if (!new_s)
 		return (NULL);
@@ -130,16 +128,17 @@ static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env
 	}
 	new_s[i++] = '/';
 	new_s[i] = '\0';
-	gc_register(env->s_gc, new_s);
-	return (new_s);
+	return (gc_register(env->s_gc, new_s), new_s);
 }
 
-char	*find_exec(char *command, char *path, int i, int j, t_env *env)
+char	*find_exec(char *command, char *path, int i, t_env *env)
 {
 	char	*temp;
+	int		j;
 
 	if (!command || !path)
 		return (NULL);
+	j = 5;
 	while (path[i])
 	{
 		while (path[i] && path[i] && path[i] != ':')
@@ -149,10 +148,7 @@ char	*find_exec(char *command, char *path, int i, int j, t_env *env)
 			return (NULL);
 		temp = ft_strjoin(temp, command);
 		if (access(temp, X_OK) == 0)
-		{
-			gc_register(env->s_gc, temp);
-			return (temp);
-		}
+			return (gc_register(env->s_gc, temp), temp);
 		free(temp);
 		temp = NULL;
 		if (!path[i])

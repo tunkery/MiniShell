@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:56:26 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/22 16:35:34 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/24 18:08:05 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,8 @@ char	*process_heredoc_line(char *line, char *result, t_env *env)
 	char	*expand_line;
 	int		i;
 	int		start;
-	char	cpy[2];
 
 	i = 0;
-	cpy[1] = '\0';
 	while (line[i])
 	{
 		if (line[i] == '$')
@@ -85,8 +83,7 @@ char	*process_heredoc_line(char *line, char *result, t_env *env)
 		}
 		else
 		{
-			cpy[0] = line[i];
-			result = ft_strjoin_heredoc(result, cpy);
+			result = ft_strjoin_heredoc(result, &line[i]);
 			gc_register(env->s_gc, result);
 			i++;
 		}

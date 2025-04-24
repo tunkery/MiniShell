@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 16:35:42 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 18:03:09 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:04:58 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,11 @@ void	close_both(int save_stdout, int save_stdin)
 {
 	close(save_stdout);
 	close(save_stdin);
+}
+
+void	write_it(t_token **current)
+{
+	write(2, "minishell: ", 11);
+	write(2, (*current)->value, ft_strlen((*current)->value));
+	write(2, ": No such file or directory\n", 29);
 }

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 18:00:51 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:38:29 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ char	**update_env(char **envp, char *key, t_env *env);
 char	**remove_env(char **envp, char *key, t_env *env);
 
 // Execute functions
-char	*find_exec(char *command, char *path_variable, int i, int j, t_env *env);
+char	*find_exec(char *command, char *path_variable, int i, t_env *env);
 void	handle_redirection(t_token **current, char **args, int *out_fd,
 char	**heredoc_input, t_env *env);
 void	execute_with_redirection(char **args, t_env *env, int out_fd, int save_stdout);
@@ -291,6 +291,9 @@ int	token_to_args_helper(t_token **temp);
 void	token_to_args_helper1(char ***args, t_token *tmp, t_env *env, int *i);
 int		count_token_helper(t_token *tokens);
 void	close_both(int save_stdout, int save_stdin);
+void	write_it(t_token **current);
+void	run_with_path_helper(char *str, char **args, t_env *env, int out_fd);
+void	wait_for_child(pid_t pid, t_env *env);
 // Validate syntax for redirect
 
 int		print_syntax_message(char *str, t_env *env);
