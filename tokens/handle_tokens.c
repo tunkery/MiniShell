@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 12:35:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/23 18:19:10 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 13:30:02 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,15 @@ void	handle_word(t_token *token, char *line, int *i, t_env *env)
 {
 	char	*result;
 	char	*temp;
+	char	cpy[2];
 
 	result = ft_strdup("");
 	gc_register(env->s_gc, result);
 	token->type = TOKEN_WORD;
-	while (line[*i] && line[*i] != ' '  && line[*i] != '\t' && line[*i] != '|' && line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
+	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '|'
+		&& line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
 	{
-        //Add backslash rules!
+		// Add backslash rules!
 		if (line[*i] == '\\')
 		{
 			(*i)++;
@@ -88,30 +90,32 @@ void	handle_word(t_token *token, char *line, int *i, t_env *env)
 			if (line[*i] == '\\' && line[*i + 1] == '$')
 			{
 				(*i)++;
-				char cpy[2] = {'\\', '\0'};
+				cpy[0] = '\\';
+				cpy[1] = '\0';
 				result = ft_strjoin(result, cpy);
 				gc_register(env->s_gc, result);
 				continue ;
 			}
-            char cpy[2] = {line[*i], '\0'};
-            result = ft_strjoin(result, cpy);
-            gc_register(env->s_gc, result);
-            (*i)++;
-            continue;
-        }
-        if(line[*i] == '"')
-        {
-            temp = process_quoted(line, i, '"', env);
-            if(temp)
-            {
-                result = ft_strjoin(result, temp);
-                gc_register(env->s_gc, result);
-            }
-            else
-            {
-                token->value = NULL;
-                return;
-            }
+			cpy[0] = line[*i];
+			cpy[1] = '\0';
+			result = ft_strjoin(result, cpy);
+			gc_register(env->s_gc, result);
+			(*i)++;
+			continue ;
+		}
+		if (line[*i] == '"')
+		{
+			temp = process_quoted(line, i, '"', env);
+			if (temp)
+			{
+				result = ft_strjoin(result, temp);
+				gc_register(env->s_gc, result);
+			}
+			else
+			{
+				token->value = NULL;
+				return ;
+			}
 		}
 		else if (line[*i] == '\'')
 		{
@@ -127,7 +131,9 @@ void	handle_word(t_token *token, char *line, int *i, t_env *env)
 				return ;
 			}
 		}
-		else if (line[*i] == '$' && (line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?' || line[*i + 1] == '"')))
+		else if (line[*i] == '$' && (line[*i + 1] && (ft_isalnum(line[*i + 1])
+					|| line[*i + 1] == '_' || line[*i + 1] == '?' || line[*i
+						+ 1] == '"')))
 		{
 			temp = expand_env(line, i, env);
 			if (temp)
@@ -141,7 +147,8 @@ void	handle_word(t_token *token, char *line, int *i, t_env *env)
 				gc_register(env->s_gc, result);
 			}
 		}
-		else if(line[*i] == '~' &&(line[*i + 1] == '/' || line[*i + 1] == '\0' || line[*i+1] == ' '))
+		else if (line[*i] == '~' && (line[*i + 1] == '/' || line[*i + 1] == '\0'
+				|| line[*i + 1] == ' '))
 		{
 			temp = handle_tilde(line, i, env);
 			if (temp)
@@ -152,7 +159,8 @@ void	handle_word(t_token *token, char *line, int *i, t_env *env)
 		}
 		else
 		{
-			char cpy[2] = {line[*i], '\0'};
+			cpy[0] = line[*i];
+			cpy[1] = '\0';
 			result = ft_strjoin(result, cpy);
 			gc_register(env->s_gc, result);
 			(*i)++;

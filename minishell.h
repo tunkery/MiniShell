@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 17:46:31 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 13:43:03 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,13 +253,15 @@ void	set_signal_pipe(void);
 
 // Tokenizer
 
-t_token    *tokenizer(char *line, t_env *env);
-void		seperated_token(char *line, t_token **head, t_env *env);
-char    	*extract_word(char *line, int *i, t_env *env);
-void    	free_token_matrix(t_token *token);
-char		*process_quoted(char *line, int *i, char quote_type, t_env *env);
-char		*expand_env(char *line, int *i, t_env *env);
-char		**tokens_to_args(t_token *tokens, t_env *env);
+t_token	*tokenizer(char *line, t_env *env);
+void	seperated_token(char *line, t_token **head, t_env *env);
+char    *extract_word(char *line, int *i, t_env *env);
+void    free_token_matrix(t_token *token);
+char	*process_quoted(char *line, int *i, char quote_type, t_env *env);
+void	process_quoted_helper(char **result, char *line, int *i, t_env *env);
+void	process_quoted_helper2(char **result, char *line, int *i, t_env *env);
+char	*expand_env(char *line, int *i, t_env *env);
+char	**tokens_to_args(t_token *tokens, t_env *env);
 
 // seperated tokenizer
 
