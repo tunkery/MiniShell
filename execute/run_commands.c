@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_commands.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 19:39:36 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/24 16:03:46 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 	pid_t	pid;
 	int		check;
 
-	(void)out_fd;
 	check = permission_check(str, env);
 	if (access(str, X_OK) == 0 && check == 0)
 	{
@@ -121,10 +120,9 @@ void	exec_command(char **args, t_env *env, int out_fd)
 	path = find_path(env);
 	exec_path = find_exec(final, path, 0, 5, env);
 	gc_register(env->s_gc, exec_path);
-	if (ft_strchr(final, '/')) // if, yani eger, biri path ile yazmissa komutu burasi kontrol edip calistiriyo
+	if (ft_strchr(final, '/'))
 		run_with_path(final, args, env, out_fd);
 	else
-		// eger pathsiz yazilmissa command burasi isi eline aliyo ve pathi bulup calistiriyo
 	{
 		if (!exec_path)
 		{
@@ -134,6 +132,4 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		else
 			run_without_path(args, env, out_fd, exec_path);
 	}
-	// if (exec_path)
-	// 	free(exec_path);
 }

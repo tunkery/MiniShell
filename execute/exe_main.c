@@ -3,41 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   exe_main.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/22 16:21:05 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/24 16:08:41 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int count_token_args(t_token *tmp)
+static int	count_token_args(t_token *tmp)
 {
-	t_token *tokens;
-	t_token *next = NULL;
-	int total;
+	t_token	*tokens;
+	t_token	*next;
+	int		total;
 
+	next = NULL;
 	tokens = tmp;
 	total = 0;
 	while (tokens && tokens->type != TOKEN_SEMIC && tokens->type != TOKEN_PIPE)
 	{
-		if(tokens == next)
+		if (tokens == next)
 		{
 			next = NULL;
 			tokens = tokens->next;
-			continue;
+			continue ;
 		}
-		if(tokens->type == TOKEN_REDIRECT_APPEND
-			|| tokens->type == TOKEN_HEREDOC ||
-			tokens->type == TOKEN_REDIRECT_OUT ||
-			 tokens->type == TOKEN_REDIRECT_IN || 
-			 tokens->type == TOKEN_HEREDOC)
-			 {
-				next = tokens->next;
-				tokens = tokens->next;
-				continue;
-			 }
+		if (tokens->type == TOKEN_REDIRECT_APPEND
+			|| tokens->type == TOKEN_HEREDOC
+			|| tokens->type == TOKEN_REDIRECT_OUT
+			|| tokens->type == TOKEN_REDIRECT_IN
+			|| tokens->type == TOKEN_HEREDOC)
+		{
+			next = tokens->next;
+			tokens = tokens->next;
+			continue ;
+		}
 		if (tokens->type == TOKEN_WORD)
 		{
 			total++;
@@ -50,13 +51,13 @@ static int count_token_args(t_token *tmp)
 char	**tokens_to_args(t_token *tokens, t_env *env)
 {
 	t_token	*tmp;
-	t_token *next = NULL;
+	t_token	*next;
 	char	**args;
 	int		i;
-	int total;
+	int		total;
 
+	next = NULL;
 	total = count_token_args(tokens);
-
 	args = my_malloc(env->s_gc, (total + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);
@@ -64,22 +65,20 @@ char	**tokens_to_args(t_token *tokens, t_env *env)
 	i = 0;
 	while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_PIPE)
 	{
-		if(tmp == next)
+		if (tmp == next)
 		{
 			next = NULL;
 			tmp = tmp->next;
-			continue;
+			continue ;
 		}
-		if(tmp->type == TOKEN_REDIRECT_APPEND
-			|| tmp->type == TOKEN_HEREDOC ||
-			tmp->type == TOKEN_REDIRECT_OUT ||
-			 tmp->type == TOKEN_REDIRECT_IN || 
-			 tmp->type == TOKEN_HEREDOC)
-			 {
-				next = tmp->next;
-				tmp = tmp->next;
-				continue;
-			 }
+		if (tmp->type == TOKEN_REDIRECT_APPEND || tmp->type == TOKEN_HEREDOC
+			|| tmp->type == TOKEN_REDIRECT_OUT || tmp->type == TOKEN_REDIRECT_IN
+			|| tmp->type == TOKEN_HEREDOC)
+		{
+			next = tmp->next;
+			tmp = tmp->next;
+			continue ;
+		}
 		if (tmp->type == TOKEN_WORD)
 		{
 			args[i] = ft_strdup(tmp->value);
@@ -119,24 +118,26 @@ void	execute_with_redirection(char **args, t_env *env, int out_fd,
 void	handle_redirection(t_token **current, char **args, int *out_fd,
 		char **heredoc_input, t_env *env)
 {
-	int in_fd = STDIN_FILENO;
-	while (*current && (*current)->type != TOKEN_SEMIC && (*current)->type != TOKEN_PIPE)
+	int	in_fd;
+
+	in_fd = STDIN_FILENO;
+	while (*current && (*current)->type != TOKEN_SEMIC
+		&& (*current)->type != TOKEN_PIPE)
 	{
 		if ((*current)->type == TOKEN_REDIRECT_OUT) // >
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 0);
-			if(!*args)
+			if (!*args)
 			{
 				return ;
 			}
-			
 		}
 		else if (*current && (*current)->type == TOKEN_REDIRECT_IN) // <
 		{
 			*current = (*current)->next;
 			read_redirected_in(current, &in_fd, args, env);
-			if(!*args)
+			if (!*args)
 			{
 				return ;
 			}
@@ -145,18 +146,18 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 1);
-			if(!*args)
+			if (!*args)
 			{
 				return ;
 			}
-			if(!*current)
-				break;
+			if (!*current)
+				break ;
 		}
 		else if ((*current)->type == TOKEN_HEREDOC) // <<
 		{
 			*current = (*current)->next;
 			process_child_heredoc(current, heredoc_input, args, env);
-			if(!*args)
+			if (!*args)
 			{
 				return ;
 			}
@@ -166,93 +167,68 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 	}
 }
 
-
-
 void	exec_without_pipes(t_token *tokens, t_env *env)
 {
-    t_token	*tmp;
-    char	**args;
-    int		out_fd;
-    int		save_stdout;
-    int		save_stdin;
-    char	*heredoc_input;
-    // int		i;
+	t_token	*tmp;
+	char	**args;
+	int		out_fd;
+	int		save_stdout;
+	int		save_stdin;
+	char	*heredoc_input;
 
-    tmp = tokens;
-    args = NULL;
-    out_fd = STDOUT_FILENO;
-    save_stdout = dup(STDOUT_FILENO);
-    save_stdin = dup(STDIN_FILENO);
-    heredoc_input = NULL;
-
-    while (tmp)
-    {
-        args = tokens_to_args(tmp, env);
-        if (!args)
-        {
-            while (tmp && tmp->type != TOKEN_SEMIC)
-                tmp = tmp->next;
-            if (tmp)
-                tmp = tmp->next;
-            continue;
-        }
-		if (out_fd != STDOUT_FILENO)
-            close(out_fd);
-        out_fd = STDOUT_FILENO;
-        
-		env->exit_code = 0;
-
-        handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
-        if(args && args[0] && args[0][0] != '\0')
-        {
-            execute_with_redirection(args, env, out_fd, save_stdout);
-        }
-
-		
-        args = NULL;
-
-		if(heredoc_input)
+	// int		i;
+	tmp = tokens;
+	args = NULL;
+	out_fd = STDOUT_FILENO;
+	save_stdout = dup(STDOUT_FILENO);
+	save_stdin = dup(STDIN_FILENO);
+	heredoc_input = NULL;
+	while (tmp)
+	{
+		args = tokens_to_args(tmp, env);
+		if (!args)
 		{
-			// free(heredoc_input);
-			heredoc_input = NULL;
+			while (tmp && tmp->type != TOKEN_SEMIC)
+				tmp = tmp->next;
+			if (tmp)
+				tmp = tmp->next;
+			continue ;
 		}
-        
-        out_fd = STDOUT_FILENO;
-        if (out_fd != STDOUT_FILENO)
-            close(out_fd);
-        
-        if (dup2(save_stdin, STDIN_FILENO) == -1)
-            perror("dup2 failed to restore STDIN");
-        
-        while (tmp && tmp->type != TOKEN_SEMIC)
-        {
-            tmp = tmp->next;
-        }
-        if (tmp)
-        {
-            tmp = tmp->next;
-        }
-    }
-    
-    close(save_stdout);
-    close(save_stdin);
+		if (out_fd != STDOUT_FILENO)
+			close(out_fd);
+		out_fd = STDOUT_FILENO;
+		handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
+		if (args && args[0] && args[0][0] != '\0')
+			execute_with_redirection(args, env, out_fd, save_stdout);
+		args = NULL;
+		if (heredoc_input)
+			heredoc_input = NULL;
+		out_fd = STDOUT_FILENO;
+		if (out_fd != STDOUT_FILENO)
+			close(out_fd);
+		if (dup2(save_stdin, STDIN_FILENO) == -1)
+			perror("dup2 failed to restore STDIN");
+		while (tmp && tmp->type != TOKEN_SEMIC)
+			tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
+	}
+	close(save_stdout);
+	close(save_stdin);
 }
 
 void	cell_launch(t_token *tokens, t_env *env)
 {
-
-	if(!validate_syntax(tokens, env))
+	if (!validate_syntax(tokens, env))
 	{
 		return ;
 	}
-
-    if(has_pipes(tokens))
-    {
-        execute_piped_command(tokens, env);
-    }
-    else
-    {
-        exec_without_pipes(tokens, env);
-    }
-
+	if (has_pipes(tokens))
+	{
+		execute_piped_command(tokens, env);
+	}
+	else
+	{
+		exec_without_pipes(tokens, env);
+	}
 }
