@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:04:28 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/24 16:08:41 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:01:17 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static int	count_token_args(t_token *tmp)
 	t_token	*next;
 	int		total;
 
-	next = NULL;
 	tokens = tmp;
 	total = 0;
 	while (tokens && tokens->type != TOKEN_SEMIC && tokens->type != TOKEN_PIPE)
@@ -29,20 +28,14 @@ static int	count_token_args(t_token *tmp)
 			tokens = tokens->next;
 			continue ;
 		}
-		if (tokens->type == TOKEN_REDIRECT_APPEND
-			|| tokens->type == TOKEN_HEREDOC
-			|| tokens->type == TOKEN_REDIRECT_OUT
-			|| tokens->type == TOKEN_REDIRECT_IN
-			|| tokens->type == TOKEN_HEREDOC)
+		if (count_token_helper(tokens) == -1)
 		{
 			next = tokens->next;
 			tokens = tokens->next;
 			continue ;
 		}
 		if (tokens->type == TOKEN_WORD)
-		{
 			total++;
-		}
 		tokens = tokens->next;
 	}
 	return (total);
@@ -65,26 +58,10 @@ char	**tokens_to_args(t_token *tokens, t_env *env)
 	i = 0;
 	while (tmp && tmp->type != TOKEN_SEMIC && tmp->type != TOKEN_PIPE)
 	{
-		if (tmp == next)
-		{
-			next = NULL;
-			tmp = tmp->next;
+		if (token_to_args_helper(&tmp) == -1)
 			continue ;
-		}
-		if (tmp->type == TOKEN_REDIRECT_APPEND || tmp->type == TOKEN_HEREDOC
-			|| tmp->type == TOKEN_REDIRECT_OUT || tmp->type == TOKEN_REDIRECT_IN
-			|| tmp->type == TOKEN_HEREDOC)
-		{
-			next = tmp->next;
-			tmp = tmp->next;
-			continue ;
-		}
 		if (tmp->type == TOKEN_WORD)
-		{
-			args[i] = ft_strdup(tmp->value);
-			gc_register(env->s_gc, args[i]);
-			i++;
-		}
+			token_to_args_helper1(&args, tmp, env, &i);
 		tmp = tmp->next;
 	}
 	args[i] = NULL;
@@ -129,27 +106,21 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 0);
 			if (!*args)
-			{
 				return ;
-			}
 		}
 		else if (*current && (*current)->type == TOKEN_REDIRECT_IN) // <
 		{
 			*current = (*current)->next;
 			read_redirected_in(current, &in_fd, args, env);
 			if (!*args)
-			{
 				return ;
-			}
 		}
 		else if ((*current)->type == TOKEN_REDIRECT_APPEND) // >>
 		{
 			*current = (*current)->next;
 			openfile_redirected(current, out_fd, args, 1);
 			if (!*args)
-			{
 				return ;
-			}
 			if (!*current)
 				break ;
 		}
@@ -158,31 +129,25 @@ void	handle_redirection(t_token **current, char **args, int *out_fd,
 			*current = (*current)->next;
 			process_child_heredoc(current, heredoc_input, args, env);
 			if (!*args)
-			{
 				return ;
-			}
 		}
 		else
 			(*current) = (*current)->next;
 	}
 }
 
-void	exec_without_pipes(t_token *tokens, t_env *env)
+void	exec_without_pipes(t_token *tokens, t_env *env, int out_fd)
 {
 	t_token	*tmp;
 	char	**args;
-	int		out_fd;
 	int		save_stdout;
 	int		save_stdin;
 	char	*heredoc_input;
 
-	// int		i;
 	tmp = tokens;
-	args = NULL;
 	out_fd = STDOUT_FILENO;
 	save_stdout = dup(STDOUT_FILENO);
 	save_stdin = dup(STDIN_FILENO);
-	heredoc_input = NULL;
 	while (tmp)
 	{
 		args = tokens_to_args(tmp, env);
@@ -194,18 +159,9 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
 				tmp = tmp->next;
 			continue ;
 		}
-		if (out_fd != STDOUT_FILENO)
-			close(out_fd);
-		out_fd = STDOUT_FILENO;
 		handle_redirection(&tmp, args, &out_fd, &heredoc_input, env);
 		if (args && args[0] && args[0][0] != '\0')
 			execute_with_redirection(args, env, out_fd, save_stdout);
-		args = NULL;
-		if (heredoc_input)
-			heredoc_input = NULL;
-		out_fd = STDOUT_FILENO;
-		if (out_fd != STDOUT_FILENO)
-			close(out_fd);
 		if (dup2(save_stdin, STDIN_FILENO) == -1)
 			perror("dup2 failed to restore STDIN");
 		while (tmp && tmp->type != TOKEN_SEMIC)
@@ -213,8 +169,7 @@ void	exec_without_pipes(t_token *tokens, t_env *env)
 		if (tmp)
 			tmp = tmp->next;
 	}
-	close(save_stdout);
-	close(save_stdin);
+	close_both(save_stdout, save_stdin);
 }
 
 void	cell_launch(t_token *tokens, t_env *env)
@@ -229,6 +184,6 @@ void	cell_launch(t_token *tokens, t_env *env)
 	}
 	else
 	{
-		exec_without_pipes(tokens, env);
+		exec_without_pipes(tokens, env, 0);
 	}
 }

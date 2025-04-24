@@ -3,35 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   exe_with_token.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 14:24:26 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/22 16:29:47 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/24 16:27:07 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
+void	read_redirected_in(t_token **current, int *in_fd, char **args,
+		t_env *env)
 {
-	if(*current && (*current)->type == TOKEN_WORD)
+	if (*current && (*current)->type == TOKEN_WORD)
 	{
 		*in_fd = open((*current)->value, O_RDONLY);
-		if(*in_fd < 0)
+		if (*in_fd < 0)
 		{
 			write(2, "minishell: ", 11);
-			write(2, (*current)->value,ft_strlen((*current)->value));
-			write(2,": No such file or directory\n", 29);
+			write(2, (*current)->value, ft_strlen((*current)->value));
+			write(2, ": No such file or directory\n", 29);
 			env->exit_code = 1;
 			*args = NULL;
-			return;
+			return ;
 		}
 		*current = (*current)->next;
 	}
-	if(*in_fd  != STDIN_FILENO)
+	if (*in_fd != STDIN_FILENO)
 	{
-		if(dup2(*in_fd, STDIN_FILENO) == -1)
+		if (dup2(*in_fd, STDIN_FILENO) == -1)
 		{
 			close(*in_fd);
 			perror("dub2 failed for redirected!");
@@ -48,15 +48,16 @@ static void	child_process_heredoc(int *pipe_fd, t_token **current,
 {
 	close(pipe_fd[0]);
 	set_signal_heredoc();
-
 	*heredoc_input = handler_heredoc((*current)->value, env);
 	write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
 	close(pipe_fd[1]);
 	exit(0);
 }
 
-static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
+static void	parent_process_heredoc(int *pipe_fd, char **args, pid_t pid)
 {
+	int	status;
+
 	close(pipe_fd[1]);
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
 	{
@@ -64,23 +65,20 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 		close(pipe_fd[0]);
 		return ;
 	}
-
-	int status;
 	waitpid(pid, &status, 0);
-	if(WIFSIGNALED(status))
+	if (WIFSIGNALED(status))
 	{
 		close(pipe_fd[0]);
 		*args = NULL;
-		return;
+		return ;
 	}
-
 }
 
 void	process_child_heredoc(t_token **current, char **heredoc_input,
 		char **args, t_env *env)
 {
-		int pipe_fd[2];
-		pid_t pid;
+	int		pipe_fd[2];
+	pid_t	pid;
 
 	if (*current && (*current)->type == TOKEN_WORD)
 	{
@@ -93,7 +91,7 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		if (pid == 0)
 			child_process_heredoc(pipe_fd, current, heredoc_input, env);
 		else if (pid > 0)
-			parent_process_heredoc(pipe_fd, args,pid);
+			parent_process_heredoc(pipe_fd, args, pid);
 		else
 		{
 			perror("fork failed!");
@@ -107,7 +105,7 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 		int append)
 {
 	int	flag;
-	int new_fd;
+	int	new_fd;
 
 	flag = O_WRONLY | O_CREAT;
 	if (append)
@@ -116,16 +114,16 @@ void	openfile_redirected(t_token **current, int *out_fd, char **args,
 		flag |= O_TRUNC;
 	if (*current && (*current)->type == TOKEN_WORD)
 	{
-		new_fd= open((*current)->value, flag, 0644);
+		new_fd = open((*current)->value, flag, 0644);
 		if (new_fd < 0)
 		{
 			write(2, "minishell: ", 11);
-			write(2, (*current)->value,ft_strlen((*current)->value));
-			write(2,": No such file or directory\n", 29);
+			write(2, (*current)->value, ft_strlen((*current)->value));
+			write(2, ": No such file or directory\n", 29);
 			*args = NULL;
 			return ;
 		}
-		if(*out_fd != STDOUT_FILENO)
+		if (*out_fd != STDOUT_FILENO)
 			close(*out_fd);
 		*out_fd = new_fd;
 		*current = (*current)->next;

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 15:59:38 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:00:51 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ char	*find_exec(char *command, char *path_variable, int i, int j, t_env *env);
 void	handle_redirection(t_token **current, char **args, int *out_fd,
 char	**heredoc_input, t_env *env);
 void	execute_with_redirection(char **args, t_env *env, int out_fd, int save_stdout);
-void	exec_without_pipes(t_token *tokens, t_env *env);
+void	exec_without_pipes(t_token *tokens, t_env *env, int out_fd);
 char	**create_args_from_tokens(t_token *start, t_token *end, t_env *env);
 t_token **find_pipe_seg(t_token *tokens, int *seg_count, t_env *env);
 void	cell_launch(t_token *tokens, t_env *env);
@@ -287,7 +287,10 @@ int		pipe_helper(int *pip, char **heredoc_input, t_env *env, t_token *curr);
 int	parent_process_heredoc_pipe(int *pipe_fd, pid_t pid, t_token *curr,
 	t_env *env);
 void	heredoc_helper(char **heredoc, t_token **curr, int *pipe_fd, t_env *env);
-
+int	token_to_args_helper(t_token **temp);
+void	token_to_args_helper1(char ***args, t_token *tmp, t_env *env, int *i);
+int		count_token_helper(t_token *tokens);
+void	close_both(int save_stdout, int save_stdin);
 // Validate syntax for redirect
 
 int		print_syntax_message(char *str, t_env *env);

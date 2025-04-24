@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:07:05 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/22 16:26:56 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/24 16:27:35 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 	}
 	return (result);
 }
-
 
 char	*handler_heredoc(char *delimiter, t_env *env)
 {
