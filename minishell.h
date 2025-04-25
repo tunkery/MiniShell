@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 20:59:15 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/25 16:32:46 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void	append_env(char *str, t_env *env, int i);
 int		duplicate_check_env(char *str, t_env *env);
 int		duplicate_check_ex(char *args, t_env *env);
 void	duplicate_fix_env(char *str, t_env *env);
-void	duplicate_fix_ex(char *str, t_env *env, int i, int size);
+void	duplicate_fix_ex(char *str, t_env *env, int i);
 void	run_builtin(char **args, t_env *env);
 void	run_export(char **args, t_env *env);
 void	run_exit(char **args, t_env *env);

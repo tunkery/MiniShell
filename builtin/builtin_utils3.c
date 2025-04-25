@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/23 16:45:30 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/25 16:33:49 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,15 @@ void	duplicate_fix_env(char *str, t_env *env)
 	env->exit_code = 0;
 }
 
-void	duplicate_fix_ex(char *str, t_env *env, int i, int size)
+void	duplicate_fix_ex(char *str, t_env *env, int i)
 {
 	char	*temp;
 
 	while (env->export && env->export[i])
 	{
-		if (ft_strncmp(env->export[i], str, size) == 0)
+		if (ft_strncmp(env->export[i], str, key_size(str)) == 0)
 		{
-			if (size != key_size(env->export[i]))
+			if (key_size(str) != key_size(env->export[i]))
 				i++;
 			else
 			{
@@ -123,12 +123,12 @@ void	export1(char *str, t_env *env)
 		if (duplicate_check_ex(str, env) == 0
 			&& duplicate_check_env(str, env) == 0)
 		{
-			duplicate_fix_ex(str, env, 0, 0);
+			duplicate_fix_ex(str, env, 0);
 			duplicate_fix_env(str, env);
 		}
 		else if (duplicate_check_ex(str, env) == 0)
 		{
-			duplicate_fix_ex(str, env, 0, 0);
+			duplicate_fix_ex(str, env, 0);
 		}
 		else
 		{

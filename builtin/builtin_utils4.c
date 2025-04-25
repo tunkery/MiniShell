@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:40:10 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 16:43:27 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/25 16:39:25 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	append_env(char *str, t_env *env, int i)
 		size++;
 	key = ft_substr(str, 0, size);
 	gc_register(env->gc, key);
-	while (env->envp && env->envp[i++])
+	while (env->envp && env->envp[i])
 	{
 		if (ft_strncmp(env->envp[i], key, size) == 0)
 		{
@@ -72,7 +72,7 @@ void	append1(char *str, t_env *env, char *value, int i)
 	if (env->export && env->export[i])
 	{
 		temp = append2(env->export[i], value);
-		free(env->export[i]);
+		// free(env->export[i]);
 		env->export[i] = ft_strdup(temp);
 		free(temp);
 	}
