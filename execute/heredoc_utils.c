@@ -36,7 +36,7 @@ char	*ft_strjoin_heredoc(char const *s1, char const *s2)
 		j++;
 	}
 	new_s[i + j] = '\0';
-	// free((void*)s1);
+	free((void*)s1);
 	return (new_s);
 }
 

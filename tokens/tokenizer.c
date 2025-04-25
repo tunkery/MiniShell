@@ -102,45 +102,30 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
     (*i)++;
     while(line[*i] && line[*i] != quote_type)
     {
-        if(quote_type == '"' && line[*i] == '$' && line[*i + 1] && (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
+        if(quote_type == '"' && line[*i] == '$' && line[*i + 1] && 
+            (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
         {
 
-                temp = expand_env(line, i, env);
-                if(temp)
-                {
-                    // char *old_res = result;
-                    result = ft_strjoin(result, temp);
-                    gc_register(env->s_gc, result);
-                    // free(old_res);
-                    // free(temp);
-                } // check it all free as lldb.
-            // }
-            // else
-            // {
-            //     char cpy[2] = {'$', '\0'};
-            //     char *old_res = result;
-            //     result = ft_strjoin(result, cpy);
-            //     free(old_res);
-            //     (*i)++;
-            // }
+            temp = expand_env(line, i, env);
+            if(temp)
+            {
+                result = ft_strjoin(result, temp);
+                gc_register(env->s_gc, result);
+            }
+
         }
         else
         {
             char cpy[2] = {line[*i], '\0'};
-            // char *old_res = result;
             result = ft_strjoin(result, cpy);
             gc_register(env->s_gc, result);
-            // free(old_res);
             (*i)++;
         }
     }
     if(line[*i] == quote_type)
         (*i)++;
     else
-    {
-        // free(result);
         return (NULL);
-    }
     return (result);
 }
 
@@ -175,7 +160,6 @@ t_token *handle_special_token(char *line, int *i, t_env *env)
         return NULL;
     }
     token->next = NULL;
-    token->prev = NULL;
     if(line[*i] == '|')
         handle_pipe(token,i, env);
     else if(line[*i] == '<')
@@ -197,33 +181,95 @@ t_token *handle_special_token(char *line, int *i, t_env *env)
 
 void seperated_token(char *line, t_token **head, t_env *env)
 {
+      
     t_token *current = NULL;
     t_token *token;
     int i = 0;
 
     while(line[i])
     {
-        // split spaces
         while(line[i] && (line[i] == ' ' || line[i] == '\t'))
             i++;
         if(line[i] == '\0')
             break;
-        token = handle_special_token(line, &i, env);
-        if(!token)
+        
+        // handle_special_token yerine farklı bir yaklaşım kullanın
+        if(line[i] == '<' && line[i+1] == '<')  // Heredoc kontrol et
         {
-            // free_token_matrix(*head);
-            // *head = NULL;
-            return;
+            // Heredoc token oluştur
+            token = my_malloc(env->s_gc, sizeof(t_token));
+            if(!token) return;
+            
+            token->type = TOKEN_HEREDOC;
+            token->value = ft_strdup("<<");
+            gc_register(env->s_gc, token->value);
+            
+            // Token'ı listeye ekle
+            token->prev = current;
+            if(!*head)
+                *head = token;
+            else
+                current->next = token;
+            current = token;
+            
+            i += 2;  // << operatörünü atla
+            
+            // Boşlukları atla
+            while(line[i] && (line[i] == ' ' || line[i] == '\t'))
+                i++;
+                
+            // Satır sonu veya özel karakter geldi mi kontrol et
+            if(!line[i] || line[i] == '\n' || line[i] == '|' || 
+               line[i] == '<' || line[i] == '>' || line[i] == ';')
+            {
+                continue;  // Delimiter yok, validation'da hata verilecek
+            }
+            
+            // Delimiter token oluştur
+            t_token *delimiter = my_malloc(env->s_gc, sizeof(t_token));
+            if(!delimiter) return;
+            
+            delimiter->type = TOKEN_WORD;
+            delimiter->value = ft_strdup("");  // Boş değer başlat
+            gc_register(env->s_gc, delimiter->value);
+            
+            // Delimiter içeriğini al
+            char *result = delimiter->value;
+            
+            // Tırnak kontrolü ve içerik alma işlemleri...
+            // (Mevcut heredoc_delimiter fonksiyonunuzdaki mantık burada uygulanabilir)
+            
+            while(line[i] && line[i] != ' ' && line[i] != '\t' && 
+                  line[i] != '|' && line[i] != '<' && line[i] != '>' && 
+                  line[i] != ';')
+            {
+                char cpy[2] = {line[i], '\0'};
+                result = ft_strjoin(result, cpy);
+                gc_register(env->s_gc, result);
+                delimiter->value = result;
+                i++;
+            }
+            
+            // Delimiter token'ı listeye ekle
+            delimiter->prev = current;
+            delimiter->next = NULL;
+            current->next = delimiter;
+            current = delimiter;
         }
-
-        token->prev = current;
-
-        if(!*head)
-            *head = token;
-        else
-            current->next = token;
-        current = token;
+        else  // Diğer token türleri
+        {
+            token = handle_special_token(line, &i, env);
+            if(!token) return;
+            
+            token->prev = current;
+            if(!*head)
+                *head = token;
+            else
+                current->next = token;
+            current = token;
+        }
     }
+    
 }
 
 t_token    *tokenizer(char *line, t_env *env)

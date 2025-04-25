@@ -84,12 +84,12 @@ char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 		gc_register(env->s_gc, line);
 		if (ft_strcmp(line, delimiter) == 0)
 			break ;
-		if(quote_mode)
+		if(quote_mode == 1)
 		{
 
-			result = ft_strjoin(result,line);
+			result = ft_strjoin_heredoc(result,line);
 			gc_register(env->s_gc, result);
-			result = ft_strjoin(result, "\n");
+			result = ft_strjoin_heredoc(result, "\n");
 			gc_register(env->s_gc, result);
 
 		}

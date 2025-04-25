@@ -23,27 +23,54 @@ void print_syntax_message(char *str, t_env *env)
 
 int validate_redirect_syntax(t_token *tokens, t_env *env)
 {
+
+    
     t_token *tmp = tokens;
     env->exit_code = 0;
+    
     while(tmp)
     {
         if(tmp->type == TOKEN_REDIRECT_IN || tmp->type == TOKEN_REDIRECT_OUT || 
-            tmp->type == TOKEN_REDIRECT_APPEND || tmp->type == TOKEN_HEREDOC)
+           tmp->type == TOKEN_REDIRECT_APPEND || tmp->type == TOKEN_HEREDOC)
         {
+
+            
+            // Redirect token'dan sonra bir token yoksa sözdizimi hatası
             if(!tmp->next)
             {
-                
+
                 print_syntax_message("newline'", env);
+                env->exit_code = 258;
                 return 0;
             }
+            
+
+            
+            // Redirect token'dan sonraki token WORD değilse sözdizimi hatası
             if(tmp->next->type != TOKEN_WORD)
             {
+
                 print_syntax_message(tmp->next->value, env);
+                env->exit_code = 258;
                 return 0;
+            }
+            
+            // Heredoc için özel kontrol - boş delimiter geçersizdir
+            if(tmp->type == TOKEN_HEREDOC)
+            {
+
+                if(!tmp->next->value || tmp->next->value[0] == '\0')
+                {
+
+                    print_syntax_message("newline'", env);
+                    env->exit_code = 258;
+                    return 0;
+                }
             }
         }
         tmp = tmp->next;
     }
+    
     return 1;
 }
 

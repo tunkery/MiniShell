@@ -109,6 +109,7 @@ typedef enum e_token_type
 	TOKEN_REDIRECT_APPEND, // >>
 	TOKEN_HEREDOC, // <<
 	TOKEN_HEREDOC_PROCESSED,
+	TOKEN_HEREDOC_DELIMITER,
 	TOKEN_SEMIC, // ;
 	TOKEN_END,
 }	t_token_type;
@@ -120,6 +121,7 @@ typedef	struct s_token
 	char  *value; // token value
 	struct s_token *next;
 	struct s_token *prev; // next token
+	int 	quote_mode; // 0: no quote, 1: single quote, 2: double quote
 }	t_token;
 
 // typedef struct s_heredoc_status
