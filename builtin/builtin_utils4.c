@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 14:40:10 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/25 16:39:25 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/25 16:40:16 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	append1(char *str, t_env *env, char *value, int i)
 	if (env->export && env->export[i])
 	{
 		temp = append2(env->export[i], value);
-		// free(env->export[i]);
 		env->export[i] = ft_strdup(temp);
 		free(temp);
 	}
