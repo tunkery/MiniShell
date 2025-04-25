@@ -215,6 +215,25 @@ void    handle_word(t_token *token, char *line, int *i, t_env *env)
 
     while(line[*i] && line[*i] != ' '  && line[*i] != '\t' && line[*i] != '|' && line[*i] != '>' && line[*i] != '<' && line[*i] != ';')
     {
+        if(line[*i] == '$' && line[*i + 1] == '\'')
+        {
+            (*i) += 2;
+            char quote_status[1024];
+            int quo_i = 0;
+
+            while(line[*i] && line[*i] != '\'')
+                quote_status[quo_i++] = line[(*i)++];
+            quote_status[quo_i] = '\0';
+            if(line[*i] == '\'')
+                (*i)++;
+            temp = ansi_c_quote(quote_status,env);
+            if(temp)
+            {
+                result = ft_strjoin(result,temp);
+                gc_register(env->s_gc,result);
+            }
+            continue;
+        }
         //Add backslash rules!
         if(line[*i] == '\\')
         {

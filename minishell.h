@@ -253,6 +253,8 @@ void    	free_token_matrix(t_token *token);
 char		*process_quoted(char *line, int *i, char quote_type, t_env *env);
 char		*expand_env(char *line, int *i, t_env *env);
 char		**tokens_to_args(t_token *tokens, t_env *env);
+char *ansi_c_quote(char *str, t_env *env);
+char get_escape(char c);
 
 // seperated tokenizer
 char	*handle_tilde(char *line, int *i, t_env *env);
