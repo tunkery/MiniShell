@@ -46,50 +46,29 @@ void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env)
 static void	child_process_heredoc(int *pipe_fd, t_token **current,
 		char **heredoc_input, t_env *env)
 {
+	char *delimiter;
+	int quote_mode;
+	size_t len;
+	char *unquoted;
+	char *content;
+	
 	close(pipe_fd[0]);
     set_signal_heredoc();
-
-    // Delimiter bilgilerini al
-    char *delimiter = (*current)->value;
-    // int quote_mode = (*current)->quote_mode;  // Quote mode'u doğrudan token'dan al
-	// if((*current)->prev && (*current)->prev->value && ft_strncmp(delimiter, "<<'", 3) == 0)
-	// 	quote_mode = 1;
-	// else if((*current)->prev && (*current)->prev->value && ft_strncmp(delimiter, "<<\"", 3) == 0)
-	// 	quote_mode = 1;
-	// else if((*current)->prev && (*current)->prev->value && ft_strncmp(delimiter, "<<", 2) == 0)
-	// 	quote_mode = 0;
-	// else
-	int quote_mode = 0;
-	
-	// char *orj = ft_strdup(delimiter);
-	// gc_register(env->s_gc, orj);
-	size_t len = ft_strlen(delimiter);
+   	delimiter = (*current)->value;
+	quote_mode = 0;
+	len = ft_strlen(delimiter);
 	if (len >= 2 && ((delimiter[0] == '\'' && delimiter[len -1] == '\'') || (len >= 2 && delimiter[0] == '\"' && delimiter[len -1] == '\"')))
 	{
 		quote_mode = 1;
-		char *unquoted = ft_substr(delimiter,1,len - 2);
-		// free(orj);
-		// gc_register(env->s_gc, orj);
+		unquoted = ft_substr(delimiter,1,len - 2);
 		gc_register(env->s_gc, unquoted);
 		delimiter = unquoted;
 	}
 	else if ((*current)->prev && (*current)->prev->value && ((ft_strncmp((*current)->prev->value, "<<'", 3) == 0) || (ft_strncmp((*current)->prev->value, "<<\"", 3) == 0 )))
-	{
 		quote_mode = 1;
-	}
-
-	char *content = handler_heredoc(delimiter, env,quote_mode);
+	content = handler_heredoc(delimiter, env,quote_mode);
 	gc_register(env->s_gc,content);
-	// gc_register(env->s_gc, orj);
 	*heredoc_input = content;
-
-	
-    
-    // // Heredoc içeriğini oku ve işle (quote_mode'a göre)
-    // *heredoc_input = handler_heredoc(delimiter, env, quote_mode);
-    // gc_register(env->s_gc, *heredoc_input);
-    
-    // Pipe'a yaz
     write(pipe_fd[1], *heredoc_input, ft_strlen(*heredoc_input));
     close(pipe_fd[1]);
     exit(0);
@@ -121,56 +100,30 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 void	process_child_heredoc(t_token **current, char **heredoc_input,
 		char **args, t_env *env)
 {
+	int pipe_fd[2];
+	pid_t pid;
 
-    
     if (!*current)
-    {
-
         return;
-    }
-    
-    
     if ((*current) && (*current)->type == TOKEN_WORD)
-    {
-
-        
-        int pipe_fd[2];
+    { 
         if (pipe(pipe_fd) == -1)
         {
 			perror("pipe failed!");
             return;
         }
-        
-        pid_t pid = fork();
+        pid = fork();
         if (pid == 0)
-        {
-
             child_process_heredoc(pipe_fd, current, heredoc_input, env);
-            // Child exits in child_process_heredoc
-        }
         else if (pid > 0)
-        {
-
             parent_process_heredoc(pipe_fd, args, pid);
-
-        }
         else
         {
-
             perror("fork failed!");
             return;
         }
-        
         *current = (*current)->next;
-
     }
-    // else
-    // {
-    //     env->exit_code = 258;
-    //     *args = NULL;
-    //     return;
-    // }
-
 }
 
 

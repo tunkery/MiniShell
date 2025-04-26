@@ -83,7 +83,6 @@ char	*process_heredoc_line(char *line, char *result, t_env *env)
 			expand_line = expanded_heredoc_line(&line[i], env);
 			result = ft_strjoin_heredoc(result, expand_line);
 			gc_register(env->s_gc, result);
-			// free(expand_line);
 			i = start + ft_strlen(&line[start]);
 		}
 		else

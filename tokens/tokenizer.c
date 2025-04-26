@@ -171,12 +171,6 @@ static char *variable_expansion(char *line, int *i, t_env *env)
         value = ft_strdup("");
         gc_register(env->s_gc, value);
     }
-    //     return (value);
-    // else
-    // {
-    //     value = ft_strdup("");
-    // }
-    // gc_register(env->s_gc, value);
     return (value);
 }
 
@@ -193,37 +187,7 @@ char *expand_env(char *line, int *i, t_env *env)
     //     return quote_expansion(line,i,'"',env);
 
     return variable_expansion(line,i,env);
-    
-    // char *value;
-    // char var_name[256];
-    // char *exit_status;
-    // int j;
 
-    // j = 0;
-    // (*i)++; 
-
-    // if(line[*i] == '?')
-    // {
-    //     (*i)++;
-    //     exit_status = ft_itoa(env->exit_code);
-    //     gc_register(env->s_gc, exit_status);
-    //     return (exit_status);
-    // }
-
-    // while(line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
-    // {
-    //     var_name[j++] = line[(*i)++];
-    // }
-    // var_name[j] = '\0';
-    // value = get_path(var_name, env);
-    // if(value)
-    //     return (value);
-    // else
-    // {
-    //     value = ft_strdup("");
-    // }
-    // gc_register(env->s_gc, value);
-    // return (value);
 }
 
 char *process_quoted(char *line, int *i, char quote_type, t_env *env)
@@ -238,14 +202,12 @@ char *process_quoted(char *line, int *i, char quote_type, t_env *env)
         if(quote_type == '"' && line[*i] == '$' && line[*i + 1] && 
             (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i + 1] == '?'))
         {
-
             temp = expand_env(line, i, env);
             if(temp)
             {
                 result = ft_strjoin(result, temp);
                 gc_register(env->s_gc, result);
             }
-
         }
         else
         {

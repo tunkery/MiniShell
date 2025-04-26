@@ -18,7 +18,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		execute/heredoc_utils.c envp/envp_utils2.c tokens/handle_tokens.c \
 		execute/pipe.c execute/pipe_utils.c parse_func/parsing.c tokens/validate_syntax.c \
 		parse_func/parse_utils.c builtin/builtin_utils2.c builtin/builtin_utils3.c \
-		garbage_collector/garbage_collector.c 
+		garbage_collector/garbage_collector.c tokens/handle_token2.c
 
 
 
