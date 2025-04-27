@@ -44,7 +44,7 @@ static int is_n_flag(char *str)
         i++;
     }
     
-    return (i > 1); // At least one 'n' after the dash
+    return (i > 1);
 }
 
 
@@ -96,6 +96,39 @@ static int is_n_flag(char *str)
 //         return (1);
 //     }
 //     return (0);
+// }
+
+// void run_echo(char **args, t_env *env)
+// {
+//     int check;
+//     int i;
+//     int flag;
+
+//     check = 0;
+//     i = 1;
+//     flag = 1;
+//     if (!args[1])
+//     {
+//         printf("\n");
+//         env->exit_code = 0;
+//         return;
+//     }
+//     while (args[i] && is_n_flag(args[i]))
+//     {
+//         check = 1;
+//         i++;
+//     }
+//     while(args[i])
+//     {
+//         if(!flag)
+//             printf(" ");
+//         printf("%s", args[i]);
+//         flag = 0;
+//         i++;
+//     }
+//     if (check == 0)
+//         printf("\n");
+//     env->exit_code = 0;
 // }
 
 void run_echo(char **args, t_env *env)

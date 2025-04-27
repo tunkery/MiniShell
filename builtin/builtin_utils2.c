@@ -95,7 +95,7 @@ void	append_exp(char *str, t_env *env)
 	append1(str, env, value, i);
 }
 
-static char	*append2(char *str, char *value)
+char	*append2(char *str, char *value)
 {
 	int		i;
 	char	*temp;

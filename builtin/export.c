@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static int	valid_name(char *str)
+int	valid_name(char *str)
 {
 	int	i;
 	char *temp;

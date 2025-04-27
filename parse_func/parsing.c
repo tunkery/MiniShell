@@ -62,10 +62,31 @@ void handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
 
 }
 
+void setup_pipe_heredoc(t_token *curr,int *in_fd,t_env *env)
+{
+    char *heredoc_input;
+    int quote_mode;
+    int pipe_fd[2];
+
+    heredoc_input = NULL;
+    quote_mode = 0;
+    if(*in_fd != STDIN_FILENO)
+        close(*in_fd);
+    if(pipe(pipe_fd) == -1)
+    {
+        perror("pipe failed");
+        exit(EXIT_FAILURE);
+    }
+    heredoc_input =handler_heredoc(curr->value,env,quote_mode);
+    write(pipe_fd[1],heredoc_input,ft_strlen(heredoc_input));
+    close(pipe_fd[1]);
+    *in_fd = pipe_fd[0];
+}
+
 void handle_heredoc_redirec(t_token **curr, int *in_fd,t_env *env)
 {
-    char *heredoc_input = NULL;
-    int quote_mode = 0;
+    // char *heredoc_input = NULL;
+    // int quote_mode = 0;
     *curr = (*curr)->next;
     if(*curr && (*curr)->type == TOKEN_WORD)
     {
@@ -78,21 +99,22 @@ void handle_heredoc_redirec(t_token **curr, int *in_fd,t_env *env)
         }
         else
         {
-            if (*in_fd != STDIN_FILENO)
-                close(*in_fd);
+            setup_pipe_heredoc(*curr,in_fd,env);
+            // if (*in_fd != STDIN_FILENO)
+            //     close(*in_fd);
         
-            int pipe_fd[2];
-            if (pipe(pipe_fd) == -1) {
-                perror("pipe failed");
-                exit(EXIT_FAILURE);
-            }
+            // int pipe_fd[2];
+            // if (pipe(pipe_fd) == -1) {
+            //     perror("pipe failed");
+            //     exit(EXIT_FAILURE);
+            // }
         
-            heredoc_input = handler_heredoc((*curr)->value, env,quote_mode);
-            write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
-            close(pipe_fd[1]);
-            // free(heredoc_input);
+            // heredoc_input = handler_heredoc((*curr)->value, env,quote_mode);
+            // write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
+            // close(pipe_fd[1]);
+            // // free(heredoc_input);
             
-            *in_fd = pipe_fd[0];
+            // *in_fd = pipe_fd[0];
         }
     }
 }

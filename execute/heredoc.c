@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static char	*ft_strjoin_free(char *s1, char *s2)
+char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*result;
 
@@ -21,7 +21,7 @@ static char	*ft_strjoin_free(char *s1, char *s2)
 	return (result);
 }
 
-static char	*expand_command_substitution(char *line, int *index, t_env *env)
+char	*expand_command_substitution(char *line, int *index, t_env *env)
 {
 	char	expand_line[256];
 	char	*temp;
@@ -75,7 +75,6 @@ char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 
 	result = ft_strdup("");
 	gc_register(env->s_gc, result);
-	// char *expand_line;
 	while (1)
 	{
 		line = readline("> ");
@@ -86,7 +85,6 @@ char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 			break ;
 		if(quote_mode == 1)
 		{
-
 			result = ft_strjoin_heredoc(result,line);
 			gc_register(env->s_gc, result);
 			result = ft_strjoin_heredoc(result, "\n");

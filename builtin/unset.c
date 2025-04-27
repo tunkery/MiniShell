@@ -16,8 +16,8 @@ static int	valid_name(char *str)
 {
 	int	i;
 
-	// if (!str[0] || ft_isalnum(str[0]) != 0)
-	// 	return (-1);
+	if (!str[0] || ft_isalnum(str[0]) != 0)
+		return (-1);
 	i = 0;
 	while (str[i])
 	{
@@ -52,7 +52,7 @@ static int	valid_name(char *str)
 // 	return (0);
 // }
 
-static int	hey(char *str, char c)
+int	hey(char *str, char c)
 {
 	int	i;
 
@@ -66,7 +66,7 @@ static int	hey(char *str, char c)
 	return (-1);
 }
 
-static char	*extract_c(char *str, char c)
+char	*extract_c(char *str, char c)
 {
 	int	j;
 

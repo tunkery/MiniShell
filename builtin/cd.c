@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static char	*get_old_pwd(t_env *env)
+char	*get_old_pwd(t_env *env)
 {
 	int		j;
 	char	*temp;
@@ -27,7 +27,7 @@ static char	*get_old_pwd(t_env *env)
 	return (temp);
 }
 
-static void	update_old_pwd(t_env *env, int check)
+void	update_old_pwd(t_env *env, int check)
 {
 	char	*temp;
 	char	buf[BUFSIZ];
@@ -66,7 +66,7 @@ static void	update_old_pwd(t_env *env, int check)
 	}
 }
 
-static void	update_pwd(t_env *env)
+void	update_pwd(t_env *env)
 {
 	char	*new_pwd;
 	char	temp[BUFSIZ];

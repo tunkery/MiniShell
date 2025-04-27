@@ -54,7 +54,6 @@ int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env)
 		{
 			*result = ft_strjoin_heredoc(*result, temp);
 			gc_register(env->s_gc, *result);
-			// free(temp);
 		}
 	}
 	else
