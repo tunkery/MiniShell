@@ -15,11 +15,11 @@
 char	*ansi_c_quote(char *str, t_env *env)
 {
 	char	*result;
-	int		i = 0;
-	char	escape[2] = {0, 0};
-
+	int		i;
+	char	escape[2];
 
 	result = ft_strdup("");
+	i = 0;
 	gc_register(env->s_gc, result);
 	while (str[i])
 	{
@@ -33,11 +33,7 @@ char	*ansi_c_quote(char *str, t_env *env)
 			gc_register(env->s_gc, result);
 		}
 		else
-		{
-			char	cpy[2] = {str[i], '\0'}; // Bunu burdan degistirmeee artiyorr yanlis oluyorr!!
-			result = ft_strjoin(result, cpy);
-			gc_register(env->s_gc, result);
-		}
+			result = regular_char_decrease(result, str, &i, env);
 		i++;
 	}
 	return (result);
@@ -46,7 +42,6 @@ char	*ansi_c_quote(char *str, t_env *env)
 char	*process_quoted(char *line, int *i, char quote_type, t_env *env)
 {
 	char	*result;
-	char	*temp;
 
 	result = ft_strdup("");
 	gc_register(env->s_gc, result);
@@ -54,16 +49,10 @@ char	*process_quoted(char *line, int *i, char quote_type, t_env *env)
 	while (line[*i] && line[*i] != quote_type)
 	{
 		if (quote_type == '"' && line[*i] == '$' && line[*i + 1]
-			&& (ft_isalnum(line[*i + 1]) || line[*i + 1] == '_' || line[*i
-				+ 1] == '?'))
-		{
-			temp = expand_env(line, i, env);
-			if (temp)
-			{
-				result = ft_strjoin(result, temp);
-				gc_register(env->s_gc, result);
-			}
-		}
+			&& (ft_isalnum(line[*i + 1])
+				|| line[*i + 1] == '_'
+				|| line[*i + 1] == '?'))
+			result = handle_quote_var(line, i, result, env);
 		else
 			result = handle_regular_char(result, line, i, env);
 	}

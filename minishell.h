@@ -298,6 +298,9 @@ t_token *create_delimiter_token(char*line,int *i,t_token *current,t_env *env);
 void process_token_type(t_token_state *state);
 void seperated_token(char *line, t_token **head, t_env *env);
 t_token    *tokenizer(char *line, t_env *env);
+// tokenizer_utils2.c
+char	*regular_char_decrease(char *result, char *line, int *i, t_env *env);
+char *handle_quote_var(char *line, int *i, char *result, t_env *env);
 //tokenizer_utils1.c
 char *ansi_c_quote(char *str, t_env *env);
 char *process_quoted(char *line, int *i, char quote_type, t_env *env);
