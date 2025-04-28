@@ -43,12 +43,13 @@
 
 // # define DEBUG 1
 // # if DEBUG
-// #  define DEBUG_PRINT(fmt, ...) fprintf(stderr, " [DEBUG] " fmt, ##__VA_ARGS__);
+// #  define DEBUG_PRINT(fmt, ...) fprintf(stderr, " [DEBUG] " fmt,
+//	##__VA_ARGS__);
 // # else
 // #  define DEBUG_PRINT(fmt, ...) \
 // 	do                        \
 // 	{                         \
-// 	} while (0) 
+// 	} while (0)
 // # endif
 
 typedef struct s_builtin
@@ -81,6 +82,7 @@ typedef struct s_env
 	char				*path1;
 	int					syntax_error;
 	int					save_stdin;
+	pid_t				*pids;
 }						t_env;
 
 typedef struct s_pipe_command
@@ -130,6 +132,16 @@ typedef struct s_token_state
 	t_token				**head;
 	t_env				*env;
 }						t_token_state;
+
+typedef struct s_pipe_seg
+{
+	int					**pipes;
+	int					seg_count;
+	int					seg_index;
+	int					fds[2];
+	t_token				*seg_start;
+	t_token				*seg_end;
+}						t_pipe_seg;
 
 // builtins_utils.c:
 int						key_check(char *args);
@@ -259,14 +271,22 @@ void					wait_child_pipes(pid_t *pids, int seg_count,
 void					cleanup_pipes(int **pipes, int seg_count);
 int						setup_io(int in_fd, int out_fd);
 // pipe.c
-void find_seg_redirect(int *fds, t_token *start, t_token *end, t_env *env);
-void					setup_child_pipes(int **pipes, int i, int seg_count,
-							int *in_fd, int *out_fd);
-void					exec_child_comd(t_token *seg_start, t_token *seg_end,
-							t_env *env, int **pipes, int i, int seg_count);
-int						fork_cmd_process(t_token **segments, int seg_count,
-							t_env *env, int **pipes, pid_t *pids);
 void					execute_piped_command(t_token *tokens, t_env *env);
+int						setup_pipe_exec(t_token **segments, int seg_count,
+							t_env *env, int ***pipes_ptr);
+int						fork_cmd_process(t_token **segments, int seg_count,
+							t_env *env, int **pipes);
+int						create_single_process(t_token **segments, int i,
+							t_pipe_seg *stat);
+void					exec_child_comd(t_pipe_seg *stat, t_env *env);
+void					exec_cmd_or_buildin(t_token *seg_start,
+							t_token *seg_end, t_env *env);
+void					setup_child_pipes(t_pipe_seg *stat, int *fds);
+void					find_seg_redirect(int *fds, t_token *start,
+							t_token *end, t_env *env);
+void					init_pipe_seg(t_pipe_seg *stat, int **pipes,
+							int seg_count, int i);
+
 // run_commands.c
 void					wait_for_child(pid_t pid, t_env *env);
 void					exec_command(char **args, t_env *env, int out_fd);
@@ -293,7 +313,8 @@ int						token_alloc_check1(t_token *tmp);
 int						token_alloc_check(t_token *tmp);
 char					**args_from_token_alloc(t_token *start, t_token *end,
 							int count, t_env *env);
-void process_apply_redirections(t_token **current, int *in_fd, int *out_fd, t_env *env);
+void					process_apply_redirections(t_token **current,
+							int *in_fd, int *out_fd, t_env *env);
 // parsing.c
 char					**create_args_from_tokens(t_token *start, t_token *end,
 							t_env *env);
@@ -303,7 +324,8 @@ void					setup_pipe_heredoc(t_token *curr, int *in_fd,
 							t_env *env);
 void					handle_heredoc_redirec(t_token **curr, int *in_fd,
 							t_env *env);
-							void	apply_redirections(t_token *start, t_token *end, int *fds, t_env *env);
+void					apply_redirections(t_token *start, t_token *end,
+							int *fds, t_env *env);
 
 /*SIGNALS*/
 // set_signal.c

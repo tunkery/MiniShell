@@ -90,7 +90,6 @@ static void	parent_process_heredoc(int *pipe_fd, char **args,pid_t pid)
 	if(WIFSIGNALED(status))
 	{
 		close(pipe_fd[0]);
-		// clean_2d(args);
 		*args = NULL;
 		return;
 	}

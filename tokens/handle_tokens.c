@@ -23,7 +23,9 @@ void	handle_pipe(t_token *token, int *i, t_env *env)
 void	handle_redirect_in(t_token *token, char *line, int *i, t_env *env)
 {
 	if (line[*i + 1] == '<')
+	{
 		heredoc_delimiter(token, line, i, env);
+	}
 	else
 	{
 		token->type = TOKEN_REDIRECT_IN;

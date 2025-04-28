@@ -22,7 +22,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		tokens/handle_tokens3.c tokens/token_heredoc.c tokens/token_expansion.c tokens/tokenizer_utils1.c \
 		builtin/builtin_utils4.c builtin/builtin_utils5.c execute/exe_utils.c execute/exe_utils1.c \
 		tokens/tokenizer_utils2.c signals/set_signal1.c parse_func/parse_utils1.c parse_func/parse_utils2.c \
-		parse_func/parse_utils3.c garbage_collector/garbage_collector1.c builtin/cd_helper.c
+		parse_func/parse_utils3.c garbage_collector/garbage_collector1.c builtin/cd_helper.c execute/pipe_utils1.c \
 
 
 

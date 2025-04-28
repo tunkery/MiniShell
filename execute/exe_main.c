@@ -91,49 +91,118 @@ void	execute_with_redirection(char **args, t_env *env, int out_fd,
 		exec_command(args, env, out_fd);
 	}
 }
-
+t_token *find_last_heredoc(t_token *start, t_token *end)
+{
+	t_token *temp = start;
+	t_token *last_heredoc = NULL;
+	
+	while(temp && temp != end && temp->type != TOKEN_PIPE && temp->type != TOKEN_SEMIC)
+	{
+		if(temp->type == TOKEN_HEREDOC)
+			last_heredoc = temp;
+		temp = temp->next;
+	}
+	return last_heredoc;
+}
 void	handle_redirection(t_token **current, char **args, int *out_fd,
 		char **heredoc_input, t_env *env)
 {
 	int	in_fd;
-
+	t_token *temp = *current;
+	t_token *end = NULL;
+	t_token *last_heredoc = NULL;
 	in_fd = STDIN_FILENO;
-	while (*current && (*current)->type != TOKEN_SEMIC
-		&& (*current)->type != TOKEN_PIPE)
+
+	end = temp;
+	while(end && end->type != TOKEN_PIPE && end->type != TOKEN_SEMIC)
+		end = end->next;
+	
+	last_heredoc = find_last_heredoc(temp,end);
+	
+	while (temp && temp != end)
 	{
-		if ((*current)->type == TOKEN_REDIRECT_OUT) // >
+		if (temp->type == TOKEN_REDIRECT_OUT) // >
 		{
-			*current = (*current)->next;
-			openfile_redirected(current, out_fd, args, 0);
+			temp = temp->next;
+			openfile_redirected(&temp, out_fd, args, 0);
 			if (!*args)
 				return ;
 		}
-		else if (*current && (*current)->type == TOKEN_REDIRECT_IN) // <
+		else if (temp && temp->type == TOKEN_REDIRECT_IN) // <
 		{
-			*current = (*current)->next;
-			read_redirected_in(current, &in_fd, args, env);
+			temp = temp->next;
+			read_redirected_in(&temp, &in_fd, args, env);
 			if (!*args)
 				return ;
 		}
-		else if ((*current)->type == TOKEN_REDIRECT_APPEND) // >>
+		else if (temp->type == TOKEN_REDIRECT_APPEND) // >>
 		{
-			*current = (*current)->next;
-			openfile_redirected(current, out_fd, args, 1);
+			temp = temp->next;
+			openfile_redirected(&temp, out_fd, args, 1);
 			if (!*args)
 				return ;
-			if (!*current)
+			if (!temp)
 				break ;
 		}
-		else if ((*current)->type == TOKEN_HEREDOC) // <<
+		else if (temp->type == TOKEN_HEREDOC) // <<
 		{
-			*current = (*current)->next;
-			process_child_heredoc(current, heredoc_input, args, env);
-			if (!*args)
-				return ;
+			t_token *current_heredoc = temp;
+			temp = temp->next;
+			if(current_heredoc == last_heredoc)
+			{
+				process_child_heredoc(&temp, heredoc_input, args, env);
+				if (!*args)
+					 return ;
+
+			}
+			else
+			{
+				char *unused = NULL;
+				process_child_heredoc(&temp, &unused, args, env);
+				if (!*args)
+					 return ;
+			}
 		}
 		else
-			(*current) = (*current)->next;
+			temp = temp->next;
 	}
+	*current = temp;
+	// while (*current && (*current)->type != TOKEN_SEMIC
+	// 	&& (*current)->type != TOKEN_PIPE)
+	// {
+	// 	if ((*current)->type == TOKEN_REDIRECT_OUT) // >
+	// 	{
+	// 		*current = (*current)->next;
+	// 		openfile_redirected(current, out_fd, args, 0);
+	// 		if (!*args)
+	// 			return ;
+	// 	}
+	// 	else if (*current && (*current)->type == TOKEN_REDIRECT_IN) // <
+	// 	{
+	// 		*current = (*current)->next;
+	// 		read_redirected_in(current, &in_fd, args, env);
+	// 		if (!*args)
+	// 			return ;
+	// 	}
+	// 	else if ((*current)->type == TOKEN_REDIRECT_APPEND) // >>
+	// 	{
+	// 		*current = (*current)->next;
+	// 		openfile_redirected(current, out_fd, args, 1);
+	// 		if (!*args)
+	// 			return ;
+	// 		if (!*current)
+	// 			break ;
+	// 	}
+	// 	else if ((*current)->type == TOKEN_HEREDOC) // <<
+	// 	{
+	// 		*current = (*current)->next;
+	// 		process_child_heredoc(current, heredoc_input, args, env);
+	// 		if (!*args)
+	// 		 	return ;
+	// 	}
+	// 	else
+	// 		(*current) = (*current)->next;
+	// }
 }
 
 void	exec_without_pipes(t_token *tokens, t_env *env, int out_fd)
