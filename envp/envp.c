@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 19:58:47 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/29 00:09:24 by hpehliva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,27 +67,25 @@ char	**update_ex(char **envp, char *key, t_env *env)
 	return (new_env);
 }
 
-char	**remove_env(char **envp, char *key, t_env *env)
+char **copy_filtred_env(char **envp,char *key,t_env *env,int size)
 {
 	int i;
 	int j;
-	int size;
 	char **new_env;
 
 	i = 0;
 	j = 0;
-	size = env_size(envp);
-	new_env = my_malloc(env->gc, sizeof(char *) * size);
-	if (!new_env)
-		return (NULL);
+	new_env = my_malloc(env->gc,sizeof(char*)* size);
+	if(!new_env)
+		return NULL;
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0
 			&& (envp[i][ft_strlen(key)] == '=' || envp[i][ft_strlen(key)] == '\0'))
-			{
-				gc_unregister(env->gc, envp[i]);
-				free(envp[i++]);
-			}
+		{
+			gc_unregister(env->gc, envp[i]);
+			free(envp[i++]);
+		}
 		if (envp[i])
 		{
 			new_env[j] = ft_strdup(envp[i]);
@@ -100,80 +98,167 @@ char	**remove_env(char **envp, char *key, t_env *env)
 	return (new_env);
 }
 
+char	**remove_env(char **envp, char *key, t_env *env)
+{
+	int size;
+	size = env_size(envp);
+	return copy_filtred_env(envp,key,env,size);
+}
+
+// char	**remove_env(char **envp, char *key, t_env *env)
+// {
+// 	int i;
+// 	int j;
+// 	int size;
+// 	char **new_env;
+
+// 	i = 0;
+// 	j = 0;
+// 	size = env_size(envp);
+// 	new_env = my_malloc(env->gc, sizeof(char *) * size);
+// 	if (!new_env)
+// 		return (NULL);
+// 	while (envp[i])
+// 	{
+// 		if (ft_strncmp(envp[i], key, ft_strlen(key)) == 0
+// 			&& (envp[i][ft_strlen(key)] == '=' || envp[i][ft_strlen(key)] == '\0'))
+// 			{
+// 				gc_unregister(env->gc, envp[i]);
+// 				free(envp[i++]);
+// 			}
+// 		if (envp[i])
+// 		{
+// 			new_env[j] = ft_strdup(envp[i]);
+// 			gc_register(env->gc, new_env[j]);
+// 			i++;
+// 			j++;
+// 		}
+// 	}
+// 	new_env[j] = NULL;
+// 	return (new_env);
+// }
+char *extract_shlvl_value(char *shlvl_entry)
+{
+	char *value;
+	size_t slen;
+
+	slen = ft_strlen(shlvl_entry);
+	if (slen >= 9)
+		value = ft_substr(shlvl_entry, 6, 3);
+	else if (slen >= 8)
+		value = ft_substr(shlvl_entry, 6, 2);
+	else
+		value = ft_substr(shlvl_entry, 6, 1);
+	return value;
+}
+
+static char *create_new_shlvl(int digit)
+{
+	char *value;
+	char *temp;
+	char *temp2;
+
+	value = ft_itoa(digit);
+	temp = ft_strjoin("SHLVL=",value);
+	temp2 = copy_ex_helper(temp);
+	
+	free(temp);
+	if(value)
+		free(value);
+	return temp2;
+}
 static void	shell_level_ex(char ***str, int i, t_env *env)
 {
 	char	*value;
-	char	*temp;
-	char	*temp2;
+	char 	*new_shlvl;
 	int		digit;
-	size_t	slen;
 
 	while ((*str)[i] && ft_strncmp((*str)[i], "SHLVL", 5) != 0)
 		i++;
-	slen = ft_strlen((*str)[i]);
-	if (slen >= 9)
-		value = ft_substr((*str)[i], 6, 3);
-	else if (slen >= 8)
-		value = ft_substr((*str)[i], 6, 2);
-	else
-		value = ft_substr((*str)[i], 6, 1);
+	value = extract_shlvl_value((*str)[i]);
 	digit = ft_atoi(value);
 	digit++;
+	
 	if (value)
 		free(value);
-	value = ft_itoa(digit);
-	temp = ft_strjoin("SHLVL=", value);
-	temp2 = copy_ex_helper(temp);
-	free(temp);
-	if (value)
-		free(value);
-	(*str)[i] = ft_strdup(temp2);
+	new_shlvl = create_new_shlvl(digit),
+	(*str)[i] = ft_strdup(new_shlvl);
 	gc_register(env->gc, (*str)[i]);
-	if (temp2)
-		free(temp2);
+	if (new_shlvl)
+		free(new_shlvl);
+}
+
+// static void	shell_level_ex(char ***str, int i, t_env *env)
+// {
+// 	char	*value;
+// 	char	*temp;
+// 	char	*temp2;
+// 	int		digit;
+// 	size_t	slen;
+
+// 	while ((*str)[i] && ft_strncmp((*str)[i], "SHLVL", 5) != 0)
+// 		i++;
+// 	slen = ft_strlen((*str)[i]);
+// 	if (slen >= 9)
+// 		value = ft_substr((*str)[i], 6, 3);
+// 	else if (slen >= 8)
+// 		value = ft_substr((*str)[i], 6, 2);
+// 	else
+// 		value = ft_substr((*str)[i], 6, 1);
+// 	digit = ft_atoi(value);
+// 	digit++;
+// 	if (value)
+// 		free(value);
+// 	value = ft_itoa(digit);
+// 	temp = ft_strjoin("SHLVL=", value);
+// 	temp2 = copy_ex_helper(temp);
+// 	free(temp);
+// 	if (value)
+// 		free(value);
+// 	(*str)[i] = ft_strdup(temp2);
+// 	gc_register(env->gc, (*str)[i]);
+// 	if (temp2)
+// 		free(temp2);
+// }
+
+static char *create_simple_shlvl(int digit)
+{
+	char *value;
+	char *temp;
+
+	value = ft_itoa(digit);
+	temp = ft_strjoin("SHLVL=",value);
+
+	if(value)
+		free(value);
+	return temp;
 }
 
 static void	shell_level(char ***str, int i, t_env *env)
 {
 	char	*value;
-	char	*temp;
+	char	*new_shlvl;
 	int		digit;
-	size_t	slen;
 
 	while ((*str)[i] && ft_strncmp((*str)[i], "SHLVL", 5) != 0)
 		i++;
-	slen = ft_strlen((*str)[i]);
-	if (slen >= 9)
-		value = ft_substr((*str)[i], 6, 3);
-	else if (slen >= 8)
-		value = ft_substr((*str)[i], 6, 2);
-	else
-		value = ft_substr((*str)[i], 6, 1);
+	value = extract_shlvl_value((*str)[i]);
 	digit = ft_atoi(value);
 	digit++;
 	if (value)
 		free(value);
-	value = ft_itoa(digit);
-	temp = ft_strjoin("SHLVL=", value);
-	if (value)
-		free(value);
-	(*str)[i] = ft_strdup(temp);
+	new_shlvl = create_simple_shlvl(digit);
+	(*str)[i] = ft_strdup(new_shlvl);
 	gc_register(env->gc, (*str)[i]);
-	if (temp)
-		free(temp);
+	if (new_shlvl)
+		free(new_shlvl);
 }
 
-void	initiate_env(t_env *env, char **envp)
+static void setup_pwd_variables(t_env *env)
 {
-	int	i;
+	int i;
 
 	i = 0;
-	copy_env(envp, &(env->envp), env);
-	copy_ex(envp, &(env->export), env);
-	shell_level(&(env->envp), 0, env);
-	shell_level_ex(&(env->export), 0, env);
-	env->exit_code = 0;
-	env->save_stdin = -1;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
 	env->curr_pwd = ft_strdup(env->envp[i]);
@@ -188,12 +273,82 @@ void	initiate_env(t_env *env, char **envp)
 		 	return ;
 		gc_register(env->gc, env->old_pwd);
 	}
+}
+
+static void setup_path_variable(t_env *env)
+{
 	env->path = malloc(sizeof(char **) * 2);
 	if (!env->path)
 	 	return ;
 	gc_register(env->gc, env->path);
 	env->path1 = getenv("PATH");
 }
+
+void	initiate_env(t_env *env, char **envp)
+{
+
+	copy_env(envp, &(env->envp), env);
+	copy_ex(envp, &(env->export), env);
+	shell_level(&(env->envp), 0, env);
+	shell_level_ex(&(env->export), 0, env);
+	env->exit_code = 0;
+	env->save_stdin = -1;
+	setup_pwd_variables(env);
+	setup_path_variable(env);
+}
+
+// void	initiate_env(t_env *env, char **envp)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	copy_env(envp, &(env->envp), env);
+// 	copy_ex(envp, &(env->export), env);
+// 	shell_level(&(env->envp), 0, env);
+// 	shell_level_ex(&(env->export), 0, env);
+// 	env->exit_code = 0;
+// 	env->save_stdin = -1;
+// 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
+// 		i++;
+// 	env->curr_pwd = ft_strdup(env->envp[i]);
+// 	gc_register(env->gc, env->curr_pwd);
+// 	i = 0;
+// 	while (env->envp[i] && ft_strncmp(env->envp[i], "OLDPWD", 6) != 0)
+// 		i++;
+// 	if (env->envp[i])
+// 	{
+// 		env->old_pwd = ft_strdup(env->envp[i]);
+// 		if (!env->envp)
+// 		 	return ;
+// 		gc_register(env->gc, env->old_pwd);
+// 	}
+// 	env->path = malloc(sizeof(char **) * 2);
+// 	if (!env->path)
+// 	 	return ;
+// 	gc_register(env->gc, env->path);
+// 	env->path1 = getenv("PATH");
+// }
+
+static char *allocate_substr(size_t len, t_env *env)
+{
+	char	*new_s;
+
+	new_s = (char *)malloc(len + 2);
+	if (!new_s)
+		return (NULL);
+	gc_register(env->s_gc, new_s);
+	return new_s;
+}
+
+static char *handle_empty_substr(t_env *env)
+{
+	char *new_s;
+
+	new_s = ft_gnl_strdup("");
+	gc_register(env->s_gc, new_s);
+	return (new_s);
+}
+
 
 static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env *env)
 {
@@ -207,14 +362,10 @@ static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env
 	i = 0;
 	s_len = ft_gnl_strlen(s);
 	if (start >= s_len)
-	{
-		new_s = ft_gnl_strdup("");
-		gc_register(env->s_gc, new_s);
-		return (new_s);
-	}
+		return (handle_empty_substr(env));
 	if (len > s_len - start)
 		len = s_len - start;
-	new_s = (char *)malloc(len + 2);
+	new_s = allocate_substr(len,env);
 	if (!new_s)
 		return (NULL);
 	while (i < len && s[start + i] != ':')
@@ -224,9 +375,41 @@ static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env
 	}
 	new_s[i++] = '/';
 	new_s[i] = '\0';
-	gc_register(env->s_gc, new_s);
 	return (new_s);
 }
+
+// static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env *env)
+// {
+// 	char	*new_s;
+// 	size_t	i;
+// 	size_t	s_len;
+// 	(void)env;
+
+// 	if (!s)
+// 		return (NULL);
+// 	i = 0;
+// 	s_len = ft_gnl_strlen(s);
+// 	if (start >= s_len)
+// 	{
+// 		new_s = ft_gnl_strdup("");
+// 		gc_register(env->s_gc, new_s);
+// 		return (new_s);
+// 	}
+// 	if (len > s_len - start)
+// 		len = s_len - start;
+// 	new_s = (char *)malloc(len + 2);
+// 	if (!new_s)
+// 		return (NULL);
+// 	while (i < len && s[start + i] != ':')
+// 	{
+// 		new_s[i] = s[start + i];
+// 		i++;
+// 	}
+// 	new_s[i++] = '/';
+// 	new_s[i] = '\0';
+// 	gc_register(env->s_gc, new_s);
+// 	return (new_s);
+// }
 
 char	*find_exec(char *command, char *path, int i, t_env *env)
 {

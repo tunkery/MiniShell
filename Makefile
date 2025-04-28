@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
+#    By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/04/22 12:46:24 by batuhan          ###   ########.fr        #
+#    Updated: 2025/04/28 23:14:17 by hpehliva         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		builtin/builtin_utils4.c builtin/builtin_utils5.c execute/exe_utils.c execute/exe_utils1.c \
 		tokens/tokenizer_utils2.c signals/set_signal1.c parse_func/parse_utils1.c parse_func/parse_utils2.c \
 		parse_func/parse_utils3.c garbage_collector/garbage_collector1.c builtin/cd_helper.c execute/pipe_utils1.c \
+		execute/exe_utils2.c execute/exe_utils3.c execute/exe_with_token2.c
 
 
 

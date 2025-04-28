@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 20:14:07 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/29 00:25:55 by hpehliva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,58 +38,122 @@ char    *user_input(void)
     return (trimmer);
 }
 
+static int setup_env(t_env **env,char **envp)
+{
+    t_gc    *gc;
+
+    gc = gc_new();
+    if (!gc)
+        return (0);
+    *env = my_malloc(gc, sizeof(t_env));
+    if (!*env)
+    {
+        gc_free_all(gc);
+        return 0;
+    }
+    (*env)->gc = gc;
+    initiate_env(*env, envp);
+    return 1;
+}
+
+static int process_comd(t_env *env)
+{
+    t_token *tokens;
+    char *line;
+
+    env->s_gc = gc_new();
+    if(!env->s_gc)
+        return 0;
+    signal_mode_read();
+    line = user_input();
+    if(!line)
+        return 0;
+    gc_register(env->s_gc, line);
+    tokens = tokenizer(line, env);
+    if(!tokens)
+    {
+        free(line);
+        return 1;
+    }
+    signal_mode_command();
+    cell_launch(tokens, env);
+    gc_free_all(env->s_gc);
+    return 1;
+}
+
+
 int main(int ac, char **av, char **envp)
 {
-    char   *line;
     t_env   *env = NULL;
-    t_token *tokens;
-    t_gc    *gc;
-    t_gc    *s_gc;
 	(void)av;
     (void)ac;
 
-	// if (ac != 1)
-	// {
-	// 	printf("Don't give any arguments!\n");
-	// 	// return (0);
-	// }
-    gc = gc_new();
-    if (!gc)
-        return (1);
-    env = my_malloc(gc, sizeof(t_env));
-    if (!env)
-        return (1);
-    env->gc = gc;
-    initiate_env(env, envp);
+
+    if(!setup_env(&env,envp))
+    {
+        return 1;
+    }
+    
     while(1)
     {
-        s_gc = gc_new();
-        if (!s_gc)
-            break ;
-        env->s_gc = s_gc;
-        signal_mode_read();
-        line = user_input();
-        if(!line)
-        {
-            gc_free_all(env->s_gc);
-            gc_free_all(env->gc);
-            return 0;
-        }
-        else // We can add free(line) here. or each links free it. // TODO Exit_shell add here!
-            gc_register(env->s_gc, line);
-        tokens = tokenizer(line, env);
-        if(!tokens)
-        {
-            free(line);
-            continue;
-        }
-        // initiate_env(env, envp);
-        signal_mode_command();
-        cell_launch(tokens, env); // a function that runs the programs in the computer
-        // free_token_matrix(tokens);
-        gc_free_all(env->s_gc);
-        // added_process(line, envp);
+        if(!process_comd(env))
+            break;
     }
-    gc_free_all(gc);
+    
+    if(env && env->gc)
+    {
+        gc_free_all(env->gc);
+    }
+
 	return (0);
 }
+
+
+// int main(int ac, char **av, char **envp)
+// {
+//     char   *line;
+//     t_env   *env = NULL;
+//     t_token *tokens;
+//     t_gc    *gc;
+//     t_gc    *s_gc;
+// 	(void)av;
+//     (void)ac;
+
+
+//     gc = gc_new();
+//     if (!gc)
+//         return (1);
+//     env = my_malloc(gc, sizeof(t_env));
+//     if (!env)
+//         return (1);
+//     env->gc = gc;
+//     initiate_env(env, envp);
+//     while(1)
+//     {
+//         s_gc = gc_new();
+//         if (!s_gc)
+//             break ;
+//         env->s_gc = s_gc;
+//         signal_mode_read();
+//         line = user_input();
+//         if(!line)
+//         {
+//             gc_free_all(env->s_gc);
+//             gc_free_all(env->gc);
+//             return 0;
+//         }
+//         else
+//             gc_register(env->s_gc, line);
+//         tokens = tokenizer(line, env);
+//         if(!tokens)
+//         {
+//             free(line);
+//             continue;
+//         }
+//         signal_mode_command();
+//         cell_launch(tokens, env);
+//         gc_free_all(env->s_gc);
+//     }
+//     gc_free_all(gc);
+// 	return (0);
+// }

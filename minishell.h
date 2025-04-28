@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 19:44:38 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/28 23:13:32 by hpehliva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@
 // #  define DEBUG_PRINT(fmt, ...) fprintf(stderr, " [DEBUG] " fmt,
 //	##__VA_ARGS__);
 // # else
-// #  define DEBUG_PRINT(fmt, ...) \
-// 	do                        \
-// 	{                         \
+// #  define DEBUG_PRINT(fmt, ...) 
+// 	do                        
+// 	{                         
 // 	} while (0)
 // # endif
 
@@ -220,11 +220,8 @@ char					*find_exec(char *command, char *path, int i,
 							t_env *env);
 
 /*EXECUTE*/
-char					**tokens_to_args(t_token *tokens, t_env *env);
-void					execute_with_redirection(char **args, t_env *env,
-							int out_fd, int save_stdout);
-void					handle_redirection(t_token **current, char **args,
-							int *out_fd, char **heredoc_input, t_env *env);
+void	handle_redirection_helper(t_token **temp, char **args, int *out_fd, t_env *env);
+void handle_redirection(t_token **current, char **args, int *out_fd, t_env *env);
 void					exec_without_pipes(t_token *tokens, t_env *env,
 							int out_fd);
 void					cell_launch(t_token *tokens, t_env *env);
@@ -242,6 +239,17 @@ void					create_pipe_helper(int ***pipes, int i);
 void					create_pipe_helper1(int ***pipes, int i);
 void					exe_helper(t_token **temp);
 void					exe_helper1(int save_stdin);
+//exe_utils2.c
+void handle_out_process(t_token **current,int *out_fd,char **args,int append);
+void handle_in_process(t_token **current,int *in_fd,char **args,t_env *env);
+void handle_heredoc_process(t_token **current,char **args,t_env *env,t_token *last_heredoc);
+void setup_input_fd(int in_fd);
+//exe_utils3.c
+char					**tokens_to_args(t_token *tokens, t_env *env);
+void	execute_with_redirection(char **args, t_env *env, int out_fd,
+	int save_stdout);
+t_token *find_last_heredoc(t_token *start, t_token *end);
+t_token *find_end_command(t_token *start);
 
 // exe_with_token.c
 void					read_redirected_in(t_token **current, int *in_fd,
@@ -250,6 +258,11 @@ void					process_child_heredoc(t_token **current,
 							char **heredoc_input, char **args, t_env *env);
 void					openfile_redirected(t_token **current, int *out_fd,
 							char **args, int append);
+// exe_with_token2.c
+void get_heredoc_delimiter(t_token **current,char **delimiter,int *quote_mode,t_env *env);
+void	child_process_heredoc(int *pipe_fd, t_token **current,char **heredoc_input, t_env *env);
+void process_heredoc_result(int fd, char **heredoc_input,t_env *env,int stat);
+void parent_process_heredoc(int pipe_fd[2],char **heredoc_input,t_env *env,char **args);
 // heredoc_utils.c
 char					*ft_strjoin_heredoc(char const *s1, char const *s2);
 int						expanded_heredoc_env(char *line, int *i, char **result,
