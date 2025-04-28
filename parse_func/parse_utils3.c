@@ -64,3 +64,27 @@ int	preprocess_heredocs(t_token **seg, int seg_count, t_env *env)
 	}
 	return (1);
 }
+
+void	process_apply_redirections(t_token **current, int *in_fd, int *out_fd,
+		t_env *env)
+{
+	if ((*current)->type == TOKEN_HEREDOC_PROCESSED)
+	{
+		if (*in_fd != STDIN_FILENO)
+			close(*in_fd);
+		*in_fd = ft_atoi((*current)->value);
+		*current = (*current)->next->next;
+		return ;
+	}
+	else if ((*current)->type == TOKEN_HEREDOC)
+		handle_heredoc_redirec(current, in_fd, env);
+	else if ((*current)->type == TOKEN_REDIRECT_OUT
+		|| (*current)->type == TOKEN_REDIRECT_APPEND
+		|| (*current)->type == TOKEN_REDIRECT_IN)
+		handle_standard_redirec(current, in_fd, out_fd);
+	else
+	{
+		if (*current)
+			*current = (*current)->next;
+	}
+}

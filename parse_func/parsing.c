@@ -70,32 +70,21 @@ void	handle_heredoc_redirec(t_token **curr, int *in_fd, t_env *env)
 	}
 }
 
-void	apply_redirections(t_token *start, t_token *end, int *in_fd,
-		int *out_fd, t_env *env)
+void	apply_redirections(t_token *start, t_token *end, int *fds, t_env *env)
 {
 	t_token	*current;
+	t_token	*prev;
+	int		*in_fd;
+	int		*out_fd;
 
+	in_fd = &fds[0];
+	out_fd = &fds[1];
 	current = start;
 	while (current && current != end && current->type != TOKEN_PIPE)
 	{
-		if (current->type == TOKEN_HEREDOC_PROCESSED)
-		{
-			if (*in_fd != STDIN_FILENO)
-				close(*in_fd);
-			*in_fd = ft_atoi(current->value);
-			current = current->next->next;
-			continue ;
-		}
-		else if (current->type == TOKEN_HEREDOC)
-			handle_heredoc_redirec(&current, in_fd, env);
-		else if (current->type == TOKEN_REDIRECT_OUT
-			|| current->type == TOKEN_REDIRECT_APPEND
-			|| current->type == TOKEN_REDIRECT_IN)
-			handle_standard_redirec(&current, in_fd, out_fd);
-		else
-		{
-			if (current)
-				current = current->next;
-		}
+		prev = current;
+		process_apply_redirections(&current, in_fd, out_fd, env);
+		if (current == prev)
+			current = current->next;
 	}
 }

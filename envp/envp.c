@@ -256,32 +256,4 @@ char	*find_exec(char *command, char *path, int i, t_env *env)
 	return (temp);
 }
 
-// char	*find_exec(char *command, char *path, int i, int j, t_env *env)
-// {
-// 	char *temp;
-
-// 	if (!command || !path)
-// 		return (NULL);
-// 	while(path[i])
-// 	{
-// 		while (path[i] && path[i] && path[i] != ':')
-// 			i++;
-// 		temp = ft_gnls_substr(path, j, i - 4, env);
-// 		if(!temp)
-// 			return (NULL);
-// 		temp = ft_strjoin(temp, command);
-// 		if (access(temp, X_OK) == 0)
-// 		{
-// 			gc_register(env->s_gc, temp);
-// 			return (temp);
-// 		}
-// 		free(temp);
-// 		temp = NULL;
-// 		if(!path[i])
-// 			break;
-// 		j = i + 1;
-// 		i++;
-// 	}
-// 	return (temp);
-// }
 

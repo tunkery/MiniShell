@@ -13,27 +13,26 @@
 #include "../minishell.h"
 
 
-void find_seg_redirect(int *in_fd, int *out_fd, t_token *start, t_token *end, t_env *env)
+void find_seg_redirect(int *fds, t_token *start, t_token *end, t_env *env)
 {
-    int redirec_in;
-    int redirec_out;
+    int redirec_fds[2];
 
-    redirec_in = *in_fd;
-    redirec_out = *out_fd;
+    redirec_fds[0] = fds[0];
+    redirec_fds[1] = fds[1];
 
-    apply_redirections(start,end,&redirec_in,&redirec_out, env);
-    if(redirec_in != *in_fd)
+    apply_redirections(start,end,redirec_fds, env);
+    if(redirec_fds[0] != fds[0])
     {
-        if(*in_fd != STDIN_FILENO)
-            close(*in_fd);
-        *in_fd = redirec_in;
+        if(fds[0] != STDIN_FILENO)
+            close(fds[0]);
+        fds[0] = redirec_fds[0];
     }
 
-    if(redirec_out != *out_fd)
+    if(redirec_fds[1] != fds[1])
     {
-        if(*out_fd != STDOUT_FILENO)
-            close(*out_fd);
-        *out_fd = redirec_out;
+        if(fds[1] != STDOUT_FILENO)
+            close(fds[1]);
+        fds[1] = redirec_fds[1];
     }
     
 }
@@ -65,15 +64,14 @@ void setup_child_pipes(int **pipes, int i, int seg_count, int *in_fd, int *out_f
 
 void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pipes, int i, int seg_count)
 {
-    int in_fd;
-    int out_fd;
+    int fds[2];
     char **args;
 
-    setup_child_pipes(pipes,i,seg_count,&in_fd,&out_fd);
+    setup_child_pipes(pipes,i,seg_count,&fds[0],&fds[1]);
 
-    find_seg_redirect(&in_fd,&out_fd,seg_start,seg_end,env);
+    find_seg_redirect(fds,seg_start,seg_end,env);
 
-    if(!setup_io(in_fd,out_fd))
+    if(!setup_io(fds[0],fds[1]))
         exit(EXIT_FAILURE);
     
     // We can seperate this part!!
