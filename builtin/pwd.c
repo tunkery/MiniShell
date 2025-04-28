@@ -14,9 +14,9 @@
 
 void	run_pwd(char **args, t_env *env)
 {
-	char buf[BUFSIZ];
-	char *check;
-	
+	char	buf[BUFSIZ];
+	char	*check;
+
 	if (args[1] && args[1][0] && args[1][0] == '-')
 	{
 		fprintf(stderr, "minishell: pwd: %s: invalid option\n", args[1]);

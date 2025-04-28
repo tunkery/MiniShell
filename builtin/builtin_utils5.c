@@ -82,7 +82,7 @@ int	exit_helper(const char *str, int i, unsigned long long *check)
 }
 
 void	exit_helper1(int *sign, const char *str, int *i,
-	unsigned long long *check)
+		unsigned long long *check)
 {
 	(*i) = 0;
 	(*sign) = 1;

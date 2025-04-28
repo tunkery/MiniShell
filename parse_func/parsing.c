@@ -12,138 +12,90 @@
 
 #include "../minishell.h"
 
-
-// Helper function to create args array from tokens
-char **create_args_from_tokens(t_token *start, t_token *end, t_env *env)
+static void	redirect_output(t_token **curr, int *fd, int flags)
 {
-
-    if(!start)
-        return NULL;
-    int count = count_args_seg(start,end);
-    return args_from_token_alloc(start,end,count, env);
+	*curr = (*curr)->next;
+	if (*curr && (*curr)->type == TOKEN_WORD)
+	{
+		if (*fd != STDOUT_FILENO)
+			close(*fd);
+		*fd = open((*curr)->value, flags, 0644);
+		if ((*fd < 0))
+		{
+			perror("open failed");
+			exit(1);
+		}
+	}
 }
 
-void handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
+static void	redirect_input(t_token **curr, int *fd)
 {
-    if ((*curr)->type == TOKEN_REDIRECT_OUT) {
-        *curr = (*curr)->next;
-        if (*curr && (*curr)->type == TOKEN_WORD) {
-            if (*out_fd != STDOUT_FILENO)
-                close(*out_fd);
-            *out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (*out_fd < 0) {
-                perror("open failed");
-                exit(1);
-            }
-        }
-    } else if ((*curr)->type == TOKEN_REDIRECT_APPEND) {
-        *curr = (*curr)->next;
-        if (*curr && (*curr)->type == TOKEN_WORD) {
-            if (*out_fd != STDOUT_FILENO)
-                close(*out_fd);
-            *out_fd = open((*curr)->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (*out_fd < 0) {
-                perror("open failed");
-                exit(1);
-            }
-        }
-    } else if ((*curr)->type == TOKEN_REDIRECT_IN) {
-        *curr = (*curr)->next;
-        if (*curr && (*curr)->type == TOKEN_WORD) {
-            if (*in_fd != STDIN_FILENO)
-                close(*in_fd);
-            *in_fd = open((*curr)->value, O_RDONLY);
-            if (*in_fd < 0) {
-                perror("open failed");
-                exit(1);
-            }
-        }
-    }
-
+	*curr = (*curr)->next;
+	if (*curr && (*curr)->type == TOKEN_WORD)
+	{
+		if (*fd != STDIN_FILENO)
+			close(*fd);
+		*fd = open((*curr)->value, O_RDONLY);
+		if (*fd < 0)
+		{
+			perror("open failed");
+			exit(1);
+		}
+	}
 }
 
-void setup_pipe_heredoc(t_token *curr,int *in_fd,t_env *env)
+void	handle_standard_redirec(t_token **curr, int *in_fd, int *out_fd)
 {
-    char *heredoc_input;
-    int quote_mode;
-    int pipe_fd[2];
-
-    heredoc_input = NULL;
-    quote_mode = 0;
-    if(*in_fd != STDIN_FILENO)
-        close(*in_fd);
-    if(pipe(pipe_fd) == -1)
-    {
-        perror("pipe failed");
-        exit(EXIT_FAILURE);
-    }
-    heredoc_input =handler_heredoc(curr->value,env,quote_mode);
-    write(pipe_fd[1],heredoc_input,ft_strlen(heredoc_input));
-    close(pipe_fd[1]);
-    *in_fd = pipe_fd[0];
+	if ((*curr)->type == TOKEN_REDIRECT_OUT)
+		redirect_output(curr, out_fd, O_WRONLY | O_CREAT | O_TRUNC);
+	else if ((*curr)->type == TOKEN_REDIRECT_APPEND)
+		redirect_output(curr, out_fd, O_WRONLY | O_CREAT | O_APPEND);
+	else if ((*curr)->type == TOKEN_REDIRECT_IN)
+		redirect_input(curr, in_fd);
 }
 
-void handle_heredoc_redirec(t_token **curr, int *in_fd,t_env *env)
+void	handle_heredoc_redirec(t_token **curr, int *in_fd, t_env *env)
 {
-    // char *heredoc_input = NULL;
-    // int quote_mode = 0;
-    *curr = (*curr)->next;
-    if(*curr && (*curr)->type == TOKEN_WORD)
-    {
-        if((*curr)->prev && (*curr)->prev->type == TOKEN_WORD)
-        {
-            if (*in_fd != STDIN_FILENO)
-                close(*in_fd);
-
-            *in_fd = ft_atoi((*curr)->prev->value);
-        }
-        else
-        {
-            setup_pipe_heredoc(*curr,in_fd,env);
-            // if (*in_fd != STDIN_FILENO)
-            //     close(*in_fd);
-        
-            // int pipe_fd[2];
-            // if (pipe(pipe_fd) == -1) {
-            //     perror("pipe failed");
-            //     exit(EXIT_FAILURE);
-            // }
-        
-            // heredoc_input = handler_heredoc((*curr)->value, env,quote_mode);
-            // write(pipe_fd[1], heredoc_input, ft_strlen(heredoc_input));
-            // close(pipe_fd[1]);
-            // // free(heredoc_input);
-            
-            // *in_fd = pipe_fd[0];
-        }
-    }
+	*curr = (*curr)->next;
+	if (*curr && (*curr)->type == TOKEN_WORD)
+	{
+		if ((*curr)->prev && (*curr)->prev->type == TOKEN_WORD)
+		{
+			if (*in_fd != STDIN_FILENO)
+				close(*in_fd);
+			*in_fd = ft_atoi((*curr)->prev->value);
+		}
+		else
+			setup_pipe_heredoc(*curr, in_fd, env);
+	}
 }
 
-
-void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t_env *env)
+void	apply_redirections(t_token *start, t_token *end, int *in_fd,
+		int *out_fd, t_env *env)
 {
-    t_token *current = start;
-    
-    while (current && current != end && current->type != TOKEN_PIPE) 
-    {
-        if(current->type == TOKEN_HEREDOC_PROCESSED)
-        {
-            if(*in_fd != STDIN_FILENO)
-                close(*in_fd);
-            *in_fd = ft_atoi(current->value);
-            current = current->next->next;
-            continue;
-        }
-        else if(current->type == TOKEN_HEREDOC)
-            handle_heredoc_redirec(&current,in_fd,env);
-        else if (current->type == TOKEN_REDIRECT_OUT ||
-            current->type == TOKEN_REDIRECT_APPEND ||
-            current->type == TOKEN_REDIRECT_IN)
-            handle_standard_redirec(&current,in_fd,out_fd);
-        else
-        {
-            if (current)
-                current = current->next;
-        }
-    }
+	t_token	*current;
+
+	current = start;
+	while (current && current != end && current->type != TOKEN_PIPE)
+	{
+		if (current->type == TOKEN_HEREDOC_PROCESSED)
+		{
+			if (*in_fd != STDIN_FILENO)
+				close(*in_fd);
+			*in_fd = ft_atoi(current->value);
+			current = current->next->next;
+			continue ;
+		}
+		else if (current->type == TOKEN_HEREDOC)
+			handle_heredoc_redirec(&current, in_fd, env);
+		else if (current->type == TOKEN_REDIRECT_OUT
+			|| current->type == TOKEN_REDIRECT_APPEND
+			|| current->type == TOKEN_REDIRECT_IN)
+			handle_standard_redirec(&current, in_fd, out_fd);
+		else
+		{
+			if (current)
+				current = current->next;
+		}
+	}
 }

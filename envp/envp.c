@@ -32,7 +32,6 @@ char	**update_env(char **envp, char *key, t_env *env)
 		gc_register(env->gc, new_env[i]);
 		i++;
 	}
-	// copy_env(envp, &new_env);
 	new_env[size] = ft_strdup(key);
 	gc_register(env->gc, new_env[size]);
 	new_env[size + 1] = NULL;
@@ -119,8 +118,6 @@ static void	shell_level_ex(char ***str, int i, t_env *env)
 	else
 		value = ft_substr((*str)[i], 6, 1);
 	digit = ft_atoi(value);
-	// gc_unregister(env->gc, (*str)[i]);
-	// free((*str)[i]);
 	digit++;
 	if (value)
 		free(value);
@@ -153,8 +150,6 @@ static void	shell_level(char ***str, int i, t_env *env)
 	else
 		value = ft_substr((*str)[i], 6, 1);
 	digit = ft_atoi(value);
-	// gc_unregister(env->gc, (*str)[i]);
-	// free((*str)[i]);
 	digit++;
 	if (value)
 		free(value);
@@ -199,8 +194,6 @@ void	initiate_env(t_env *env, char **envp)
 	gc_register(env->gc, env->path);
 	env->path1 = getenv("PATH");
 }
-
-// helper function that's needed for the find_exec
 
 static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env *env)
 {

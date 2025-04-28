@@ -270,6 +270,8 @@ int count_pipe_seg(t_token * tokens);
 t_token **seg_alloc(t_token *tokens, int seg_count, t_env *env);
 t_token **find_pipe_seg(t_token *tokens, int *seg_count, t_env *env);
 int count_args_seg(t_token *start,t_token *end);
+int	token_alloc_check1(t_token *tmp);
+int	token_alloc_check(t_token *tmp);
 char **args_from_token_alloc(t_token *start, t_token *end, int count, t_env *env);
 //parsing.c
 char **create_args_from_tokens(t_token *start, t_token *end, t_env *env);
