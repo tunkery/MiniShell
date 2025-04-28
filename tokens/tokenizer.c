@@ -12,113 +12,92 @@
 
 #include "../minishell.h"
 
-void process_delimiter_check(t_token *delimiter,char *line,int *i,t_env *env)
+t_token	*handle_heredoc_token(int *i, t_token *current, t_token **head,
+		t_env *env)
 {
-    char *result;
-    char cpy[2];
+	t_token	*token;
 
-    result = delimiter->value;
-    cpy[1] = '\0';
-    while(line[*i] && line[*i] != ' ' && line[*i] != '\t' && 
-          line[*i] != '|' && line[*i] != '<' && line[*i] != '>' && 
-          line[*i] != ';')
-    {
-        cpy[0] = line[*i];
-        result = ft_strjoin(result, cpy);
-        gc_register(env->s_gc, result);
-        delimiter->value = result;
-        (*i)++;
-    }
+	token = my_malloc(env->s_gc, sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = TOKEN_HEREDOC;
+	token->value = ft_strdup("<<");
+	gc_register(env->s_gc, token->value);
+	current = add_token_list(token, head, current);
+	*i += 2;
+	return (current);
 }
 
-t_token *handle_heredoc_token(int *i,t_token *current,t_token **head, t_env *env)
+t_token	*create_delimiter_token(char *line, int *i, t_token *current,
+		t_env *env)
 {
-    t_token *token;
+	t_token	*delimiter;
 
-    token = my_malloc(env->s_gc,sizeof(t_token));
-    if(!token)
-        return NULL;
-    
-    token->type = TOKEN_HEREDOC;
-    token->value = ft_strdup("<<");
-    gc_register(env->s_gc,token->value);
-
-    current = add_token_list(token,head,current);
-
-    *i += 2;
-
-    return current;
-
+	skip_whitespace(line, i);
+	if (!line[*i] || line[*i] == '\n' || line[*i] == '|' || line[*i] == '<'
+		|| line[*i] == '>' || line[*i] == ';')
+		return (current);
+	delimiter = my_malloc(env->s_gc, sizeof(t_token));
+	if (!delimiter)
+		return (NULL);
+	delimiter->type = TOKEN_WORD;
+	delimiter->value = ft_strdup("");
+	gc_register(env->s_gc, delimiter->value);
+	process_delimiter_check(delimiter, line, i, env);
+	delimiter->prev = current;
+	delimiter->next = NULL;
+	current->next = delimiter;
+	current = delimiter;
+	return (delimiter);
 }
 
-
-t_token *create_delimiter_token(char*line,int *i,t_token *current,t_env *env)
+void	process_token_type(t_token_state *state)
 {
-    t_token *delimiter;
+	t_token	*token;
 
-    skip_whitespace(line,i);
-    if(!line[*i] || line[*i] == '\n' || line[*i] == '|' || 
-        line[*i] == '<' || line[*i] == '>' || line[*i] == ';')
-        return current;
-    delimiter = my_malloc(env->s_gc, sizeof(t_token));
-    if(!delimiter)
-        return NULL;
-    delimiter->type = TOKEN_WORD;
-    delimiter->value = ft_strdup("");
-    gc_register(env->s_gc, delimiter->value);
-    process_delimiter_check(delimiter,line,i,env);
-    delimiter->prev = current;
-    delimiter->next = NULL;
-    current->next = delimiter;
-    current = delimiter;
-    return delimiter;
+	if (state->line[state->i] == '<' && state->line[state->i + 1] == '<')
+	{
+		state->current = handle_heredoc_token(&state->i, state->current,
+				state->head, state->env);
+		if (!state->current)
+			return ;
+		state->current = create_delimiter_token(state->line, &state->i,
+				state->current, state->env);
+	}
+	else
+	{
+		token = handle_special_token(state->line, &state->i, state->env);
+		if (!token)
+			return ;
+		state->current = add_token_list(token, state->head, state->current);
+	}
 }
 
-void process_token_type(t_token_state *state)
+void	seperated_token(char *line, t_token **head, t_env *env)
 {
-    t_token *token;
-    if(state->line[state->i] == '<' && state->line[state->i+1] == '<')
-    {
-        state->current = handle_heredoc_token(&state->i,state->current,state->head,state->env);
-        if (!state->current)
-            return;
-        state->current = create_delimiter_token(state->line,&state->i,state->current,state->env);
-    }
-    else
-        {
-            token = handle_special_token(state->line, &state->i, state->env);
-            if(!token) 
-                return;
-            state->current = add_token_list(token,state->head,state->current); 
-        }
+	t_token_state	state;
+
+	state.line = line;
+	state.i = 0;
+	state.current = NULL;
+	state.head = head;
+	state.env = env;
+	while (line[state.i])
+	{
+		skip_whitespace(line, &state.i);
+		if (line[state.i] == '\0')
+			break ;
+		process_token_type(&state);
+		if (!state.current)
+			return ;
+	}
 }
 
-
-void seperated_token(char *line, t_token **head, t_env *env)
+t_token	*tokenizer(char *line, t_env *env)
 {
-    t_token_state state;
+	t_token	*head;
 
-    state.line = line;
-    state.i = 0;
-    state.current = NULL;
-    state.head = head;
-    state.env = env;
-
-    while(line[state.i])
-    {
-        skip_whitespace(line,&state.i);
-        if(line[state.i] == '\0')
-            break;
-        process_token_type(&state);
-        if(!state.current)
-            return;
-    }
-}
-
-t_token    *tokenizer(char *line, t_env *env)
-{
-    t_token *head = NULL;
-
-    seperated_token(line, &head, env);
-    return (head);
+	head = NULL;
+	seperated_token(line, &head, env);
+	return (head);
 }

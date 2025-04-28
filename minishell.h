@@ -143,26 +143,33 @@ void	run_builtin(char **args, t_env *env);
 int	append_check(char *str);
 char	*append_organiser(char *str);
 int	append_key_size(char *str);
-void	append_exp(char *str, t_env *env);
+void	append_exp(char *str, t_env *env, int i);
 char	*append2(char *str, char *value);
+//builtin_utils3.c
+int	duplicate_check_env(char *str, t_env *env);
+int	duplicate_check_ex(char *str, t_env *env);
+void	duplicate_fix_env(char *str, t_env *env);
+void	duplicate_fix_ex(char *str, t_env *env, int i);
+void	export1(char *str, t_env *env);
+//builtins_utils4.c
+void	checker(char *str, int name_c, int *check, t_env *env);
+void	append_env(char *str, t_env *env, int i);
 void	append1(char *str, t_env *env, char *value, int i);
 void	append(char *str, t_env *env, char *value, int i);
-void	append_env(char *str, t_env *env);
-//builtin_utils3.c
-int	duplicate_check_env(char *str, t_env *env);
-int	duplicate_check_ex(char *str, t_env *env);
-void	duplicate_fix_env(char *str, t_env *env);
-void	duplicate_fix_ex(char *str, t_env *env);
-void	export1(char *str, t_env *env);
-void	checker(char *str, int name_c, int *check, t_env *env);
-//builtin_utils3.c
-int	duplicate_check_env(char *str, t_env *env);
-int	duplicate_check_ex(char *str, t_env *env);
-void	duplicate_fix_env(char *str, t_env *env);
-void	duplicate_fix_ex(char *str, t_env *env);
-void	export1(char *str, t_env *env);
-void	checker(char *str, int name_c, int *check, t_env *env);
+//builtin_utils5.c
+int	unset_checker(char *args, t_env *env);
+int	unset_checker2(char *args, t_env *env);
+int	exit_helper(const char *str, int i, unsigned long long *check);
+void	exit_helper1(int *sign, const char *str, int *i,
+	unsigned long long *check);
+int	exit_helper2(char **args, int *i);
 //cd.c
+int	no_path_handle(t_env *env);
+int	argument_check(char **args, t_env *env);
+void	cd_minus_sign(char *args, char *path, t_env *env, char *old_pwd);
+void	cd_tilde(char *path, t_env *env);
+void	cd_helper(char *args, t_env *env, char *old_pwd);
+void	uop_helper(t_env *env, int j);
 char	*get_old_pwd(t_env *env);
 void	update_old_pwd(t_env *env, int check);
 void	update_pwd(t_env *env);
@@ -178,7 +185,7 @@ void	run_export(char **args, t_env *env);
 //pwd.c
 void	run_pwd(char **args, t_env *env);
 //unset.c
-// int	valid_name(char *str);
+int	valid_name_unset(char *str);
 int	hey(char *str, char c);
 char	*extract_c(char *str, char c);
 void	run_unset(char **args, t_env *env);
@@ -198,14 +205,26 @@ char	**update_env(char **envp, char *key, t_env *env);
 char	**update_ex(char **envp, char *key, t_env *env);
 char	**remove_env(char **envp, char *key, t_env *env);
 void	initiate_env(t_env *env, char **envp);
-char	*find_exec(char *command, char *path, int i, int j, t_env *env);
+char	*find_exec(char *command, char *path, int i, t_env *env);
 
 /*EXECUTE*/
 char	**tokens_to_args(t_token *tokens, t_env *env);
 void	execute_with_redirection(char **args, t_env *env, int out_fd,int save_stdout);
 void	handle_redirection(t_token **current, char **args, int *out_fd, char **heredoc_input, t_env *env);
-void	exec_without_pipes(t_token *tokens, t_env *env);
+void	exec_without_pipes(t_token *tokens, t_env *env, int out_fd);
 void	cell_launch(t_token *tokens, t_env *env);
+//exe_utils.c
+int	token_to_args_helper(t_token **temp);
+void	token_to_args_helper1(char ***args, t_token *tmp, t_env *env, int *i);
+int	count_token_helper(t_token *tokens);
+void	close_both(int save_stdout, int save_stdin);
+void	write_it(t_token **current);
+//exe_utils1.c
+void	run_with_path_helper(char *str, char **args, t_env *env, int out_fd);
+void	create_pipe_helper(int ***pipes, int i);
+void	create_pipe_helper1(int ***pipes, int i);
+void	exe_helper(t_token **temp);
+void	exe_helper1(int save_stdin);
 
 //exe_with_token.c
 void	read_redirected_in(t_token **current, int *in_fd, char **args, t_env *env);
@@ -235,6 +254,7 @@ void exec_child_comd(t_token *seg_start, t_token *seg_end, t_env *env, int **pip
 int fork_cmd_process(t_token **segments, int seg_count, t_env *env, int **pipes, pid_t *pids);
 void execute_piped_command(t_token *tokens, t_env *env);
 //run_commands.c
+void	wait_for_child(pid_t pid, t_env *env);
 void	exec_command(char **args, t_env *env, int out_fd);
 
 /*PARSING*/
@@ -331,9 +351,9 @@ void	gc_unregister(t_gc *gc, void *ptr);
 void	gc_free_all(t_gc *gc);
 
 //validate_syntax.c
-void	print_syntax_message(char *str, t_env *env);
+int	print_syntax_message(char *str, t_env *env);
 int	validate_redirect_syntax(t_token *tokens, t_env *env);
-int validate_pipe_syntax(t_token *tokens, t_env *env);
+int	validate_pipe_syntax(t_token *tokens, t_env *env, int check);
 int	validate_syntax(t_token *tokens, t_env *env);
 
 // typedef struct s_heredoc_status

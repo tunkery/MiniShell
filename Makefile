@@ -20,6 +20,7 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		parse_func/parse_utils.c builtin/builtin_utils2.c builtin/builtin_utils3.c \
 		garbage_collector/garbage_collector.c tokens/handle_tokens1.c tokens/handle_tokens2.c \
 		tokens/handle_tokens3.c tokens/token_heredoc.c tokens/token_expansion.c tokens/tokenizer_utils1.c \
+		builtin/builtin_utils4.c builtin/builtin_utils5.c execute/exe_utils.c execute/exe_utils1.c
 
 
 

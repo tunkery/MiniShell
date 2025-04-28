@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/25 16:33:49 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:51:26 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ int	duplicate_check_env(char *str, t_env *env)
 	i = 0;
 	while (env->envp && env->envp[i])
 	{
-		if (ft_strncmp(env->envp[i], str, size) == 0
-			&& env->envp[i][size + 1] == '=' && key_size(env->envp[i]) == size
+		if (ft_strncmp(env->envp[i], str, size) == 0 && env->envp[i][size + 1] == '=' && key_size(env->envp[i]) == size
 			&& env->envp[i][0] == str[0])
 		{
+			// if (size != key_size(env->envp[i]))
+			// 	i++;
+			// else
 			return (0);
 		}
 		if (env->envp[i])
@@ -46,11 +48,12 @@ int	duplicate_check_ex(char *str, t_env *env)
 	i = 0;
 	while (env->export && env->export[i])
 	{
-		if (ft_strncmp(env->export[i], str, size) == 0
-			&& env->export[i][size + 1] == '='
-			&& key_size(env->export[i]) == size
+		if (ft_strncmp(env->export[i], str, size) == 0 && env->export[i][size + 1] == '=' && key_size(env->export[i]) == size
 			&& env->export[i][0] == str[0])
 		{
+			// if (size != key_size(env->export[i]))
+			// 	i++;
+			// else
 			return (0);
 		}
 		if (env->export[i])
@@ -78,6 +81,8 @@ void	duplicate_fix_env(char *str, t_env *env)
 				i++;
 			else
 			{
+				// if(env->envp[i])
+				// 	free(env->envp[i]);
 				env->envp[i] = ft_strdup(str);
 				gc_register(env->gc, env->envp[i]);
 				break ;
@@ -88,18 +93,24 @@ void	duplicate_fix_env(char *str, t_env *env)
 	env->exit_code = 0;
 }
 
-void	duplicate_fix_ex(char *str, t_env *env, int i)
+void	duplicate_fix_ex(char *str, t_env *env)
 {
+	int	i;
+	int	size;
 	char	*temp;
 
+	i = 0;
+	size = key_size(str);
 	while (env->export && env->export[i])
 	{
-		if (ft_strncmp(env->export[i], str, key_size(str)) == 0)
+		if (ft_strncmp(env->export[i], str, size) == 0)
 		{
-			if (key_size(str) != key_size(env->export[i]))
+			if (size != key_size(env->export[i]))
 				i++;
 			else
 			{
+				// if (env->export[i])
+				// 	free(env->export[i]);
 				temp = copy_ex_helper(str);
 				env->export[i] = ft_strdup(temp);
 				gc_register(env->gc, env->export[i]);
@@ -120,15 +131,14 @@ void	export1(char *str, t_env *env)
 {
 	if (ft_strchr(str, '=') != 0)
 	{
-		if (duplicate_check_ex(str, env) == 0
-			&& duplicate_check_env(str, env) == 0)
+		if (duplicate_check_ex(str, env) == 0 && duplicate_check_env(str, env) == 0)
 		{
-			duplicate_fix_ex(str, env, 0);
+			duplicate_fix_ex(str, env);
 			duplicate_fix_env(str, env);
 		}
 		else if (duplicate_check_ex(str, env) == 0)
 		{
-			duplicate_fix_ex(str, env, 0);
+			duplicate_fix_ex(str, env);
 		}
 		else
 		{
@@ -139,5 +149,26 @@ void	export1(char *str, t_env *env)
 	else
 	{
 		env->export = update_ex(env->export, str, env);
+	}
+}
+
+void	checker(char *str, int name_c, int *check, t_env *env)
+{
+	if (name_c == -1)
+	{
+		fprintf(stderr, "minishell: export: '%s': not a valid identifier\n", str);
+		env->exit_code = 1;
+		(*check) = 1;
+	}
+	else if (name_c == -2)
+	{
+		fprintf(stderr, "minishell: export: %s: invalid option\n", str);
+		env->exit_code = 2;
+		(*check) = 2;
+	}
+	else if (name_c == -3)
+	{
+		append_env(str, env);
+		append_exp(str, env);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 14:23:49 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/17 15:18:19 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	key_check(char *args)
 
 int	builtin_check(char **tokens)
 {
-	if (!tokens || !tokens[0])
-		return (0);
+	if(!tokens || !tokens[0])
+		return 0;
 	if (ft_strncmp(tokens[0], "env", ft_strlen(tokens[0])) == 0)
 		return (1);
 	if (ft_strncmp(tokens[0], "pwd", ft_strlen(tokens[0])) == 0)

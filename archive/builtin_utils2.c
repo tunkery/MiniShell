@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:25:02 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/23 16:42:10 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:56:07 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	append_check(char *str)
 
 char	*append_organiser(char *str)
 {
-	int		i;
+	int	i;
 	char	*temp;
 	char	*temp1;
 	char	*result;
@@ -53,7 +53,7 @@ char	*append_organiser(char *str)
 
 int	append_key_size(char *str)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (str[i])
@@ -65,12 +65,14 @@ int	append_key_size(char *str)
 	return (i);
 }
 
-void	append_exp(char *str, t_env *env, int i)
+void	append_exp(char *str, t_env *env)
 {
-	int		size;
+	int	i;
+	int	size;
 	char	*value;
 	char	*key;
 
+	i = 0;
 	size = 0;
 	while (str[size] && str[size] != '=')
 		size++;
@@ -114,4 +116,73 @@ char	*append2(char *str, char *value)
 	temp3[i++] = '"';
 	temp3[i] = '\0';
 	return (temp3);
+}
+
+void	append1(char *str, t_env *env, char *value, int i)
+{
+	char	*temp;
+
+	if (env->export[i])
+	{
+		temp = append2(env->export[i], value);
+		free(env->export[i]);
+		env->export[i] = ft_strdup(temp);
+		free(temp);
+	}
+	else
+	{
+		temp = append_organiser(str);
+		env->export = update_ex(env->export, temp, env);
+		free(temp);
+	}
+}
+
+void	append(char *str, t_env *env, char *value, int i)
+{
+	char	*temp;
+
+	if (env->envp[i])
+	{
+		temp = ft_strjoin(env->envp[i], value);
+		// free(env->envp[i]);
+		env->envp[i] = ft_strdup(temp);
+		gc_register(env->gc, env->envp[i]);
+		free(temp);
+	}
+	else
+	{
+		temp = append_organiser(str);
+		env->envp = update_env(env->envp, temp, env);
+		free(temp);
+	}
+}
+
+void	append_env(char *str, t_env *env)
+{
+	int	i;
+	int	size;
+	char	*value;
+	char	*key;
+
+	i = 0;
+	size = 0;
+	while (str[size] && str[size] != '=')
+		size++;
+	value = ft_substr(str, size + 1, ft_strlen(str) - size - 1);
+	gc_register(env->gc, value);
+	size = 0;
+	while (str[size] && str[size] != '+')
+		size++;
+	key = ft_substr(str, 0, size);
+	gc_register(env->gc, key);
+	while (env->envp && env->envp[i])
+	{
+		if (ft_strncmp(env->envp[i], key, size) == 0)
+		{
+			if (size == append_key_size(str) + 1)
+				break ;
+		}
+		i++;
+	}
+	append(str, env, value, i);
 }

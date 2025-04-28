@@ -12,6 +12,15 @@
 
 #include "../minishell.h"
 
+static void	env_helper(char *args, t_env *env)
+{
+	write(2, "env: illegal option ", 20);
+	write(2, args, ft_strlen(args));
+	write(2, "\n", 1);
+	write(2, "usage: env\n", 11);
+	env->exit_code = 1;
+}
+
 void	run_env(char **args, t_env *env)
 {
 	int	i;
@@ -19,14 +28,14 @@ void	run_env(char **args, t_env *env)
 	i = 0;
 	if (args[1] && args[1][0] == '-')
 	{
-		fprintf(stderr, "env: illegal option %s\n", args[1]);
-		printf("usage: env\n");
-		env->exit_code = 1;
+		env_helper(args[1], env);
 		return ;
 	}
 	else if (args[1])
 	{
-		fprintf(stderr, "env: %s: No such file or directory\n", args[1]);
+		write(2, "env: ", 5);
+		write(2, args[1], ft_strlen(args[1]));
+		write(2, ": No such file or directory\n", 28);
 		env->exit_code = 127;
 		return ;
 	}
@@ -34,7 +43,7 @@ void	run_env(char **args, t_env *env)
 		env->exit_code = 0;
 	while (env->envp[i])
 	{
-		fprintf(stdout, "%s\n", env->envp[i]);
+		printf("%s\n", env->envp[i]);
 		i++;
 	}
 }

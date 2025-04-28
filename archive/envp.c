@@ -235,60 +235,32 @@ static char	*ft_gnls_substr(char const *s, unsigned int start, size_t len, t_env
 	return (new_s);
 }
 
-char	*find_exec(char *command, char *path, int i, t_env *env)
+char	*find_exec(char *command, char *path, int i, int j, t_env *env)
 {
-	char	*temp;
-	int		j;
+	char *temp;
 
 	if (!command || !path)
 		return (NULL);
-	j = 5;
-	while (path[i])
+	while(path[i])
 	{
 		while (path[i] && path[i] && path[i] != ':')
 			i++;
 		temp = ft_gnls_substr(path, j, i - 4, env);
-		if (!temp)
+		if(!temp)
 			return (NULL);
 		temp = ft_strjoin(temp, command);
 		if (access(temp, X_OK) == 0)
-			return (gc_register(env->s_gc, temp), temp);
+		{
+			gc_register(env->s_gc, temp);
+			return (temp);
+		}
 		free(temp);
 		temp = NULL;
-		if (!path[i])
-			break ;
+		if(!path[i])
+			break;
 		j = i + 1;
 		i++;
 	}
 	return (temp);
 }
-
-// char	*find_exec(char *command, char *path, int i, int j, t_env *env)
-// {
-// 	char *temp;
-
-// 	if (!command || !path)
-// 		return (NULL);
-// 	while(path[i])
-// 	{
-// 		while (path[i] && path[i] && path[i] != ':')
-// 			i++;
-// 		temp = ft_gnls_substr(path, j, i - 4, env);
-// 		if(!temp)
-// 			return (NULL);
-// 		temp = ft_strjoin(temp, command);
-// 		if (access(temp, X_OK) == 0)
-// 		{
-// 			gc_register(env->s_gc, temp);
-// 			return (temp);
-// 		}
-// 		free(temp);
-// 		temp = NULL;
-// 		if(!path[i])
-// 			break;
-// 		j = i + 1;
-// 		i++;
-// 	}
-// 	return (temp);
-// }
 
