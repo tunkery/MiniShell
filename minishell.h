@@ -280,14 +280,14 @@ void apply_redirections(t_token *start, t_token *end, int *in_fd, int *out_fd, t
 
 /*SIGNALS*/
 //set_signal.c
-void	set_signal_heredoc(void);
-void	set_signal_pipe(void);
 void	turn_off_echo(void);
 void	sigint_handler_command(int signo);
 void	signal_mode_command(void);
-//signal_utils.c
 void	sigint_handler_read(int signo);
 void	signal_mode_read(void);
+//set_signal1.c
+void	set_signal_heredoc(void);
+void	set_signal_pipe(void);
 
 
 /*TOKENS*/
