@@ -103,14 +103,12 @@ int	exit_helper2(char **args, int *i)
 		(*i)++;
 	if (ft_isalpha(args[1][0]) != 0)
 	{
-		// perror("exit: entered a value other than integers");
 		return (2);
 	}
 	else if (*i == 1)
 		return (0);
 	else if (*i > 2)
 	{
-		// perror("exit: too many arguments");
 		return (1);
 	}
 	return (-1);

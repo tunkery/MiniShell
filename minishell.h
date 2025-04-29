@@ -316,7 +316,15 @@ void					init_pipe_seg(t_pipe_seg *stat, int **pipes,
 void					close_pipes(int **pipes, int count);
 // run_commands.c
 void					wait_for_child(pid_t pid, t_env *env);
+void	run_without_path(char **args, t_env *env, int out_fd, char *exe);
+void exec_command_path(char **args, t_env *env, int out_fd, char *exec_path);
 void					exec_command(char **args, t_env *env, int out_fd);
+//run_command1.c
+int	permission_check(char *str, t_env *env);
+void	run_with_path(char *str, char **args, t_env *env, int out_fd);
+void permision_denied(char *ptr);
+void no_such_directory(char *ptr);
+void is_directory(char *ptr);
 /*PARSING*/
 int						parent_process_heredoc_pipe(int *pipe_fd, pid_t pid,
 							t_token *curr, t_env *env);
@@ -363,8 +371,8 @@ void					signal_mode_read(void);
 // set_signal1.c
 void					set_signal_heredoc(void);
 void					set_signal_pipe(void);
-void set_for_cat(void);
-void set_signal_backslash(void);
+void					set_for_cat(void);
+void					set_signal_backslash(void);
 /*TOKENS*/
 // tokenizer
 void					process_delimiter_check(t_token *delimiter, char *line,

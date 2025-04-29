@@ -51,7 +51,7 @@ void	setup_input_fd(int in_fd)
 {
 	if (in_fd != STDIN_FILENO)
 	{
-		if (dup2(in_fd, STDIN_FILENO) == -1)
+		if (dup2(in_fd, STDIN_FILENO) != -1)
 		{
 			perror("dup2 failed");
 			close(in_fd);

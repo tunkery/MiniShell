@@ -16,7 +16,6 @@ int	parent_process_heredoc_pipe(int *pipe_fd, pid_t pid, t_token *curr,
 		t_env *env)
 {
 	int		status;
-	char	fd_str[16];
 
 	close(pipe_fd[1]);
 	waitpid(pid, &status, 0);
@@ -26,8 +25,7 @@ int	parent_process_heredoc_pipe(int *pipe_fd, pid_t pid, t_token *curr,
 		env->exit_code = 128 + WTERMSIG(status);
 		return (0);
 	}
-	snprintf(fd_str, sizeof(fd_str), "%d", pipe_fd[0]);
-	curr->value = ft_strdup(fd_str);
+	curr->value = ft_itoa(pipe_fd[0]);
 	gc_register(env->s_gc, curr->value);
 	curr->type = TOKEN_HEREDOC_PROCESSED;
 	return (1);

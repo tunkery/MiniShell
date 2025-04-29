@@ -19,7 +19,7 @@ void	gc_register(t_gc *gc, void *ptr)
 
 	node = NULL;
 	check = NULL;
-	if (!gc || !ptr) 
+	if (!gc || !ptr)
 		return ;
 	check = gc->head;
 	while (check)

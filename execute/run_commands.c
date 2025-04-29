@@ -14,31 +14,43 @@
 
 void	wait_for_child(pid_t pid, t_env *env)
 {
-	int	status;
+	int					status;
+	struct sigaction	sa_ignore;
 
+	sa_ignore.sa_handler = SIG_IGN;
+	sigemptyset(&sa_ignore.sa_mask);
+	sa_ignore.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_ignore, NULL);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		env->exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 	{
 		env->exit_code = 128 + WTERMSIG(status);
-		if(WTERMSIG(status) == SIGQUIT)
-			write(STDERR_FILENO, "^\\Quit: 3\n",10);
+		if (WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "^\\Quit: 3\n", 10);
 	}
+	signal_mode_command();
 }
 
-static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
+void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 {
 	pid_t	pid;
+	int		is_cat_command;
 
+	is_cat_command = 0;
+	if (args[0] && ft_strcmp(args[0], "cat") == 0 && (!args[1]
+			|| args[1][0] == '-'))
+		set_signal_backslash();
 	pid = fork();
 	if (pid == 0)
 	{
-		if (out_fd != STDOUT_FILENO)
-		{
-			dup2(out_fd, STDOUT_FILENO);
-			close(out_fd);
-		}
+		if (is_cat_command)
+			if (out_fd != STDOUT_FILENO)
+			{
+				dup2(out_fd, STDOUT_FILENO);
+				close(out_fd);
+			}
 		if (execve(exe, args, env->envp) == -1)
 		{
 			exit(127);
@@ -50,66 +62,11 @@ static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 		wait_for_child(pid, env);
 }
 
-static int	permission_check(char *str, t_env *env)
+void	exec_command_path(char **args, t_env *env, int out_fd, char *exec_path)
 {
-	struct stat	info;
-
-	if (stat(str, &info) != 0)
-	{
-		fprintf(stderr, "minishell: %s: No such file or directory\n", str);
-		env->exit_code = 127;
-		return (1);
-	}
-	else if (S_ISDIR(info.st_mode))
-	{
-		fprintf(stderr, "minishell: %s: is a directory\n", str);
-		env->exit_code = 126;
-		return (1);
-	}
-	else if (access(str, X_OK) != 0)
-	{
-		fprintf(stderr, "minishell: %s: Permission denied\n", str);
-		env->exit_code = 126;
-		return (1);
-	}
-	return (0);
-}
-
-static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
-{
-	int	check;
-
-	check = permission_check(str, env);
-	if (access(str, X_OK) == 0 && check == 0)
-	{
-		run_with_path_helper(str, args, env, out_fd);
-	}
-	else if (check == 0)
-	{
-		fprintf(stderr, "minishell: %s: command not found.\n", str);
-		env->exit_code = 127;
-	}
-}
-
-
-void	exec_command(char **args, t_env *env, int out_fd)
-{
-	char	*exec_path;
-	char	*path;
 	char	*final;
-	int is_cat_command = 0;
 
-	if (!args || !args[0])
-		return ;
-	if(args[0] && ft_strcmp(args[0], "cat") == 0 && (!args[1] || args[1][0] == '-' ))
-	{
-		is_cat_command = 1;
-		set_signal_backslash();
-	}
 	final = args[0];
-	path = find_path(env);
-	exec_path = find_exec(final, path, 0, env);
-	gc_register(env->s_gc, exec_path);
 	if (ft_strchr(final, '/'))
 		run_with_path(final, args, env, out_fd);
 	else
@@ -117,11 +74,36 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		if (!exec_path)
 		{
 			env->exit_code = 127;
-			fprintf(stderr, "minishell: %s: command not found.\n", args[0]);
+			write(2, "minishell: ", 11);
+			write(2, args[0], ft_strlen(args[0]));
+			write(2, ": command not found.\n", 21);
 		}
 		else
 			run_without_path(args, env, out_fd, exec_path);
 	}
-	if(is_cat_command)
-		set_for_cat();
+}
+
+void	exec_command(char **args, t_env *env, int out_fd)
+{
+	char				*exec_path;
+	char				*path;
+	int					is_cat_command;
+	struct sigaction	old_quit;
+	struct sigaction	sa_current;
+
+	is_cat_command = 0;
+	if (!args || !args[0])
+		return ;
+	sigaction(SIGQUIT, NULL, &old_quit);
+	if (args[0] && ft_strcmp(args[0], "cat") == 0 && (!args[1]
+			|| args[1][0] == '-'))
+		is_cat_command = 1;
+	// final = args[0];
+	path = find_path(env);
+	exec_path = find_exec(args[0], path, 0, env);
+	gc_register(env->s_gc, exec_path);
+	if (is_cat_command)
+		set_signal_backslash();
+	exec_command_path(args, env, out_fd, exec_path);
+	sigaction(SIGQUIT, &old_quit, NULL);
 }

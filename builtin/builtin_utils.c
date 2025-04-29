@@ -41,7 +41,7 @@ int	builtin_check(char **tokens)
 		return (2);
 	if (ft_strncmp(tokens[0], "echo", 4) == 0 && check == 4)
 		return (3);
-	if (ft_strncmp(tokens[0], "export", 6) == 0  && check == 6)
+	if (ft_strncmp(tokens[0], "export", 6) == 0 && check == 6)
 		return (4);
 	if (ft_strncmp(tokens[0], "unset", 5) == 0 && check == 5)
 		return (5);

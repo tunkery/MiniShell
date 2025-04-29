@@ -80,7 +80,6 @@ void	run_exit(char **args, t_env *env)
 	}
 	else if (code == 2 || err == 2)
 		write_and_exit(args, env);
-	// err = aq_exiti(args[1], &value, i);
 	status = (unsigned char)value;
 	free_both(env);
 	exit(status);

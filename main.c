@@ -55,11 +55,10 @@ static int	setup_env(t_env **env, char **envp)
 	return (1);
 }
 
-static int	process_comd(t_env *env)
+static int	process_comd(t_env *env,t_gc *s_gc)
 {
 	t_token	*tokens;
 	char	*line;
-	t_gc	*s_gc;
 
 	s_gc = gc_new();
 	if (!s_gc)
@@ -88,17 +87,23 @@ static int	process_comd(t_env *env)
 int	main(int ac, char **av, char **envp)
 {
 	t_env	*env;
+	t_gc	*s_gc;
 
 	env = NULL;
+	s_gc = NULL;
 	(void)av;
-	(void)ac;
+	if (ac > 1)
+	{
+		printf(RED "Don't give any arguments!\n" RESET);
+		return (0);
+	}
 	if (!setup_env(&env, envp))
 	{
 		return (1);
 	}
 	while (1)
 	{
-		if (!process_comd(env))
+		if (!process_comd(env,s_gc))
 			break ;
 	}
 	gc_free_all(env->gc);

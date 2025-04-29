@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static	void	error_print(t_token **current)
+static void	error_print(t_token **current)
 {
 	write(2, "minishell: ", 11);
 	write(2, (*current)->value, ft_strlen((*current)->value));
@@ -61,14 +61,12 @@ void	process_child_heredoc(t_token **current, char **heredoc_input,
 		perror("pipe failed!");
 		return ;
 	}
-	set_signal_heredoc();
 	pid = fork();
 	if (pid == 0)
 		child_process_heredoc(pipe_fd, current, heredoc_input, env);
 	else if (pid > 0)
 	{
 		parent_process_heredoc(pipe_fd, heredoc_input, env, args);
-		signal_mode_command();
 	}
 	else
 	{
