@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_with_token2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 23:11:27 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/28 23:12:51 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:57:54 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	child_process_heredoc(int *pipe_fd, t_token **current,
 	char	*content;
 
 	close(pipe_fd[0]);
-	set_signal_heredoc();
+	signal(SIGINT,SIG_DFL);
 	get_heredoc_delimiter(current, &delimiter, &quote_mode, env);
 	content = handler_heredoc(delimiter, env, quote_mode);
 	gc_register(env->s_gc, content);

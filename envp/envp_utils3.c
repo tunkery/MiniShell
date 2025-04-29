@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp_utils3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:17:12 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/29 11:17:25 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:12:27 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,8 @@ void	copy_ex(char **str, char ***envp, t_env *env)
 		temp = copy_ex_helper(str[i]);
 		(*envp)[i] = ft_strdup(temp);
 		gc_register(env->gc, (*envp)[i]);
-		if (temp)
-			free(temp);
+		free(temp);
 		i++;
 	}
-	(*envp)[i] = NULL;
+	(*envp)[size] = NULL;
 }

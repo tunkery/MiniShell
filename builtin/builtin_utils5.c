@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils5.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:09:59 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/24 21:01:20 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/29 18:11:12 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,14 @@ int	exit_helper2(char **args, int *i)
 		(*i)++;
 	if (ft_isalpha(args[1][0]) != 0)
 	{
-		perror("exit: entered a value other than integers");
+		// perror("exit: entered a value other than integers");
 		return (2);
 	}
 	else if (*i == 1)
 		return (0);
 	else if (*i > 2)
 	{
-		perror("exit: too many arguments");
+		// perror("exit: too many arguments");
 		return (1);
 	}
 	return (-1);

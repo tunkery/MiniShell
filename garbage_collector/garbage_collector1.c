@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector1.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:25:12 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/28 13:25:14 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:15:14 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_utils3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 23:07:43 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/28 23:08:26 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 17:33:42 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static int	count_token_args(t_token *tmp)
 	t_token	*next;
 	int		total;
 
+	next = NULL;
 	tokens = tmp;
 	total = 0;
 	while (tokens && tokens->type != TOKEN_SEMIC && tokens->type != TOKEN_PIPE)

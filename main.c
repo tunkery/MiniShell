@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:09:58 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/29 00:25:55 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:38:31 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,25 @@ static int	process_comd(t_env *env)
 {
 	t_token	*tokens;
 	char	*line;
+	t_gc	*s_gc;
 
-	env->s_gc = gc_new();
-	if (!env->s_gc)
+	s_gc = gc_new();
+	if (!s_gc)
 		return (0);
+	env->s_gc = s_gc;
 	signal_mode_read();
 	line = user_input();
 	if (!line)
+	{
+		gc_free_all(env->s_gc);
+		// gc_free_all(env->gc);
 		return (0);
+	}
 	gc_register(env->s_gc, line);
 	tokens = tokenizer(line, env);
 	if (!tokens)
 	{
-		free(line);
+		gc_free_all(env->s_gc);
 		return (1);
 	}
 	signal_mode_command();
@@ -96,9 +102,6 @@ int	main(int ac, char **av, char **envp)
 		if (!process_comd(env))
 			break ;
 	}
-	if (env && env->gc)
-	{
-		gc_free_all(env->gc);
-	}
+	gc_free_all(env->gc);
 	return (0);
 }

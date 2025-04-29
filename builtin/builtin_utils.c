@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/23 14:23:49 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/29 19:36:59 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,24 @@ int	key_check(char *args)
 
 int	builtin_check(char **tokens)
 {
+	int	check;
+
+	check = ft_strlen(tokens[0]);
 	if (!tokens || !tokens[0])
 		return (0);
-	if (ft_strncmp(tokens[0], "env", ft_strlen(tokens[0])) == 0)
+	if (ft_strncmp(tokens[0], "env", 3) == 0 && check == 3)
 		return (1);
-	if (ft_strncmp(tokens[0], "pwd", ft_strlen(tokens[0])) == 0)
+	if (ft_strncmp(tokens[0], "pwd", 3) == 0 && check == 3)
 		return (2);
-	if (ft_strncmp(tokens[0], "echo", ft_strlen(tokens[0])) == 0)
+	if (ft_strncmp(tokens[0], "echo", 4) == 0 && check == 4)
 		return (3);
-	if (ft_strncmp(tokens[0], "export", ft_strlen(tokens[0])) == 0)
+	if (ft_strncmp(tokens[0], "export", 6) == 0  && check == 6)
 		return (4);
-	if (ft_strncmp(tokens[0], "unset", ft_strlen(tokens[0])) == 0)
+	if (ft_strncmp(tokens[0], "unset", 5) == 0 && check == 5)
 		return (5);
-	if (ft_strncmp(tokens[0], "cd", ft_strlen(tokens[0])) == 0)
+	if (ft_strncmp(tokens[0], "cd", 2) == 0 && check == 2)
 		return (6);
-	if (ft_strncmp(tokens[0], "exit", ft_strlen(tokens[0])) == 0)
+	if (ft_strncmp(tokens[0], "exit", 4) == 0 && check == 4)
 		return (7);
 	return (0);
 }
