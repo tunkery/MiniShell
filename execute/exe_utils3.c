@@ -12,17 +12,16 @@
 
 #include "../minishell.h"
 
-static int	count_token_args(t_token *tmp)
+static int	count_token_args(t_token *tmp, int total)
 {
 	t_token	*tokens;
 	t_token	*next;
-	int		total;
 
 	tokens = tmp;
-	total = 0;
+	next = NULL;
 	while (tokens && tokens->type != TOKEN_SEMIC && tokens->type != TOKEN_PIPE)
 	{
-		if (tokens == next)
+		if (tokens && tokens == next)
 		{
 			next = NULL;
 			tokens = tokens->next;
@@ -48,7 +47,8 @@ char	**tokens_to_args(t_token *tokens, t_env *env)
 	int		i;
 	int		total;
 
-	total = count_token_args(tokens);
+	total = 0;
+	total = count_token_args(tokens, 0);
 	args = my_malloc(env->s_gc, (total + 1) * sizeof(char *));
 	if (!args)
 		return (NULL);

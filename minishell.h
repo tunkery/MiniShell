@@ -363,6 +363,8 @@ void					signal_mode_read(void);
 // set_signal1.c
 void					set_signal_heredoc(void);
 void					set_signal_pipe(void);
+void set_for_cat(void);
+void set_signal_backslash(void);
 /*TOKENS*/
 // tokenizer
 void					process_delimiter_check(t_token *delimiter, char *line,

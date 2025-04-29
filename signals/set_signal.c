@@ -56,6 +56,7 @@ void	signal_mode_read(void)
 	struct sigaction	sa_input;
 	struct sigaction	sa_output;
 
+
 	sa_input.sa_handler = sigint_handler_read;
 	sigemptyset(&sa_input.sa_mask);
 	sa_input.sa_flags = SA_RESTART;

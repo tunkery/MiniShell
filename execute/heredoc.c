@@ -93,6 +93,7 @@ char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 	gc_register(env->s_gc, result);
 	while (1)
 	{
+		signal(SIGINT, SIG_DFL);
 		line = readline("> ");
 		if (!line)
 			break ;

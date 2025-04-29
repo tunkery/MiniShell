@@ -73,6 +73,7 @@ t_token	*handle_special_token(char *line, int *i, t_env *env)
 		return (NULL);
 	}
 	token->next = NULL;
+	token->prev = NULL;
 	if (line[*i] == '|')
 		handle_pipe(token, i, env);
 	else if (line[*i] == '<')

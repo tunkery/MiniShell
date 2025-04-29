@@ -20,7 +20,11 @@ void	wait_for_child(pid_t pid, t_env *env)
 	if (WIFEXITED(status))
 		env->exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
+	{
 		env->exit_code = 128 + WTERMSIG(status);
+		if(WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "^\\Quit: 3\n",10);
+	}
 }
 
 static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
@@ -87,14 +91,21 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 	}
 }
 
+
 void	exec_command(char **args, t_env *env, int out_fd)
 {
 	char	*exec_path;
 	char	*path;
 	char	*final;
+	int is_cat_command = 0;
 
 	if (!args || !args[0])
 		return ;
+	if(args[0] && ft_strcmp(args[0], "cat") == 0 && (!args[1] || args[1][0] == '-' ))
+	{
+		is_cat_command = 1;
+		set_signal_backslash();
+	}
 	final = args[0];
 	path = find_path(env);
 	exec_path = find_exec(final, path, 0, env);
@@ -111,4 +122,6 @@ void	exec_command(char **args, t_env *env, int out_fd)
 		else
 			run_without_path(args, env, out_fd, exec_path);
 	}
+	if(is_cat_command)
+		set_for_cat();
 }

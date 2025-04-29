@@ -43,8 +43,10 @@ void	child_process_heredoc(int *pipe_fd, t_token **current,
 	int		quote_mode;
 	char	*content;
 
+	delimiter = NULL;
+	quote_mode = 0;
+	content = NULL;
 	close(pipe_fd[0]);
-	set_signal_heredoc();
 	get_heredoc_delimiter(current, &delimiter, &quote_mode, env);
 	content = handler_heredoc(delimiter, env, quote_mode);
 	gc_register(env->s_gc, content);
@@ -82,6 +84,7 @@ void	parent_process_heredoc(int pipe_fd[2], char **heredoc_input, t_env *env,
 	{
 		close(pipe_fd[0]);
 		*args = NULL;
+		env->exit_code = 0;
 		return ;
 	}
 	process_heredoc_result(pipe_fd[0], heredoc_input, env, status);

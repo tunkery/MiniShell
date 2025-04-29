@@ -23,6 +23,7 @@ int	parent_process_heredoc_pipe(int *pipe_fd, pid_t pid, t_token *curr,
 	if (WIFSIGNALED(status))
 	{
 		close(pipe_fd[0]);
+		env->exit_code = 128 + WTERMSIG(status);
 		return (0);
 	}
 	snprintf(fd_str, sizeof(fd_str), "%d", pipe_fd[0]);

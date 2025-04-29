@@ -66,7 +66,10 @@ static int	process_comd(t_env *env)
 	signal_mode_read();
 	line = user_input();
 	if (!line)
+	{
+		gc_free_all(env->s_gc);
 		return (0);
+	}
 	gc_register(env->s_gc, line);
 	tokens = tokenizer(line, env);
 	if (!tokens)
