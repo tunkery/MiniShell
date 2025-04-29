@@ -55,7 +55,7 @@ static int	setup_env(t_env **env, char **envp)
 	return (1);
 }
 
-static int	process_comd(t_env *env,t_gc *s_gc)
+static int	process_comd(t_env *env, t_gc *s_gc)
 {
 	t_token	*tokens;
 	char	*line;
@@ -103,7 +103,7 @@ int	main(int ac, char **av, char **envp)
 	}
 	while (1)
 	{
-		if (!process_comd(env,s_gc))
+		if (!process_comd(env, s_gc))
 			break ;
 	}
 	gc_free_all(env->gc);

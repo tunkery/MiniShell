@@ -16,7 +16,6 @@ void	sigint_handler_heredoc(int signo)
 {
 	(void)signo;
 	write(STDOUT_FILENO, "\n", 1);
-	// exit(130);
 }
 
 void	set_signal_heredoc(void)
@@ -45,20 +44,20 @@ void	set_signal_pipe(void)
 	turn_off_echo();
 }
 
-void set_signal_backslash(void)
+void	set_signal_backslash(void)
 {
-	struct sigaction sa_quit;
+	struct sigaction	sa_quit;
 
 	sa_quit.sa_handler = SIG_DFL;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT,&sa_quit, NULL);
+	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
-void set_for_cat(void)
+void	set_for_cat(void)
 {
-	struct sigaction sa_quit;
+	struct sigaction	sa_quit;
 
 	sa_quit.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT,&sa_quit, NULL);
+	sigaction(SIGQUIT, &sa_quit, NULL);
 }

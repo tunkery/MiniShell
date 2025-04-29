@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/28 23:13:32 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 21:44:15 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,8 @@ void					handle_redirection(t_token **current, char **args,
 void					exec_without_pipes(t_token *tokens, t_env *env,
 							int out_fd);
 void					cell_launch(t_token *tokens, t_env *env);
+// write_helper.c
+void					no_file(char *str);
 // exe_utils.c
 int						token_to_args_helper(t_token **temp);
 void					token_to_args_helper1(char ***args, t_token *tmp,
@@ -316,15 +318,18 @@ void					init_pipe_seg(t_pipe_seg *stat, int **pipes,
 void					close_pipes(int **pipes, int count);
 // run_commands.c
 void					wait_for_child(pid_t pid, t_env *env);
-void	run_without_path(char **args, t_env *env, int out_fd, char *exe);
-void exec_command_path(char **args, t_env *env, int out_fd, char *exec_path);
+void					run_without_path(char **args, t_env *env, int out_fd,
+							char *exe);
+void					exec_command_path(char **args, t_env *env, int out_fd,
+							char *exec_path);
 void					exec_command(char **args, t_env *env, int out_fd);
-//run_command1.c
-int	permission_check(char *str, t_env *env);
-void	run_with_path(char *str, char **args, t_env *env, int out_fd);
-void permision_denied(char *ptr);
-void no_such_directory(char *ptr);
-void is_directory(char *ptr);
+// run_command1.c
+int						permission_check(char *str, t_env *env);
+void					run_with_path(char *str, char **args, t_env *env,
+							int out_fd);
+void					permision_denied(char *ptr);
+void					no_such_directory(char *ptr);
+void					is_directory(char *ptr);
 /*PARSING*/
 int						parent_process_heredoc_pipe(int *pipe_fd, pid_t pid,
 							t_token *curr, t_env *env);
