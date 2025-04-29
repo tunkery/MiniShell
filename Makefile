@@ -6,7 +6,7 @@
 #    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/04/29 21:44:24 by bolcay           ###   ########.fr        #
+#    Updated: 2025/04/30 00:58:54 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ OBJS = $(SRCS:.c=.o)
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -g $(INCLUDE)
+CFLAGS = -Wall -Werror -Wextra -g $(INCLUDE)
 RM = rm -f
 RM_DIR = rm -rf
 
