@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 13:31:23 by batuhan           #+#    #+#             */
-/*   Updated: 2025/04/25 16:33:49 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/30 00:55:16 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,13 @@ void	duplicate_fix_env(char *str, t_env *env)
 	size = key_size(str);
 	while (env->envp[i])
 	{
-		if (ft_strncmp(env->envp[i], str, size) == 0)
+		if (ft_strncmp(env->envp[i], str, size) == 0 && env->envp[i][size
+			+ 1] == '=' && key_size(env->envp[i]) == size
+			&& env->envp[i][0] == str[0])
 		{
-			if (size != key_size(env->envp[i]))
-				i++;
-			else
-			{
-				env->envp[i] = ft_strdup(str);
-				gc_register(env->gc, env->envp[i]);
-				break ;
-			}
+			env->envp[i] = ft_strdup(str);
+			gc_register(env->gc, env->envp[i]);
+			break ;
 		}
 		i++;
 	}
@@ -90,21 +87,20 @@ void	duplicate_fix_env(char *str, t_env *env)
 void	duplicate_fix_ex(char *str, t_env *env, int i)
 {
 	char	*temp;
+	int		size;
 
+	size = key_size(str);
 	while (env->export && env->export[i])
 	{
-		if (ft_strncmp(env->export[i], str, key_size(str)) == 0)
+		if (ft_strncmp(env->export[i], str, size) == 0 && env->export[i][size
+			+ 1] == '=' && key_size(env->export[i]) == size
+			&& env->export[i][0] == str[0])
 		{
-			if (key_size(str) != key_size(env->export[i]))
-				i++;
-			else
-			{
-				temp = copy_ex_helper(str);
-				env->export[i] = ft_strdup(temp);
-				gc_register(env->gc, env->export[i]);
-				free(temp);
-				break ;
-			}
+			temp = copy_ex_helper(str);
+			env->export[i] = ft_strdup(temp);
+			gc_register(env->gc, env->export[i]);
+			free(temp);
+			break ;
 		}
 		i++;
 	}
