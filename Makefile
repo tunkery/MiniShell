@@ -61,9 +61,6 @@ fclean: clean
 		$(RM) $(NAME)
 		make fclean -C $(LIBFT_DIR)
 
-leakcheck:
-	@valgrind --leak-check=full  --suppressions=readline.supp ./minishell
-
 re: fclean all
 
 .PHONY: all clean fclean re
