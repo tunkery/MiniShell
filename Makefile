@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c envp/envp_utils.c \
-		envp/envp.c deallocation.c signals/set_signal.c \
+		envp/envp.c signals/set_signal.c \
 		tokens/tokenizer.c builtin/builtin_utils.c tokens/tokenizer_utils.c builtin/env.c \
 		builtin/pwd.c builtin/echo.c builtin/export.c builtin/unset.c builtin/cd.c builtin/exit.c \
 		execute/exe_main.c execute/heredoc.c execute/exe_with_token.c execute/run_commands.c \
@@ -23,7 +23,8 @@ SRCS = main.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 		builtin/builtin_utils4.c builtin/builtin_utils5.c execute/exe_utils.c execute/exe_utils1.c \
 		tokens/tokenizer_utils2.c signals/set_signal1.c parse_func/parse_utils1.c parse_func/parse_utils2.c \
 		parse_func/parse_utils3.c garbage_collector/garbage_collector1.c builtin/cd_helper.c execute/pipe_utils1.c \
-		execute/exe_utils2.c execute/exe_utils3.c execute/exe_with_token2.c
+		execute/exe_utils2.c execute/exe_utils3.c execute/exe_with_token2.c envp/envp_utils3.c envp/envp_utils4.c \
+		envp/envp_utils5.c
 
 
 

@@ -86,7 +86,8 @@ static char	*ft_line_copy(char **temp)
 		free(line);
 		line = NULL;
 	}
-	new_temp = ft_gnl_substr(*temp, position + 1, ft_gnl_strlen(*temp) - position - 1);
+	new_temp = ft_gnl_substr(*temp, position + 1, ft_gnl_strlen(*temp)
+			- position - 1);
 	if (new_temp && new_temp[0] == '\0')
 	{
 		free(new_temp);

@@ -52,10 +52,8 @@ void	update_old_pwd(t_env *env, int check)
 {
 	char	*temp;
 	char	buf[BUFSIZ];
-	// int		i;
 	int		j;
 
-	// i = 0;
 	j = 0;
 	if (check == 1)
 	{

@@ -73,7 +73,7 @@ static int	permission_check(char *str, t_env *env)
 
 static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 {
-	int		check;
+	int	check;
 
 	check = permission_check(str, env);
 	if (access(str, X_OK) == 0 && check == 0)
@@ -112,5 +112,3 @@ void	exec_command(char **args, t_env *env, int out_fd)
 			run_without_path(args, env, out_fd, exec_path);
 	}
 }
-
-

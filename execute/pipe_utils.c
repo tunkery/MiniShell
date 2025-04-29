@@ -12,28 +12,27 @@
 
 #include "../minishell.h"
 
-int	has_pipes(t_token *tokens)
+void	close_pipes(int **pipes, int count)
 {
-	t_token	*tmp;
+	int	j;
 
-	tmp = tokens;
-	while (tmp && tmp->type != TOKEN_SEMIC)
+	j = 0;
+	while (j < count)
 	{
-		if (tmp->type == TOKEN_PIPE)
-			return (1);
-		tmp = tmp->next;
+		close(pipes[j][0]);
+		close(pipes[j][1]);
+		free(pipes[j]);
+		j++;
 	}
-	return (0);
+	free(pipes);
 }
 
 int	**create_pipes(int seg_count)
 {
 	int	i;
-	int	j;
 	int	**pipes;
 
 	i = 0;
-	j = 0;
 	pipes = malloc(sizeof(int *) * (seg_count - 1));
 	if (!pipes)
 		return (NULL);
@@ -43,31 +42,12 @@ int	**create_pipes(int seg_count)
 	{
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i])
-		{
-			j = 0;
-			while (j < i)
-			{
-				close(pipes[j][0]);
-				close(pipes[j][1]);
-				free(pipes[j]);
-				j++;
-			}
-			free(pipes);
-			return (NULL);
-		}
+			return (close_pipes(pipes, i), NULL);
 		if (pipe(pipes[i]) == -1)
 		{
 			perror("pipe failed");
-			j = 0;
-			while (j < i)
-			{
-				close(pipes[j][0]);
-				close(pipes[j][1]);
-				free(pipes[j]);
-				j++;
-			}
 			free(pipes[i]);
-			free(pipes);
+			close_pipes(pipes, i);
 			return (NULL);
 		}
 		i++;

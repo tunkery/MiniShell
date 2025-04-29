@@ -36,16 +36,5 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		j++;
 	}
 	new_s[i + j] = '\0';
-	// free((void*)s1);
 	return (new_s);
 }
-/*
-
-int main()
-{
-    char const *s1 = "my name is ";
-    char const *s2 = "Batuhan";
-    printf("%s", ft_strjoin(s1, s2));
-    return (0);
-}
-*/

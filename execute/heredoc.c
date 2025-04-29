@@ -66,25 +66,23 @@ char	*expanded_heredoc_line(char *line, t_env *env)
 	return (result);
 }
 
-char *append_heredoc_line(char*result,char *line,t_env *env,int quote_mode)
+char	*append_heredoc_line(char *result, char *line, t_env *env,
+		int quote_mode)
 {
-	if(quote_mode == 1)
+	if (quote_mode == 1)
 	{
-		result = ft_strjoin_heredoc(result,line);
+		result = ft_strjoin_heredoc(result, line);
 		gc_register(env->s_gc, result);
 		result = ft_strjoin_heredoc(result, "\n");
 		gc_register(env->s_gc, result);
-
 	}
 	else
 	{
 		result = process_heredoc_line(line, result, env);
 		gc_register(env->s_gc, result);
 	}
-	return result;
-
+	return (result);
 }
-
 
 char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 {
@@ -101,20 +99,7 @@ char	*handler_heredoc(char *delimiter, t_env *env, int quote_mode)
 		gc_register(env->s_gc, line);
 		if (ft_strcmp(line, delimiter) == 0)
 			break ;
-		result = append_heredoc_line(result,line,env,quote_mode);
-		// if(quote_mode == 1)
-		// {
-		// 	result = ft_strjoin_heredoc(result,line);
-		// 	gc_register(env->s_gc, result);
-		// 	result = ft_strjoin_heredoc(result, "\n");
-		// 	gc_register(env->s_gc, result);
-
-		// }
-		// else
-		// {
-		// 	result = process_heredoc_line(line, result, env);
-		// 	gc_register(env->s_gc, result);
-		// }
+		result = append_heredoc_line(result, line, env, quote_mode);
 	}
 	return (result);
 }

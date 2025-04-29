@@ -15,42 +15,31 @@
 
 # include "../libft/libft.h"
 # include "get_next_line/get_next_line.h"
-# include <curses.h> // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
-# include <dirent.h> // opendir, readdir, closedir
-# include <fcntl.h>  // open
+# include <curses.h>
+# include <dirent.h>
+# include <fcntl.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <signal.h>      // signal, sigaction, sigemptyset, sigaddset, kill
-# include <stdio.h>       // printf, perror
-# include <stdlib.h>      // malloc, free, exit, getenv
-# include <string.h>      // strerror
-# include <sys/ioctl.h>   // ioctl
-# include <sys/stat.h>    // stat, lstat, fstat
-# include <sys/termios.h> // tcsetattr, tcgetattr
-# include <sys/types.h>   // wait, waitpid, wait3, wait4, stat, lstat, fstat
+# include <signal.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/ioctl.h>
+# include <sys/stat.h>
+# include <sys/termios.h>
+# include <sys/types.h>
 # include <sys/unistd.h>
-# include <sys/wait.h> // wait, waitpid, wait3, wait4
-# include <termios.h>  // tcsetattr, tcgetattr
-# include <unistd.h>   // write, access, read, close, fork, getcwd, chdir,
+# include <sys/wait.h>
+# include <termios.h>
+# include <unistd.h>
 
-# define RESET "\001\033[0m\002" // Reset to default
+# define RESET "\001\033[0m\002"
 # define CYAN "\001\033[1;36m\002"
 # define BLUE "\001\033[1;34m\002"
 # define RED "\001\033[1;31m\002"
 # define MGNT "\001\033[1;35m\002"
 # define GRN "\001\033[1;32m\002"
-
-// # define DEBUG 1
-// # if DEBUG
-// #  define DEBUG_PRINT(fmt, ...) fprintf(stderr, " [DEBUG] " fmt,
-//	##__VA_ARGS__);
-// # else
-// #  define DEBUG_PRINT(fmt, ...) 
-// 	do                        
-// 	{                         
-// 	} while (0)
-// # endif
 
 typedef struct s_builtin
 {
@@ -103,25 +92,25 @@ typedef struct s_process
 
 typedef enum e_token_type
 {
-	TOKEN_WORD,            // (Cmd, Args)
-	TOKEN_PIPE,            // |
-	TOKEN_REDIRECT_IN,     // <
-	TOKEN_REDIRECT_OUT,    // >
-	TOKEN_REDIRECT_APPEND, // >>
-	TOKEN_HEREDOC,         // <<
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIRECT_IN,
+	TOKEN_REDIRECT_OUT,
+	TOKEN_REDIRECT_APPEND,
+	TOKEN_HEREDOC,
 	TOKEN_HEREDOC_PROCESSED,
 	TOKEN_HEREDOC_DELIMITER,
-	TOKEN_SEMIC, // ;
+	TOKEN_SEMIC,
 	TOKEN_END,
 }						t_token_type;
 
 typedef struct s_token
 {
-	t_token_type type; // token type
-	char *value;       // token value
+	t_token_type		type;
+	char				*value;
 	struct s_token		*next;
-	struct s_token *prev; // next token
-	int quote_mode;       // 0: no quote, 1: single quote, 2: double quote
+	struct s_token		*prev;
+	int					quote_mode;
 }						t_token;
 
 typedef struct s_token_state
@@ -207,21 +196,40 @@ int						key_size(char *str);
 int						value_size(char *str);
 int						env_size(char **envp);
 void					copy_env(char **str, char ***envp, t_env *env);
-char					*copy_ex_helper(char *str);
-void					copy_ex(char **str, char ***envp, t_env *env);
 // envp_utils2.c
 char					*find_path(t_env *env);
+char					**copy_filtred_env(char **envp, char *key, t_env *env,
+							int size);
+char					**remove_env(char **envp, char *key, t_env *env);
+// envp_utils3.c
+char					*ft_substr_ex(char const *s, unsigned int start,
+							size_t len);
+char					*copy_ex_helper(char *str);
+void					copy_ex(char **str, char ***envp, t_env *env);
+// envp_utils4.c
+char					*extract_shlvl_value(char *shlvl_entry);
+char					*create_new_shlvl(int digit);
+void					shell_level_ex(char ***str, int i, t_env *env);
+char					*create_simple_shlvl(int digit);
+void					shell_level(char ***str, int i, t_env *env);
+// envp_utils5.c
+void					setup_path_variable(t_env *env);
+void					initiate_env(t_env *env, char **envp);
+char					*allocate_substr(size_t len, t_env *env);
+char					*handle_empty_substr(t_env *env);
 // envp.c
 char					**update_env(char **envp, char *key, t_env *env);
 char					**update_ex(char **envp, char *key, t_env *env);
-char					**remove_env(char **envp, char *key, t_env *env);
-void					initiate_env(t_env *env, char **envp);
+void					setup_pwd_variables(t_env *env);
+char					*ft_gnls_substr(char const *s, unsigned int start,
+							size_t len, t_env *env);
 char					*find_exec(char *command, char *path, int i,
 							t_env *env);
-
 /*EXECUTE*/
-void	handle_redirection_helper(t_token **temp, char **args, int *out_fd, t_env *env);
-void handle_redirection(t_token **current, char **args, int *out_fd, t_env *env);
+void					handle_redirection_helper(t_token **temp, char **args,
+							int *out_fd, t_env *env);
+void					handle_redirection(t_token **current, char **args,
+							int *out_fd, t_env *env);
 void					exec_without_pipes(t_token *tokens, t_env *env,
 							int out_fd);
 void					cell_launch(t_token *tokens, t_env *env);
@@ -239,18 +247,20 @@ void					create_pipe_helper(int ***pipes, int i);
 void					create_pipe_helper1(int ***pipes, int i);
 void					exe_helper(t_token **temp);
 void					exe_helper1(int save_stdin);
-//exe_utils2.c
-void handle_out_process(t_token **current,int *out_fd,char **args,int append);
-void handle_in_process(t_token **current,int *in_fd,char **args,t_env *env);
-void handle_heredoc_process(t_token **current,char **args,t_env *env,t_token *last_heredoc);
-void setup_input_fd(int in_fd);
-//exe_utils3.c
+// exe_utils2.c
+void					handle_out_process(t_token **current, int *out_fd,
+							char **args, int append);
+void					handle_in_process(t_token **current, int *in_fd,
+							char **args, t_env *env);
+void					handle_heredoc_process(t_token **current, char **args,
+							t_env *env, t_token *last_heredoc);
+void					setup_input_fd(int in_fd);
+// exe_utils3.c
 char					**tokens_to_args(t_token *tokens, t_env *env);
-void	execute_with_redirection(char **args, t_env *env, int out_fd,
-	int save_stdout);
-t_token *find_last_heredoc(t_token *start, t_token *end);
-t_token *find_end_command(t_token *start);
-
+void					execute_with_redirection(char **args, t_env *env,
+							int out_fd, int save_stdout);
+t_token					*find_last_heredoc(t_token *start, t_token *end);
+t_token					*find_end_command(t_token *start);
 // exe_with_token.c
 void					read_redirected_in(t_token **current, int *in_fd,
 							char **args, t_env *env);
@@ -259,10 +269,14 @@ void					process_child_heredoc(t_token **current,
 void					openfile_redirected(t_token **current, int *out_fd,
 							char **args, int append);
 // exe_with_token2.c
-void get_heredoc_delimiter(t_token **current,char **delimiter,int *quote_mode,t_env *env);
-void	child_process_heredoc(int *pipe_fd, t_token **current,char **heredoc_input, t_env *env);
-void process_heredoc_result(int fd, char **heredoc_input,t_env *env,int stat);
-void parent_process_heredoc(int pipe_fd[2],char **heredoc_input,t_env *env,char **args);
+void					get_heredoc_delimiter(t_token **current,
+							char **delimiter, int *quote_mode, t_env *env);
+void					child_process_heredoc(int *pipe_fd, t_token **current,
+							char **heredoc_input, t_env *env);
+void					process_heredoc_result(int fd, char **heredoc_input,
+							t_env *env, int stat);
+void					parent_process_heredoc(int pipe_fd[2],
+							char **heredoc_input, t_env *env, char **args);
 // heredoc_utils.c
 char					*ft_strjoin_heredoc(char const *s1, char const *s2);
 int						expanded_heredoc_env(char *line, int *i, char **result,
@@ -277,13 +291,13 @@ char					*expanded_heredoc_line(char *line, t_env *env);
 char					*handler_heredoc(char *delimiter, t_env *env,
 							int quote_mode);
 // pipe_utils.c
-int						has_pipes(t_token *tokens);
 int						**create_pipes(int seg_count);
 void					wait_child_pipes(pid_t *pids, int seg_count,
 							t_env *env);
 void					cleanup_pipes(int **pipes, int seg_count);
 int						setup_io(int in_fd, int out_fd);
 // pipe.c
+int						has_pipes(t_token *tokens);
 void					execute_piped_command(t_token *tokens, t_env *env);
 int						setup_pipe_exec(t_token **segments, int seg_count,
 							t_env *env, int ***pipes_ptr);
@@ -299,11 +313,10 @@ void					find_seg_redirect(int *fds, t_token *start,
 							t_token *end, t_env *env);
 void					init_pipe_seg(t_pipe_seg *stat, int **pipes,
 							int seg_count, int i);
-
+void					close_pipes(int **pipes, int count);
 // run_commands.c
 void					wait_for_child(pid_t pid, t_env *env);
 void					exec_command(char **args, t_env *env, int out_fd);
-
 /*PARSING*/
 int						parent_process_heredoc_pipe(int *pipe_fd, pid_t pid,
 							t_token *curr, t_env *env);
@@ -350,7 +363,6 @@ void					signal_mode_read(void);
 // set_signal1.c
 void					set_signal_heredoc(void);
 void					set_signal_pipe(void);
-
 /*TOKENS*/
 // tokenizer
 void					process_delimiter_check(t_token *delimiter, char *line,
@@ -439,7 +451,6 @@ void					*my_malloc(t_gc *gc, int size);
 void					gc_register(t_gc *gc, void *ptr);
 void					gc_unregister(t_gc *gc, void *ptr);
 void					gc_free_all(t_gc *gc);
-
 // validate_syntax.c
 int						print_syntax_message(char *str, t_env *env);
 int						validate_redirect_syntax(t_token *tokens, t_env *env);

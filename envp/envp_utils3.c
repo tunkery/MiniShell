@@ -1,77 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envp_utils.c                                       :+:      :+:    :+:   */
+/*   envp_utils3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hpehliva <hpehliva@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 09:11:50 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 20:10:38 by batuhan          ###   ########.fr       */
+/*   Created: 2025/04/29 11:17:12 by hpehliva          #+#    #+#             */
+/*   Updated: 2025/04/29 11:17:25 by hpehliva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	key_size(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			return (i - 1);
-		i++;
-	}
-	return (i);
-}
-
-int	value_size(char *str)
-{
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (str[i] != '=')
-		i++;
-	while (str[i + j])
-		j++;
-	return (j);
-}
-
-int	env_size(char **envp)
-{
-	int i;
-
-	i = 0;
-	while (envp[i])
-		i++;
-	return (i);
-}
-
-void copy_env(char **str, char ***envp, t_env *env)
-{
-	int i;
-	int size;
-
-	if (!str || !envp)
-		return ;
-	i = 0;
-	size = env_size(str);
-	*envp = my_malloc(env->gc, sizeof(char *) * (size + 1));
-	if (!*envp)
-		return ;
-	while (i < size)
-	{
-		(*envp)[i] = ft_strdup(str[i]);
-		gc_register(env->gc, (*envp)[i]);
-		i++;
-	}
-	(*envp)[i] = NULL;
-}
-
-static char	*ft_substr_ex(char const *s, unsigned int start, size_t len)
+char	*ft_substr_ex(char const *s, unsigned int start, size_t len)
 {
 	char	*new_s;
 	size_t	i;
@@ -125,7 +66,7 @@ void	copy_ex(char **str, char ***envp, t_env *env)
 	int		i;
 	int		size;
 	char	*temp;
-	
+
 	if (!str || !envp)
 		return ;
 	i = 0;

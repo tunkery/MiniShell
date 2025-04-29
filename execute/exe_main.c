@@ -12,43 +12,45 @@
 
 #include "../minishell.h"
 
-void	handle_redirection_helper(t_token **temp, char **args, int *out_fd, t_env *env)
+void	handle_redirection_helper(t_token **temp, char **args, int *out_fd,
+		t_env *env)
 {
-	int in_fd;
-	t_token *end;
-	t_token *last_heredoc;
+	int		in_fd;
+	t_token	*end;
+	t_token	*last_heredoc;
 
 	in_fd = STDIN_FILENO;
 	end = find_end_command(*temp);
-	last_heredoc = find_last_heredoc(*temp,end);
-	while(*temp && *temp != end)
+	last_heredoc = find_last_heredoc(*temp, end);
+	while (*temp && *temp != end)
 	{
-		if((*temp)->type == TOKEN_REDIRECT_OUT)
-			handle_out_process(temp,out_fd,args,0);
-		else if((*temp)->type == TOKEN_REDIRECT_IN)
-			handle_in_process(temp,&in_fd,args,env);
-		else if((*temp)->type == TOKEN_REDIRECT_APPEND)
-			handle_out_process(temp,out_fd,args,1);
-		else if((*temp)->type == TOKEN_HEREDOC)
-			handle_heredoc_process(temp,args,env,last_heredoc);
+		if ((*temp)->type == TOKEN_REDIRECT_OUT)
+			handle_out_process(temp, out_fd, args, 0);
+		else if ((*temp)->type == TOKEN_REDIRECT_IN)
+			handle_in_process(temp, &in_fd, args, env);
+		else if ((*temp)->type == TOKEN_REDIRECT_APPEND)
+			handle_out_process(temp, out_fd, args, 1);
+		else if ((*temp)->type == TOKEN_HEREDOC)
+			handle_heredoc_process(temp, args, env, last_heredoc);
 		else
 			*temp = (*temp)->next;
-		if(!*args)
-		 	return;
+		if (!*args)
+			return ;
 	}
 	setup_input_fd(in_fd);
 }
 
-void	handle_redirection(t_token **current, char **args, int *out_fd, t_env *env)
+void	handle_redirection(t_token **current, char **args, int *out_fd,
+		t_env *env)
 {
-	t_token *temp;
-	temp = *current;
-	handle_redirection_helper(&temp,args,out_fd,env);
-	*current = temp;
-	if(!*args)
-		return;
-}
+	t_token	*temp;
 
+	temp = *current;
+	handle_redirection_helper(&temp, args, out_fd, env);
+	*current = temp;
+	if (!*args)
+		return ;
+}
 
 void	exec_without_pipes(t_token *tokens, t_env *env, int out_fd)
 {

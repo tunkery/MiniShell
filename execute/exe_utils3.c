@@ -89,26 +89,30 @@ void	execute_with_redirection(char **args, t_env *env, int out_fd,
 		exec_command(args, env, out_fd);
 	}
 }
-t_token *find_last_heredoc(t_token *start, t_token *end)
+
+t_token	*find_last_heredoc(t_token *start, t_token *end)
 {
-	t_token *temp = start;
-	t_token *last_heredoc = NULL;
-	
-	while(temp && temp != end && temp->type != TOKEN_PIPE && temp->type != TOKEN_SEMIC)
+	t_token	*temp;
+	t_token	*last_heredoc;
+
+	temp = start;
+	last_heredoc = NULL;
+	while (temp && temp != end && temp->type != TOKEN_PIPE
+		&& temp->type != TOKEN_SEMIC)
 	{
-		if(temp->type == TOKEN_HEREDOC)
+		if (temp->type == TOKEN_HEREDOC)
 			last_heredoc = temp;
 		temp = temp->next;
 	}
-	return last_heredoc;
+	return (last_heredoc);
 }
 
-t_token *find_end_command(t_token *start)
+t_token	*find_end_command(t_token *start)
 {
+	t_token	*end;
 
-	t_token *end;
 	end = start;
-	while(end && end->type != TOKEN_PIPE && end->type != TOKEN_SEMIC)
+	while (end && end->type != TOKEN_PIPE && end->type != TOKEN_SEMIC)
 		end = end->next;
-	return end;
+	return (end);
 }

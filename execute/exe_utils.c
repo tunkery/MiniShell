@@ -38,11 +38,9 @@ void	token_to_args_helper1(char ***args, t_token *tmp, t_env *env, int *i)
 
 int	count_token_helper(t_token *tokens)
 {
-	if (tokens->type == TOKEN_REDIRECT_APPEND
-		|| tokens->type == TOKEN_HEREDOC
+	if (tokens->type == TOKEN_REDIRECT_APPEND || tokens->type == TOKEN_HEREDOC
 		|| tokens->type == TOKEN_REDIRECT_OUT
-		|| tokens->type == TOKEN_REDIRECT_IN
-		|| tokens->type == TOKEN_HEREDOC)
+		|| tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_HEREDOC)
 		return (-1);
 	return (0);
 }

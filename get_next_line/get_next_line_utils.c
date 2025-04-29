@@ -22,7 +22,7 @@ char	*ft_gnl_strdup(const char *s)
 		return (NULL);
 	i = 0;
 	j = ft_gnl_strlen(s);
-	new_s = (char *) malloc(j + 1);
+	new_s = (char *)malloc(j + 1);
 	if (!new_s)
 		return (NULL);
 	while (i < j)
@@ -62,15 +62,15 @@ int	ft_gnl_strchr(const char *str, int c)
 
 char	*ft_gnl_strjoin(char const *s1, char const *s2, size_t len)
 {
-	size_t		i;
-	size_t		j;
-	char		*new_s;
+	size_t	i;
+	size_t	j;
+	char	*new_s;
 
 	if (!s1 || !s2)
 		return (NULL);
 	i = 0;
 	j = 0;
-	new_s = malloc (ft_gnl_strlen(s1) + ft_gnl_strlen(s2) + 1);
+	new_s = malloc(ft_gnl_strlen(s1) + ft_gnl_strlen(s2) + 1);
 	if (!new_s)
 		return (NULL);
 	while (s1[i])

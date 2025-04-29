@@ -22,7 +22,7 @@ char	*ft_strjoin_heredoc(char const *s1, char const *s2)
 		return (NULL);
 	i = 0;
 	j = 0;
-	new_s = malloc (ft_strlen(s1) + ft_strlen(s2) + 1);
+	new_s = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!new_s)
 		return (NULL);
 	while (s1[i])
@@ -36,7 +36,7 @@ char	*ft_strjoin_heredoc(char const *s1, char const *s2)
 		j++;
 	}
 	new_s[i + j] = '\0';
-	free((void*)s1);
+	free((void *)s1);
 	return (new_s);
 }
 
@@ -64,7 +64,8 @@ int	expanded_heredoc_env(char *line, int *i, char **result, t_env *env)
 	}
 	return (*i);
 }
-char *append_regular_char(char*result,char c,t_env *env)
+
+char	*append_regular_char(char *result, char c, t_env *env)
 {
 	char	cpy[2];
 
@@ -72,7 +73,7 @@ char *append_regular_char(char*result,char c,t_env *env)
 	cpy[1] = '\0';
 	result = ft_strjoin_heredoc(result, cpy);
 	gc_register(env->s_gc, result);
-	return result;
+	return (result);
 }
 
 char	*process_heredoc_line(char *line, char *result, t_env *env)
@@ -94,7 +95,7 @@ char	*process_heredoc_line(char *line, char *result, t_env *env)
 		}
 		else
 		{
-			result = append_regular_char(result,line[i],env);
+			result = append_regular_char(result, line[i], env);
 			i++;
 		}
 	}
