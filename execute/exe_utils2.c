@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_utils2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 23:05:25 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/28 23:06:57 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 21:33:03 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,20 @@ void	setup_input_fd(int in_fd)
 			return ;
 		}
 		close(in_fd);
+	}
+}
+
+void	wait_for_child(pid_t pid, t_env *env)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		env->exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		env->exit_code = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "^\\Quit: 3\n", 10);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector1.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:25:12 by hpehliva          #+#    #+#             */
-/*   Updated: 2025/04/29 19:15:14 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/29 21:58:21 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	gc_register(t_gc *gc, void *ptr)
 
 	node = NULL;
 	check = NULL;
-	if (!gc || !ptr) 
+	if (!gc || !ptr)
 		return ;
 	check = gc->head;
 	while (check)

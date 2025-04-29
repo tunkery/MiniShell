@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   run_commands.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:26:21 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 19:39:36 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/29 21:49:29 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	wait_for_child(pid_t pid, t_env *env)
-{
-	int	status;
-
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		env->exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-	{
-		env->exit_code = 128 + WTERMSIG(status);
-		if(WTERMSIG(status) == SIGQUIT)
-			write(STDERR_FILENO, "^\\Quit: 3\n",10);
-	}
-}
 
 static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 {
@@ -41,6 +26,7 @@ static void	run_without_path(char **args, t_env *env, int out_fd, char *exe)
 		}
 		if (execve(exe, args, env->envp) == -1)
 		{
+			perror("execve failed");
 			exit(127);
 		}
 	}
@@ -56,19 +42,23 @@ static int	permission_check(char *str, t_env *env)
 
 	if (stat(str, &info) != 0)
 	{
-		fprintf(stderr, "minishell: %s: No such file or directory\n", str);
+		no_file(str);
 		env->exit_code = 127;
 		return (1);
 	}
 	else if (S_ISDIR(info.st_mode))
 	{
-		fprintf(stderr, "minishell: %s: is a directory\n", str);
+		write(2, "minishell: ", 11);
+		write(2, str, ft_strlen(str));
+		write(2, ": is a directory\n", 17);
 		env->exit_code = 126;
 		return (1);
 	}
 	else if (access(str, X_OK) != 0)
 	{
-		fprintf(stderr, "minishell: %s: Permission denied\n", str);
+		write(2, "minishell: ", 11);
+		write(2, str, ft_strlen(str));
+		write(2, ": Permission denied\n", 20);
 		env->exit_code = 126;
 		return (1);
 	}
@@ -86,22 +76,39 @@ static void	run_with_path(char *str, char **args, t_env *env, int out_fd)
 	}
 	else if (check == 0)
 	{
-		fprintf(stderr, "minishell: %s: command not found.\n", str);
+		write(2, "minishell: ", 11);
+		write(2, str, ft_strlen(str));
+		write(2, ": command not found.\n", 21);
 		env->exit_code = 127;
 	}
 }
 
+static void	run_commands_helper(char **args, t_env *env, int out_fd
+		, char *exec_path)
+{
+	if (!exec_path)
+	{
+		env->exit_code = 127;
+		write(2, "minishell: ", 11);
+		write(2, args[0], ft_strlen(args[0]));
+		write(2, ": command not found.\n", 21);
+	}
+	else
+		run_without_path(args, env, out_fd, exec_path);
+}
 
 void	exec_command(char **args, t_env *env, int out_fd)
 {
 	char	*exec_path;
 	char	*path;
 	char	*final;
-	int is_cat_command = 0;
+	int		is_cat_command;
 
 	if (!args || !args[0])
 		return ;
-	if(args[0] && ft_strcmp(args[0], "cat") == 0 && (!args[1] || args[1][0] == '-' ))
+	is_cat_command = 0;
+	if (args[0] && ft_strcmp(args[0], "cat") == 0
+		&& (!args[1] || args[1][0] == '-' ))
 	{
 		is_cat_command = 1;
 		set_signal_backslash();
@@ -113,15 +120,7 @@ void	exec_command(char **args, t_env *env, int out_fd)
 	if (ft_strchr(final, '/'))
 		run_with_path(final, args, env, out_fd);
 	else
-	{
-		if (!exec_path)
-		{
-			env->exit_code = 127;
-			fprintf(stderr, "minishell: %s: command not found.\n", args[0]);
-		}
-		else
-			run_without_path(args, env, out_fd, exec_path);
-	}
-	if(is_cat_command)
+		run_commands_helper(args, env, out_fd, exec_path);
+	if (is_cat_command)
 		set_for_cat();
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:41:55 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/29 19:36:59 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/29 21:57:35 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	builtin_check(char **tokens)
 		return (2);
 	if (ft_strncmp(tokens[0], "echo", 4) == 0 && check == 4)
 		return (3);
-	if (ft_strncmp(tokens[0], "export", 6) == 0  && check == 6)
+	if (ft_strncmp(tokens[0], "export", 6) == 0 && check == 6)
 		return (4);
 	if (ft_strncmp(tokens[0], "unset", 5) == 0 && check == 5)
 		return (5);

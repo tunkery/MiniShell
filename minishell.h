@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:20:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/28 23:13:32 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 21:44:15 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,8 @@ void					handle_redirection(t_token **current, char **args,
 void					exec_without_pipes(t_token *tokens, t_env *env,
 							int out_fd);
 void					cell_launch(t_token *tokens, t_env *env);
+// write_helper.c
+void					no_file(char *str);
 // exe_utils.c
 int						token_to_args_helper(t_token **temp);
 void					token_to_args_helper1(char ***args, t_token *tmp,
@@ -363,8 +365,8 @@ void					signal_mode_read(void);
 // set_signal1.c
 void					set_signal_heredoc(void);
 void					set_signal_pipe(void);
-void set_for_cat(void);
-void set_signal_backslash(void);
+void					set_for_cat(void);
+void					set_signal_backslash(void);
 /*TOKENS*/
 // tokenizer
 void					process_delimiter_check(t_token *delimiter, char *line,
