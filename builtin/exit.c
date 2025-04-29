@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:02:44 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/29 21:57:07 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/04/30 01:20:37 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	write_and_exit(char **args, t_env *env)
 	write(2, ": numeric argument required\n", 28);
 	gc_free_all(env->s_gc);
 	gc_free_all(env->gc);
-	exit(2);
+	exit(255);
 }
 
 static int	aq_exiti(const char *str, long long *out, int i)
@@ -79,7 +79,7 @@ void	run_exit(char **args, t_env *env)
 		env->exit_code = 1;
 		return ;
 	}
-	else if (code == 2 || err == 2)
+	else if (code == 2 || err != 0)
 		write_and_exit(args, env);
 	status = (unsigned char)value;
 	free_both(env);
