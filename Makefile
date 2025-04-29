@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 10:02:15 by bolcay            #+#    #+#              #
-#    Updated: 2025/04/28 23:14:17 by hpehliva         ###   ########.fr        #
+#    Updated: 2025/04/29 19:59:11 by batuhan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ OBJS = $(SRCS:.c=.o)
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g $(INCLUDE)
+CFLAGS = -Wall -Wextra -g $(INCLUDE)
 RM = rm -f
 RM_DIR = rm -rf
 

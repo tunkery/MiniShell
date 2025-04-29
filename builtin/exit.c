@@ -6,11 +6,27 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 09:02:44 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/16 10:33:09 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/29 19:53:10 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void	free_both(t_env *env)
+{
+	gc_free_all(env->s_gc);
+	gc_free_all(env->gc);
+}
+
+static void	write_and_exit(char **args, t_env *env)
+{
+	write(2, "exit: ", 6);
+	write(2, args[1], ft_strlen(args[1]));
+	write(2, ": numeric argument required\n", 28);
+	gc_free_all(env->s_gc);
+	gc_free_all(env->gc);
+	exit(2);
+}
 
 static int	aq_exiti(const char *str, long long *out, int i)
 {
@@ -47,25 +63,25 @@ void	run_exit(char **args, t_env *env)
 	long long		value;
 	int				err;
 	unsigned char	status;
+	int				code;
 
-	(void)env;
 	if (!args[1])
-		exit(0);
-	if (exit_helper2(args, &i) != -1)
-		exit(exit_helper2(args, &i));
-	if (i == 2)
 	{
-		err = aq_exiti(args[1], &value, 0);
-		if (err != 0)
-		{
-			write(2, "exit: ", 6);
-			write(2, args[1], ft_strlen(args[1]));
-			write(2, ": numeric argument required\n", 28);
-			exit(2);
-		}
-		status = (unsigned char)value;
-		exit(status);
+		free_both(env);
+		exit(0);
 	}
-	else
+	code = exit_helper2(args, &i);
+	err = aq_exiti(args[1], &value, i);
+	if (code == 1)
+	{
 		write(2, "exit: too many arguments\n", 25);
+		env->exit_code = 1;
+		return ;
+	}
+	else if (code == 2 || err == 2)
+		write_and_exit(args, env);
+	// err = aq_exiti(args[1], &value, i);
+	status = (unsigned char)value;
+	free_both(env);
+	exit(status);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hpehliva <hpehliva@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 12:08:19 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/29 00:09:24 by hpehliva         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:41:53 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,12 @@ void	setup_pwd_variables(t_env *env)
 	while (env->envp[i] && ft_strncmp(env->envp[i], "PWD", 3) != 0)
 		i++;
 	env->curr_pwd = ft_strdup(env->envp[i]);
-	gc_register(env->gc, env->curr_pwd);
+	if (env->curr_pwd)
+		gc_register(env->gc, env->curr_pwd);
 	i = 0;
 	while (env->envp[i] && ft_strncmp(env->envp[i], "OLDPWD", 6) != 0)
 		i++;
-	if (env->envp[i])
+	if (env->envp[i] && (ft_strncmp(env->envp[i], "OLDPWD", 6) == 0))
 	{
 		env->old_pwd = ft_strdup(env->envp[i]);
 		if (!env->envp)

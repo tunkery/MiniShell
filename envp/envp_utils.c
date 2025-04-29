@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:11:50 by bolcay            #+#    #+#             */
-/*   Updated: 2025/04/22 20:10:38 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/04/29 19:12:22 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,5 @@ void	copy_env(char **str, char ***envp, t_env *env)
 		gc_register(env->gc, (*envp)[i]);
 		i++;
 	}
-	(*envp)[i] = NULL;
+	(*envp)[size] = NULL;
 }
