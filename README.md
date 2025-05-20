@@ -36,5 +36,7 @@ The goal is to understand how a shell works under the hood, practice process and
 ## Example Commands
 
 minishell$ echo Hello World
-minishell$ export USER=batuhan
+
+minishell$ export USER=tunkery
+
 minishell$ ls -l | grep minishell
